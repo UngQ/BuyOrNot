@@ -13,24 +13,52 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-		// Override point for customization after application launch.
+
+		NotificationCenter.default.addObserver(self, selector: #selector(handleAuthenticationFailure), name: .authenticationFailed, object: nil)
+
 		return true
 	}
 
-	// MARK: UISceneSession Lifecycle
-
 	func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-		// Called when a new scene session is being created.
-		// Use this method to select a configuration to create the new scene with.
+
 		return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
 	}
 
 	func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-		// Called when the user discards a scene session.
-		// If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-		// Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+
+	}
+
+	private var rootViewController: UIViewController? {
+		return (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController
+	}
+
+	@objc private func handleAuthenticationFailure(notification: Notification) {
+		DispatchQueue.main.async {
+			if let rootVC = self.rootViewController {
+				let alert = UIAlertController(title: "로그인 정보 만료", message: "다시 로그인 해주세요", preferredStyle: .alert)
+				alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { _ in
+					self.changeRootViewToLogin()
+				}))
+				rootVC.present(alert, animated: true)
+			}
+
+		}
+	}
+
+	private func changeRootViewToLogin() {
+		let loginViewController = SignInViewController()
+		changeRootView(loginViewController)
+	}
+
+	private func changeRootView(_ viewController: UIViewController, isNav: Bool = false) {
+		guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+			  let sceneDelegate = windowScene.delegate as? SceneDelegate else {
+			return
+		}
+		let vc = isNav ? UINavigationController(rootViewController: viewController) : viewController
+		sceneDelegate.window?.rootViewController = vc
+		sceneDelegate.window?.makeKeyAndVisible()
 	}
 
 
 }
-

@@ -28,10 +28,6 @@ class PasswordViewModel: ViewModelType {
 
 		let initValid = BehaviorRelay(value: false)
 		let finalValid = PublishRelay<Bool>()
-
-
-		let test = Observable.merge(input.passwordText.asObservable(),
-						 input.confirmPasswordText.asObservable())
 		let combineText = Observable.combineLatest(input.passwordText,
 											input.confirmPasswordText)
 
@@ -43,15 +39,11 @@ class PasswordViewModel: ViewModelType {
 			}
 			.disposed(by: disposeBag)
 
-
-
 		combineText.map {
 			print($0, $1)
 			return self.isValidPassword($0) && $0 == $1 }
 			.bind(to: finalValid)
 			.disposed(by: disposeBag)
-
-
 
 
 		return Output(initValid: initValid.asDriver(onErrorJustReturn: false),

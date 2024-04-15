@@ -44,6 +44,11 @@
 		A55990EA2BCC1DCE0096B98A /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990E92BCC1DCE0096B98A /* CategoryViewController.swift */; };
 		A55990EC2BCC1DD90096B98A /* CategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990EB2BCC1DD90096B98A /* CategoryViewModel.swift */; };
 		A55990F12BCC1FE30096B98A /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = A55990F02BCC1FE30096B98A /* .gitignore */; };
+		A55990F32BCC24AA0096B98A /* JoinQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990F22BCC24AA0096B98A /* JoinQuery.swift */; };
+		A55990F72BCC44670096B98A /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990F62BCC44670096B98A /* UserDefaultsKeys.swift */; };
+		A55990FA2BCC4A190096B98A /* CustomTabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990F92BCC4A190096B98A /* CustomTabbarController.swift */; };
+		A55990FC2BCCABD50096B98A /* ImagePostQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990FB2BCCABD50096B98A /* ImagePostQuery.swift */; };
+		A5A92E912BCD5730006434C6 /* Notification.Name+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A92E902BCD5730006434C6 /* Notification.Name+Ex.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,6 +85,11 @@
 		A55990E92BCC1DCE0096B98A /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		A55990EB2BCC1DD90096B98A /* CategoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewModel.swift; sourceTree = "<group>"; };
 		A55990F02BCC1FE30096B98A /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		A55990F22BCC24AA0096B98A /* JoinQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinQuery.swift; sourceTree = "<group>"; };
+		A55990F62BCC44670096B98A /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
+		A55990F92BCC4A190096B98A /* CustomTabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabbarController.swift; sourceTree = "<group>"; };
+		A55990FB2BCCABD50096B98A /* ImagePostQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePostQuery.swift; sourceTree = "<group>"; };
+		A5A92E902BCD5730006434C6 /* Notification.Name+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification.Name+Ex.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +132,7 @@
 				A55990A22BCBFF9C0096B98A /* SignIn */,
 				A55990A32BCBFFB50096B98A /* SignUp */,
 				A55990E72BCC1D460096B98A /* Category */,
+				A55990F82BCC49FF0096B98A /* Tabbar */,
 				A55990C72BCC1AA00096B98A /* Protocol */,
 				A55990C42BCC1A870096B98A /* Extension */,
 				A55990C12BCC1A330096B98A /* Base */,
@@ -174,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				A55990BD2BCC01C20096B98A /* Color.swift */,
+				A55990F62BCC44670096B98A /* UserDefaultsKeys.swift */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -190,6 +202,7 @@
 			isa = PBXGroup;
 			children = (
 				A55990C52BCC1A950096B98A /* UIViewController+Ex.swift */,
+				A5A92E902BCD5730006434C6 /* Notification.Name+Ex.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -212,6 +225,8 @@
 				A55990DD2BCC1C020096B98A /* APIKey.swift */,
 				A55990E12BCC1C3B0096B98A /* LoginQuery.swift */,
 				A55990E32BCC1C530096B98A /* ValidationEmailQuery.swift */,
+				A55990F22BCC24AA0096B98A /* JoinQuery.swift */,
+				A55990FB2BCCABD50096B98A /* ImagePostQuery.swift */,
 				A55990E52BCC1C5E0096B98A /* NetworkManager.swift */,
 			);
 			path = Network;
@@ -224,6 +239,14 @@
 				A55990EB2BCC1DD90096B98A /* CategoryViewModel.swift */,
 			);
 			path = Category;
+			sourceTree = "<group>";
+		};
+		A55990F82BCC49FF0096B98A /* Tabbar */ = {
+			isa = PBXGroup;
+			children = (
+				A55990F92BCC4A190096B98A /* CustomTabbarController.swift */,
+			);
+			path = Tabbar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -317,18 +340,22 @@
 				A55990DE2BCC1C020096B98A /* APIKey.swift in Sources */,
 				A55990C02BCC01F80096B98A /* SignTextField.swift in Sources */,
 				A55990D32BCC1B9E0096B98A /* PasswordViewModel.swift in Sources */,
+				A55990F32BCC24AA0096B98A /* JoinQuery.swift in Sources */,
 				A55990D72BCC1BC60096B98A /* NicknameViewModel.swift in Sources */,
 				A55990C62BCC1A950096B98A /* UIViewController+Ex.swift in Sources */,
 				A55990E42BCC1C530096B98A /* ValidationEmailQuery.swift in Sources */,
 				A55990A52BCC00760096B98A /* SignInViewController.swift in Sources */,
 				A55990D52BCC1BB60096B98A /* NicknameViewController.swift in Sources */,
+				A55990FA2BCC4A190096B98A /* CustomTabbarController.swift in Sources */,
 				A55990E02BCC1C200096B98A /* HTTPHeader.swift in Sources */,
 				A55990EA2BCC1DCE0096B98A /* CategoryViewController.swift in Sources */,
+				A55990F72BCC44670096B98A /* UserDefaultsKeys.swift in Sources */,
 				A55990DA2BCC1BE00096B98A /* Router.swift in Sources */,
 				A55990932BCBFED00096B98A /* ViewController.swift in Sources */,
 				A55990BE2BCC01C20096B98A /* Color.swift in Sources */,
 				A55990BB2BCC015B0096B98A /* PointButton.swift in Sources */,
 				A55990CF2BCC1B6D0096B98A /* SignUpViewModel.swift in Sources */,
+				A5A92E912BCD5730006434C6 /* Notification.Name+Ex.swift in Sources */,
 				A55990C32BCC1A450096B98A /* BaseViewController.swift in Sources */,
 				A559908F2BCBFED00096B98A /* AppDelegate.swift in Sources */,
 				A55990CB2BCC1AC30096B98A /* ViewModelType.swift in Sources */,
@@ -337,6 +364,7 @@
 				A55990D12BCC1B8D0096B98A /* PasswordViewController.swift in Sources */,
 				A55990C92BCC1AB20096B98A /* ReusableID.swift in Sources */,
 				A55990E62BCC1C5E0096B98A /* NetworkManager.swift in Sources */,
+				A55990FC2BCCABD50096B98A /* ImagePostQuery.swift in Sources */,
 				A55990CD2BCC1B460096B98A /* SignUpViewController.swift in Sources */,
 				A55990EC2BCC1DD90096B98A /* CategoryViewModel.swift in Sources */,
 				A55990912BCBFED00096B98A /* SceneDelegate.swift in Sources */,

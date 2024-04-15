@@ -58,7 +58,7 @@ class PasswordViewController: BaseViewController {
 			.withLatestFrom(input.confirmPasswordText)
 			.asDriver(onErrorJustReturn: "")
 			.drive(with: self) { owner, password in
-				UserDefaults.standard.setValue(password, forKey: "password")
+				UserDefaults.standard.setValue(password, forKey: UserDefaultsKey.password.key)
 				owner.navigationController?.pushViewController(NicknameViewController(), animated: true)
 			}
 			.disposed(by: disposeBag)

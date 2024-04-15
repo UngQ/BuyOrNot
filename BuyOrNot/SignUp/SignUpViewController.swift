@@ -48,10 +48,10 @@ class SignUpViewController: BaseViewController {
 		nextButton.rx.tap
 			.bind(with: self) { owner, _ in
 				if isValidation {
-					UserDefaults.standard.setValue(owner.emailTextField.text, forKey: "email")
+					UserDefaults.standard.setValue(owner.emailTextField.text, forKey: UserDefaultsKey.email.key)
 					owner.navigationController?.pushViewController(PasswordViewController(), animated: true)
 				} else {
-					self.view.makeToast("이메일 입력 후, 중복 확인 부탁드립니다.", position: .center)
+					self.view.makeToast("중복 확인 진행해주세요.", position: .center)
 				}
 			}
 			.disposed(by: disposeBag)
@@ -64,7 +64,6 @@ class SignUpViewController: BaseViewController {
 
 		output.isValidation
 			.drive(with: self) { owner, validation in
-//				owner.nextButton.isEnabled = validation
 				isValidation = validation
 				owner.nextButton.backgroundColor = validation ? .systemBlue : .lightGray
 			}
@@ -97,6 +96,9 @@ class SignUpViewController: BaseViewController {
 			make.top.equalTo(emailTextField.snp.bottom).offset(30)
 			make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
 		}
+
+		validationButton.backgroundColor = .systemBlue
+		validationButton.setTitleColor(.white, for: .normal)
 	}
 
 }
