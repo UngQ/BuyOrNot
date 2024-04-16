@@ -37,7 +37,8 @@ class SignUpViewModel: ViewModelType {
 			.withLatestFrom(input.emailTextField)
 			.flatMap {
 				if self.isValidEmail($0) {
-					return NetworkManager.validateEmail(query: ValidationEmailQuery(email: $0))
+					return NetworkManager.performRequest(route: .validationEmail(query: ValidationEmailQuery(email: $0)), decodingType: MessageModel.self)
+
 						.catch { error in
 							if let errorCode = error.asAFError?.responseCode, errorCode == 409 {
 								validationMessage.accept("이미 사용 중인 이메일 입니다.")

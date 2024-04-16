@@ -26,8 +26,7 @@ class NicknameViewController: BaseViewController {
 	override func bind() {
 
 
-		let input = NicknameViewModel.Input(nickname: nicknameTextField.rx.text.orEmpty
-											,
+		let input = NicknameViewModel.Input(nickname: nicknameTextField.rx.text.orEmpty,
 											nextButtonTap: nextButton.rx.tap)
 
 		let output = viewModel.transform(input: input)
@@ -43,7 +42,8 @@ class NicknameViewController: BaseViewController {
 			.drive(with: self) { owner, complete in
 				print("Completed")
 				
-				owner.changeRootView(to: CategoryViewController(), isNav: true)
+				owner.changeRootView(to: CustomTabBarController(), isNav: true)
+				
 			}
 			.disposed(by: disposeBag)
 
@@ -52,7 +52,7 @@ class NicknameViewController: BaseViewController {
 
 
 
-	func configureLayout() {
+	override func configureLayout() {
 		view.addSubview(nicknameTextField)
 		view.addSubview(descriptionLabel)
 		view.addSubview(nextButton)

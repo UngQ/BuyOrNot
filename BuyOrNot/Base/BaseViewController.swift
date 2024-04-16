@@ -20,10 +20,15 @@ class BaseViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = Color.white
+		configureLayout()
 		bind()
 	}
 
 	func bind() {
+
+	}
+	
+	func configureLayout() {
 
 	}
 

@@ -68,7 +68,7 @@ class PasswordViewController: BaseViewController {
 
 
 
-	func configureLayout() {
+	override func configureLayout() {
 		view.addSubview(passwordTextField)
 		view.addSubview(confirmPasswordTextField)
 		view.addSubview(nextButton)

@@ -48,13 +48,16 @@ class NicknameViewModel: ViewModelType {
 										  password: password,
 										  nick: nickname)
 
-				return NetworkManager.join(query: joinQuery)
+				return NetworkManager.performRequest(route: .join(query: joinQuery), decodingType: JoinModel.self)
 					.flatMap { join -> Single<LoginModel> in
 						let loginQuery = LoginQuery(email: joinQuery.email, password: joinQuery.password)
-						return NetworkManager.createLogin(query: loginQuery)
+						return NetworkManager.performRequest(route: .login(query: loginQuery), decodingType: LoginModel.self)
 					}
 			}
 			.subscribe(with: self) { owner, login in
+				UserDefaults.standard.setValue(login.user_id, forKey: UserDefaultsKey.userId.key)
+				UserDefaults.standard.setValue(login.email, forKey: UserDefaultsKey.email.key)
+				UserDefaults.standard.setValue(login.nick, forKey: UserDefaultsKey.nick.key)
 				UserDefaults.standard.setValue(login.accessToken, forKey: UserDefaultsKey.accessToken.key)
 				UserDefaults.standard.setValue(login.refreshToken, forKey: UserDefaultsKey.refreshToken.key)
 				isCompleteJoin.accept(true)

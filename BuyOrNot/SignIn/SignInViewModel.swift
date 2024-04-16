@@ -20,12 +20,14 @@ final class SignInViewModel: ViewModelType {
 	}
 
 	struct Output {
+		let errorMessage: Driver<String>
 		let loginValidation: Driver<Bool>
 		let loginSuccessTrigger: Driver<Void>
 	}
 
 	func transform(input: Input) -> Output {
 
+		let errorMessage = PublishRelay<String>()
 		let loginValid = BehaviorRelay(value: false)
 		let loginSuccessTrigger = PublishRelay<Void>()
 
@@ -34,37 +36,42 @@ final class SignInViewModel: ViewModelType {
 			input.passwordText
 		)
 			.map { email, password in
+				print(email, password)
 				return LoginQuery(email: email, password: password)
 			}
 
-		loginObservable
-			.bind(with: self) { owner, login in
-				if login.email.contains("@") && login.password.count > 3 {
-					loginValid.accept(true)
-				} else {
-					loginValid.accept(false)
-				}
-			}
-			.disposed(by: disposeBag)
+//		loginObservable
+//			.bind(with: self) { owner, login in
+//				if login.email.contains("@") && login.password.count > 3 {
+//					loginValid.accept(true)
+//				} else {
+//					loginValid.accept(false)
+//				}
+//			}
+//			.disposed(by: disposeBag)
 
 		input.loginButtonTapped
 			.debounce(.seconds(1), scheduler: MainScheduler.instance)
 			.withLatestFrom(loginObservable)
 			.flatMap { loginQuery in
+				print("\(loginQuery)) 이곳인가")
 				return NetworkManager.createLogin(query: loginQuery)
-			}
-			.subscribe(with: self) { owner, loginModel in
-				UserDefaults.standard.set(loginModel.accessToken, forKey: "token")
-				UserDefaults.standard.set(loginModel.refreshToken, forKey: "refreshToken")
+					.catch { error -> Single<LoginModel> in
+						errorMessage.accept("이메일 혹은 비밀번호가 올바르지 않습니다.")
+						return Single.never()
+							 }
+					 }
+			.subscribe(with: self, onNext: { owner, loginModel in
+				print("통신성공")
+				UserDefaults.standard.set(loginModel.accessToken, forKey: UserDefaultsKey.accessToken.key)
+				UserDefaults.standard.set(loginModel.refreshToken, forKey: UserDefaultsKey.refreshToken.key)
 				loginSuccessTrigger.accept(())
-			} onError: { owner, error in
-				print("오류 발생")
-			}
-			.disposed(by: disposeBag)
-
+			})
+					 .disposed(by: disposeBag)
 
 
 		return Output(
+			errorMessage: errorMessage.asDriver(onErrorJustReturn: ""),
 			loginValidation: loginValid.asDriver(),
 			loginSuccessTrigger: loginSuccessTrigger.asDriver(onErrorJustReturn: ())
 		)

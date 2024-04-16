@@ -8,11 +8,14 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import AVFoundation
+import PhotosUI
 
 
 class CustomTabBarController: UITabBarController {
 
 	let disposeBag = DisposeBag()
+	var category = ""
 
 	private let firstVC = UINavigationController(rootViewController: CategoryViewController())
 	private let secondVC = UINavigationController(rootViewController: SignInViewController())
@@ -23,6 +26,7 @@ class CustomTabBarController: UITabBarController {
 		self.delegate = self
 		setupMiddleButton()
 
+		firstVC.view.backgroundColor = .white
 		firstVC.tabBarItem.title = ""
 		firstVC.tabBarItem.image = UIImage(systemName: "house.fill")
 
@@ -35,24 +39,24 @@ class CustomTabBarController: UITabBarController {
 	}
 
 	func setupMiddleButton() {
-		let middleBtn = UIButton(frame: CGRect(x: (self.tabBar.bounds.width / 2) - 35, y: -30, width: 70, height: 70))
+		let middleBtn = UIButton(frame: CGRect(x: (self.tabBar.bounds.width / 2) - 35, y: -20, width: 70, height: 70))
 		middleBtn.layer.cornerRadius = 35
 		middleBtn.backgroundColor = .clear
 		middleBtn.setBackgroundImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
 		middleBtn.tintColor = .systemGreen
 
 
-//		middleBtn.addTarget(self, action: #selector(middleButtonAction), for: .touchUpInside)
+		//		middleBtn.addTarget(self, action: #selector(middleButtonAction), for: .touchUpInside)
 
 		self.tabBar.addSubview(middleBtn)
 		self.tabBar.layer.masksToBounds = false
 		middleBtn.clipsToBounds = true
 	}
 
-//	@objc func middleButtonAction(sender: UIButton) {
-//		selectedIndex = 2 // 중앙 버튼이면 보통 중앙의 인덱스
-//		showActionSheet()
-//	}
+	//	@objc func middleButtonAction(sender: UIButton) {
+	//		selectedIndex = 2 // 중앙 버튼이면 보통 중앙의 인덱스
+	//		showActionSheet()
+	//	}
 
 	func showActionSheet() {
 		let actionSheet = UIAlertController(title: .none, message: .none, preferredStyle: .actionSheet)
@@ -60,13 +64,20 @@ class CustomTabBarController: UITabBarController {
 
 		let topAction = UIAlertAction(title: "상의 (Top)", style: .default, handler: { _ in
 			self.imagePicker()
+			self.category = "#Top"
 		})
 		let bottomAction = UIAlertAction(title: "바지 (Bottom)", style: .default, handler: { _ in
-			self.imagePicker()		})
+			self.imagePicker()
+			self.category = "#Bottom"
+		})
 		let shoesAction = UIAlertAction(title: "신발 (Shoes)", style: .default, handler: { _ in
-			self.imagePicker()		})
+			self.imagePicker()
+			self.category = "#Shoes"
+		})
 		let accAction = UIAlertAction(title: "악세사리 (Acc)", style: .default, handler: { _ in
-			self.imagePicker()		})
+			self.imagePicker()
+			self.category = "#Acc"
+		})
 		let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
 
 		actionSheet.addAction(topAction)
@@ -75,10 +86,10 @@ class CustomTabBarController: UITabBarController {
 		actionSheet.addAction(accAction)
 		actionSheet.addAction(cancelAction)
 
-//		if let popoverController = actionSheet.popoverPresentationController {
-//			popoverController.sourceView = sender
-//			popoverController.sourceRect = sender.bounds
-//		}
+		//		if let popoverController = actionSheet.popoverPresentationController {
+		//			popoverController.sourceView = sender
+		//			popoverController.sourceRect = sender.bounds
+		//		}
 
 		self.present(actionSheet, animated: true, completion: nil)
 	}
@@ -86,39 +97,86 @@ class CustomTabBarController: UITabBarController {
 	func imagePicker() {
 
 		let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-		   let gallery = UIAlertAction(title: "사진첩", style: .default) { action in
+		let gallery = UIAlertAction(title: "갤러리", style: .default) { action in
+			let vc = UIImagePickerController()
+			vc.allowsEditing = true
+			vc.delegate = self
 
-			   let vc = UIImagePickerController()
-//				vc.allowsEditing = true
-			   vc.delegate = self
-			   self.present(vc, animated: true)
-		   }
-		   let camera = UIAlertAction(title: "카메라", style: .default) { action in
+			self.present(vc, animated: true)
+		}
+		let camera = UIAlertAction(title: "카메라", style: .default) { action in
+			self.openCamera()
+		}
+		let web = UIAlertAction(title: "네이버", style: .default) { action in
 
-			   let vc = UIImagePickerController()
-			   vc.sourceType = .camera
-			   self.present(vc, animated: true)
-		   }
-		   let web = UIAlertAction(title: "네이버", style: .default) { action in
+			//			   let vc = ImageWebSearchViewController()
+			//			   vc.valueSpace = {
+			//				   self.selectedURL = $0
+			//				   self.selectedImage = nil
+			//				   self.mainView.optionTableView.reloadRows(at: [IndexPath(row: 0, section: OptionType.image.rawValue)], with: .none)
+			//			   }
+			//
+			//			   self.present(vc, animated: true)
 
-//			   let vc = ImageWebSearchViewController()
-//			   vc.valueSpace = {
-//				   self.selectedURL = $0
-//				   self.selectedImage = nil
-//				   self.mainView.optionTableView.reloadRows(at: [IndexPath(row: 0, section: OptionType.image.rawValue)], with: .none)
-//			   }
-//
-//			   self.present(vc, animated: true)
+		}
+		let cancel = UIAlertAction(title: "취소", style: .cancel)
 
-		   }
-		   let cancel = UIAlertAction(title: "취소", style: .cancel)
+		alert.addAction(gallery)
+		alert.addAction(camera)
+		alert.addAction(web)
+		alert.addAction(cancel)
 
-		   alert.addAction(gallery)
-		   alert.addAction(camera)
-		   alert.addAction(web)
-		   alert.addAction(cancel)
+		present(alert, animated: true)
+	}
 
-		   present(alert, animated: true)
+	func showAlertGoToSetting() {
+		let alertController = UIAlertController(
+			title: "현재 카메라 사용에 대한 접근 권한이 없습니다.",
+			message: "설정 > [살까요?말까요?]탭에서 접근을 활성화 할 수 있습니다.",
+			preferredStyle: .alert
+		)
+		let cancelAlert = UIAlertAction(
+			title: "취소",
+			style: .cancel
+		) { _ in
+			alertController.dismiss(animated: true, completion: nil)
+		}
+		let goToSettingAlert = UIAlertAction(
+			title: "설정으로 이동하기",
+			style: .default) { _ in
+				guard
+					let settingURL = URL(string: UIApplication.openSettingsURLString),
+					UIApplication.shared.canOpenURL(settingURL)
+				else { return }
+				UIApplication.shared.open(settingURL, options: [:])
+			}
+		[cancelAlert, goToSettingAlert]
+			.forEach(alertController.addAction(_:))
+		DispatchQueue.main.async {
+			self.present(alertController, animated: true) // must be used from main thread only
+		}
+	}
+
+	func openCamera() {
+		#if targetEnvironment(simulator)
+		fatalError()
+		#endif
+
+		// Privacy - Camera Usage Description
+		AVCaptureDevice.requestAccess(for: .video) { [weak self] isAuthorized in
+			guard isAuthorized else { 
+				self?.showAlertGoToSetting()
+				return }
+
+			DispatchQueue.main.async {
+				  let pickerController = UIImagePickerController()
+				  pickerController.sourceType = .camera
+				  pickerController.allowsEditing = false
+				  pickerController.mediaTypes = ["public.image"]
+				  pickerController.delegate = self
+				  self?.present(pickerController, animated: true)
+				}
+		}
 	}
 }
 
@@ -138,17 +196,17 @@ extension CustomTabBarController: UIImagePickerControllerDelegate, UINavigationC
 	}
 
 	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-		if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+		if let pickedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
+			guard let uploadImage = pickedImage.jpegData(compressionQuality: 0.5) else { return }
 
-			print(pickedImage.pngData())
-
-			NetworkManager.postImage(query: ImagePostQuery(file: pickedImage.pngData()!))
-				.subscribe(onSuccess: { result in
-					print(result.files)
-				}, onFailure: { error in
-					print(error.asAFError?.responseCode)
+			NetworkManager.performRequest(route: .uploadImage(query: ImagePostQuery(file: uploadImage)), decodingType: ImageModel.self)
+				.subscribe(with: self, onSuccess: { owner, image in
+					let vc = UploadPostViewController()
+					vc.category = owner.category
+					vc.image = image.files
+					print(image.files)
+					owner.navigationController?.pushViewController(vc, animated: true)
 				})
-
 				.disposed(by: disposeBag)
 
 		}

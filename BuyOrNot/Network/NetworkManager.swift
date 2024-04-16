@@ -14,10 +14,7 @@ struct AccessTokenModel: Decodable {
 	let accessToken: String
 }
 
-struct LoginModel: Decodable {
-	let accessToken: String
-	let refreshToken: String
-}
+
 
 struct MessageModel: Decodable {
 	let message: String
@@ -29,17 +26,81 @@ struct JoinModel: Decodable {
 	let nick: String
 }
 
-struct ImagePostModel: Decodable {
+struct ImageModel: Decodable {
 	let files: [String]
 }
 
 struct NetworkManager {
 
+	static func performRequest<T: Decodable>(route: Router, decodingType: T.Type) -> Single<T> {
+		return Single<T>.create { single in
+			do {
+				let urlRequest = try route.asURLRequest()
+
+				if case Router.uploadImage(let query) = route {
+					guard let image = query as? ImagePostQuery else { return Disposables.create() }
+					AF.upload(multipartFormData: { multipartFormData in
+						multipartFormData.append(image.file,
+												 withName: "files",
+												 fileName: "buyOrNot.jpg",
+												 mimeType: "image/jpg")
+					}, with: urlRequest)
+					.validate(statusCode: 200..<300)
+					.responseDecodable(of: T.self) { response in
+						switch response.result {
+						case .success(let result):
+							single(.success(result))
+						case .failure(let error):
+							single(.failure(error))
+						}
+					}
+				} else if case Router.lookImage(let endPoint) = route {
+					AF.request(urlRequest)
+						.responseData { response in
+							switch response.result {
+							case .success(let data):
+								single(.success(data as! T))
+							case .failure(let error):
+								single(.failure(error))
+							}
+						}
+				} else {
+					AF.request(urlRequest)
+						.validate(statusCode: 200..<300)
+						.responseDecodable(of: T.self) { response in
+							switch response.result {
+							case .success(let result):
+								single(.success(result))
+							case .failure(let error):
+								single(.failure(error))
+							}
+						}
+				}
+			} catch {
+				single(.failure(error))
+			}
+
+			return Disposables.create()
+		}
+		.retry(when: { errors in
+			errors.flatMap { error -> Single<Void> in
+				guard let afError = error as? AFError, afError.responseCode == 419 else {
+					throw error
+				}
+				return refreshToken().flatMap { _ in
+					performRequest(route: route, decodingType: T.self).map { _ in
+						Void()
+					}
+				}
+			}
+		})
+	}
+
 	static func createLogin(query: LoginQuery) -> Single<LoginModel> {
 		return Single<LoginModel>.create { single in
 			do {
 				let urlRequest = try Router.login(query: query).asURLRequest()
-
+				print(urlRequest.httpBody)
 				AF.request(urlRequest)
 					.validate(statusCode: 200..<300)
 					.responseDecodable(of: LoginModel.self) { response in
@@ -47,6 +108,7 @@ struct NetworkManager {
 						case .success(let loginModel):
 							single(.success(loginModel))
 						case .failure(let error):
+
 							single(.failure(error))
 						}
 					}
@@ -103,60 +165,22 @@ struct NetworkManager {
 
 			return Disposables.create()
 		}
+
 	}
 
-//	static func postImage(query: ImagePostQuery) -> Single<ImagePostModel> {
-//		return Single<ImagePostModel>.create { single in
-//			do {
-//				let urlRequest = try Router.imagePosts(query: query).asURLRequest()
-//
-//				AF.upload(multipartFormData: { multipartFormData in
-//					multipartFormData.append(query.file,
-//											 withName: "files",
-//											 fileName: "buyOrNot.png",
-//											 mimeType: "image/png")
-//				}, with: urlRequest)
-//				.validate(statusCode: 200..<300)
-//				.responseDecodable(of: ImagePostModel.self) { response in
-//					switch response.result {
-//					case .success(let imagePostModel):
-//						single(.success(imagePostModel))
-//						print(imagePostModel.files)
-//						print("Asdfasdfgjhidfghjaoighf")
-//					case .failure(let error):
-//						single(.failure(error))
-//						print(response.response?.statusCode)
-//					}
-//				}
-//
-//			} catch {
-//				single(.failure(error))
-//			}
-//
-//
-//			return Disposables.create()
-//		}
-//		.retry(when: { error in
-//			error.flatMap { error -> Observable<Void> in
-//				guard let afError = error as? AFError, afError.responseCode == 419 else { throw error }
-//				return refreshToken().asObservable().map { _ in Void() }
-//			}
-//		})
-//	}
-
-	static func postImage(query: ImagePostQuery) -> Single<ImagePostModel> {
-		return Single<ImagePostModel>.create { single in
+	static func uploadImage(query: ImagePostQuery) -> Single<ImageModel> {
+		return Single<ImageModel>.create { single in
 			do {
-				let urlRequest = try Router.imagePosts(query: query).asURLRequest()
+				let urlRequest = try Router.uploadImage(query: query).asURLRequest()
 
 				AF.upload(multipartFormData: { multipartFormData in
 					multipartFormData.append(query.file,
 											 withName: "files",
-											 fileName: "buyOrNot.png",
-											 mimeType: "image/png")
+											 fileName: "buyOrNot.jpg",
+											 mimeType: "image/jpg")
 				}, with: urlRequest)
 				.validate(statusCode: 200..<300)
-				.responseDecodable(of: ImagePostModel.self) { response in
+				.responseDecodable(of: ImageModel.self) { response in
 					switch response.result {
 					case .success(let model):
 						single(.success(model))
@@ -175,7 +199,7 @@ struct NetworkManager {
 					throw error
 				}
 				return refreshToken().flatMap { _ in
-					postImage(query: query).map { _ in
+					uploadImage(query: query).map { _ in
 						Void()
 					}
 				}

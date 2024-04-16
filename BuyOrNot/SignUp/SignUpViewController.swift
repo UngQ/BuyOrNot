@@ -71,7 +71,7 @@ class SignUpViewController: BaseViewController {
 
 	}
 
-	func configureLayout() {
+	override func configureLayout() {
 		view.addSubview(emailTextField)
 		view.addSubview(validationButton)
 		view.addSubview(nextButton)

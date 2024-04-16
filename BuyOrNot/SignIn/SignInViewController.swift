@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import Toast
 
 final class SignInViewController: BaseViewController {
 
@@ -29,12 +30,6 @@ final class SignInViewController: BaseViewController {
 	}
 
 	override func bind() {
-		signUpButton.rx.tap
-			.asDriver()
-			.drive(with: self) { owner, _ in
-				owner.navigationController?.pushViewController(SignUpViewController(), animated: true)
-			}
-			.disposed(by: disposeBag)
 
 		let input = SignInViewModel.Input(
 			emailText: emailTextField.rx.text.orEmpty.asObservable(),
@@ -42,28 +37,33 @@ final class SignInViewController: BaseViewController {
 			loginButtonTapped: signInButton.rx.tap.asObservable())
 
 		let output = viewModel.transform(input: input)
-
-		output.loginValidation
-			.drive(with: self) { owner, valid in
-				owner.signInButton.isEnabled = valid
-			}
-			.disposed(by: disposeBag)
+//
+//		output.loginValidation
+//			.drive(with: self) { owner, valid in
+//				owner.signInButton.isEnabled = valid
+//			}
+//			.disposed(by: disposeBag)
 
 		output.loginSuccessTrigger
 			.drive(with: self) { owner, _ in
-				owner.changeRootView(to: CategoryViewController(), isNav: true)
+				owner.changeRootView(to: CustomTabBarController(), isNav: true)
+			}
+			.disposed(by: disposeBag)
+
+		output.errorMessage
+			.drive(with: self) { owner, message in
+				owner.view.makeToast(message, position: .center)
 			}
 			.disposed(by: disposeBag)
 
 	}
-
-
+	
 	func configure() {
 		signUpButton.setTitle("회원이 아니십니까?", for: .normal)
 		signUpButton.setTitleColor(Color.black, for: .normal)
 	}
 
-	func configureLayout() {
+	override func configureLayout() {
 		view.addSubview(emailTextField)
 		view.addSubview(passwordTextField)
 		view.addSubview(signInButton)
@@ -92,6 +92,9 @@ final class SignInViewController: BaseViewController {
 			make.top.equalTo(signInButton.snp.bottom).offset(30)
 			make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
 		}
+
+		emailTextField.keyboardType = .emailAddress
+		passwordTextField.isSecureTextEntry = true
 	}
 
 

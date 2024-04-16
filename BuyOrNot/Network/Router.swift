@@ -11,14 +11,14 @@ import Alamofire
 enum Router {
 	case tokenRefresh
 
-	case login(query: LoginQuery)
-	case validationEmail(query: ValidationEmailQuery)
-	case join(query: JoinQuery)
+	case login(query: Encodable)
+	case validationEmail(query: Encodable)
+	case join(query: Encodable)
 
-	case imagePosts(query: ImagePostQuery)
-//    case withdraw
-//    case fetchPost
-//    case uploadPost
+	case uploadImage(query: Encodable)
+	case uploadPost(query: Encodable)
+
+	case lookImage(endPoint: String)
 
 }
 
@@ -30,13 +30,15 @@ extension Router: TargetType {
 
 	var method: Alamofire.HTTPMethod {
 		switch self {
-		case .tokenRefresh:
+		case .tokenRefresh,
+				.lookImage:
 			return .get
 
 		case .login,
 			 .validationEmail,
 			 .join,
-			 .imagePosts:
+			 .uploadImage,
+			 .uploadPost:
 			return .post
 
 		}
@@ -52,8 +54,12 @@ extension Router: TargetType {
 			return "/v1/validation/email"
 		case .join:
 			return "/v1/users/join"
-		case .imagePosts:
+		case .uploadImage:
 			return "/v1/posts/files"
+		case .uploadPost:
+			return "/v1/posts"
+		case .lookImage(let endPoint):
+			return "/v1/\(endPoint)"
 		}
 	}
 
@@ -73,10 +79,17 @@ extension Router: TargetType {
 				HTTPHeader.contentType.rawValue: HTTPHeader.json.rawValue,
 				HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue
 			]
-		case .imagePosts:
+			
+		case .uploadImage,
+				.uploadPost:
 			return [HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
 					HTTPHeader.contentType.rawValue: HTTPHeader.multipart.rawValue,
 					HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
+
+		case .lookImage:
+			return [
+				HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
+				HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
 
 		}
 	}
@@ -91,19 +104,18 @@ extension Router: TargetType {
 
 	var body: Data? {
 		switch self {
-		case .tokenRefresh:
+		case .tokenRefresh,
+				.uploadImage,
+				.lookImage
+			:
 			return nil
-		case .login(let query):
+		case .login(let query),
+			.validationEmail(let query),
+			.join(let query),
+			.uploadPost(let query):
 			let encoder = JSONEncoder()
 			return try? encoder.encode(query)
-		case .validationEmail(let query):
-			let encoder = JSONEncoder()
-			return try? encoder.encode(query)
-		case .join(let query):
-			let encoder = JSONEncoder()
-			return try? encoder.encode(query)
-		case .imagePosts(let query):
-			return nil
+
 		}
 	}
 
@@ -115,3 +127,12 @@ extension Router: TargetType {
 
 
 
+extension Router {
+	func asURL() throws -> URL {
+		let urlString = baseURL + path
+		guard let url = URL(string: urlString) else {
+			throw AFError.invalidURL(url: urlString)
+		}
+		return url
+	}
+}
