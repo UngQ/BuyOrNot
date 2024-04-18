@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import AVFoundation
-import PhotosUI
+import IQKeyboardManagerSwift
 
 
 class CustomTabBarController: UITabBarController {
@@ -17,9 +17,12 @@ class CustomTabBarController: UITabBarController {
 	let disposeBag = DisposeBag()
 	var category = ""
 
-	private let firstVC = UINavigationController(rootViewController: CategoryViewController())
-	private let secondVC = UINavigationController(rootViewController: SignInViewController())
-	private let thirdVC = UINavigationController(rootViewController: SignUpViewController())
+//	private let firstVC = UINavigationController(rootViewController: TotalPostViewController())
+//	private let secondVC = UINavigationController(rootViewController: SignInViewController())
+//	private let thirdVC = UINavigationController(rootViewController: SignUpViewController())
+
+	private let firstVC = UINavigationController(rootViewController: TotalPostViewController())
+	private let thirdVC = SignUpViewController()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -30,7 +33,6 @@ class CustomTabBarController: UITabBarController {
 		firstVC.tabBarItem.title = ""
 		firstVC.tabBarItem.image = UIImage(systemName: "house.fill")
 
-		secondVC.tabBarItem.title = ""
 
 		thirdVC.tabBarItem.title = ""
 		thirdVC.tabBarItem.image = UIImage(systemName: "gearshape.fill")
@@ -85,11 +87,6 @@ class CustomTabBarController: UITabBarController {
 		actionSheet.addAction(shoesAction)
 		actionSheet.addAction(accAction)
 		actionSheet.addAction(cancelAction)
-
-		//		if let popoverController = actionSheet.popoverPresentationController {
-		//			popoverController.sourceView = sender
-		//			popoverController.sourceRect = sender.bounds
-		//		}
 
 		self.present(actionSheet, animated: true, completion: nil)
 	}
@@ -202,8 +199,8 @@ extension CustomTabBarController: UIImagePickerControllerDelegate, UINavigationC
 			NetworkManager.performRequest(route: .uploadImage(query: ImagePostQuery(file: uploadImage)), decodingType: ImageModel.self)
 				.subscribe(with: self, onSuccess: { owner, image in
 					let vc = UploadPostViewController()
-					vc.category = owner.category
-					vc.image = image.files
+					vc.viewModel.category = owner.category
+					vc.viewModel.image = image.files
 					print(image.files)
 					owner.navigationController?.pushViewController(vc, animated: true)
 				})

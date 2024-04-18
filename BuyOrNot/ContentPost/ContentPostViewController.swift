@@ -1,13 +1,13 @@
 //
-//  CategoryViewController.swift
+//  ContentPostViewController.swift
 //  BuyOrNot
 //
-//  Created by ungQ on 4/14/24.
+//  Created by ungQ on 4/18/24.
 //
 
 import UIKit
 
-class CategoryViewController: UIViewController {
+class ContentPostViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -23,11 +23,34 @@ protocol TargetType: URLRequestConvertible {
 extension TargetType {
 
 	func asURLRequest() throws -> URLRequest {
-		let url = try baseURL.asURL()
-		var urlRequest = try URLRequest(url: url.appendingPathComponent(path), method: method)
+//		let url = try baseURL.asURL()
+//		var urlRequest = try URLRequest(url: url.appendingPathComponent(path), method: method)
+//		urlRequest.allHTTPHeaderFields = header
+//		urlRequest.httpBody = parameters?.data(using: .utf8)
+//		urlRequest.httpBody = body
+//
+//		return urlRequest
+		guard let base = URL(string: baseURL) else {
+			throw URLError(.badURL)
+		}
+		let url = base.appendingPathComponent(path)
+
+		var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+		components?.queryItems = queryItems
+
+		guard let finalURL = components?.url else {
+			throw URLError(.badURL)
+		}
+
+		var urlRequest = URLRequest(url: finalURL)
+		urlRequest.httpMethod = method.rawValue
 		urlRequest.allHTTPHeaderFields = header
-		urlRequest.httpBody = parameters?.data(using: .utf8)
-		urlRequest.httpBody = body
+		if let parameters = parameters {
+			urlRequest.httpBody = parameters.data(using: .utf8)
+		} else {
+			urlRequest.httpBody = body
+		}
+
 		return urlRequest
 	}
 

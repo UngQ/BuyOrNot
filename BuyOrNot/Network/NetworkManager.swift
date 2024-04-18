@@ -9,6 +9,7 @@ import Foundation
 import Alamofire
 import RxSwift
 import RxCocoa
+import Kingfisher
 
 struct AccessTokenModel: Decodable {
 	let accessToken: String
@@ -29,8 +30,35 @@ struct JoinModel: Decodable {
 struct ImageModel: Decodable {
 	let files: [String]
 }
+struct PostModel: Decodable {
+	let post_id: String?
+	let product_id: String?
+	let title: String?
+	let content: String?
+	let content1: String?
+//	let creator
+	let files: [String]?
+//	let likes: [String]
+//	let likes2: [String]
+//	let hashTags: [String]
+//	let comments: [String]
+}
+
+struct PostsModel: Decodable {
+	let data: [PostModel]
+	let next_cursor: String
+}
 
 struct NetworkManager {
+
+	//KingFisher 사용시 활용
+	static let imageDownloadRequest = AnyModifier { request in
+		var requestBody = request
+		requestBody.setValue(UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "", forHTTPHeaderField: HTTPHeader.authorization.rawValue)
+		requestBody.setValue(APIKey.sesacKey.rawValue, forHTTPHeaderField: HTTPHeader.sesacKey.rawValue)
+
+		return requestBody
+	}
 
 	static func performRequest<T: Decodable>(route: Router, decodingType: T.Type) -> Single<T> {
 		return Single<T>.create { single in
@@ -54,16 +82,6 @@ struct NetworkManager {
 							single(.failure(error))
 						}
 					}
-				} else if case Router.lookImage(let endPoint) = route {
-					AF.request(urlRequest)
-						.responseData { response in
-							switch response.result {
-							case .success(let data):
-								single(.success(data as! T))
-							case .failure(let error):
-								single(.failure(error))
-							}
-						}
 				} else {
 					AF.request(urlRequest)
 						.validate(statusCode: 200..<300)
@@ -71,8 +89,10 @@ struct NetworkManager {
 							switch response.result {
 							case .success(let result):
 								single(.success(result))
+								print(response.response?.statusCode)
 							case .failure(let error):
 								single(.failure(error))
+								print(response.response?.statusCode)
 							}
 						}
 				}
@@ -168,6 +188,30 @@ struct NetworkManager {
 
 	}
 
+
+	static func uploadPost(query: PostQuery) -> Single<PostModel> {
+		return Single<PostModel>.create { single in
+			do {
+				let urlRequest = try Router.uploadPost(query: query).asURLRequest()
+
+				AF.request(urlRequest)
+					.validate(statusCode: 200..<300)
+					.responseDecodable(of: PostModel.self) { response in
+						switch response.result {
+						case .success(let joinModel):
+							single(.success(joinModel))
+						case .failure(let error):
+							single(.failure(error))
+						}
+					}
+			} catch {
+				single(.failure(error))
+			}
+
+			return Disposables.create()
+		}
+
+	}
 	static func uploadImage(query: ImagePostQuery) -> Single<ImageModel> {
 		return Single<ImageModel>.create { single in
 			do {
@@ -220,8 +264,11 @@ struct NetworkManager {
 						single(.success(()))
 					case .failure(let error):
 						print("흠")
+						print(response.response?.statusCode)
 						if let code = response.response?.statusCode, code == 418 {
 							print("리프레시 토큰 만료")
+							NotificationCenter.default.post(name: .authenticationFailed, object: nil)
+						} else {
 							NotificationCenter.default.post(name: .authenticationFailed, object: nil)
 						}
 						single(.failure(error))

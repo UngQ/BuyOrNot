@@ -41,8 +41,8 @@
 		A55990E22BCC1C3B0096B98A /* LoginQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990E12BCC1C3B0096B98A /* LoginQuery.swift */; };
 		A55990E42BCC1C530096B98A /* ValidationEmailQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990E32BCC1C530096B98A /* ValidationEmailQuery.swift */; };
 		A55990E62BCC1C5E0096B98A /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990E52BCC1C5E0096B98A /* NetworkManager.swift */; };
-		A55990EA2BCC1DCE0096B98A /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990E92BCC1DCE0096B98A /* CategoryViewController.swift */; };
-		A55990EC2BCC1DD90096B98A /* CategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990EB2BCC1DD90096B98A /* CategoryViewModel.swift */; };
+		A55990EA2BCC1DCE0096B98A /* TotalPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990E92BCC1DCE0096B98A /* TotalPostViewController.swift */; };
+		A55990EC2BCC1DD90096B98A /* TotalPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990EB2BCC1DD90096B98A /* TotalPostViewModel.swift */; };
 		A55990F12BCC1FE30096B98A /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = A55990F02BCC1FE30096B98A /* .gitignore */; };
 		A55990F32BCC24AA0096B98A /* JoinQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990F22BCC24AA0096B98A /* JoinQuery.swift */; };
 		A55990F72BCC44670096B98A /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990F62BCC44670096B98A /* UserDefaultsKeys.swift */; };
@@ -53,6 +53,11 @@
 		A5A92E972BCD79D7006434C6 /* UploadPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A92E962BCD79D7006434C6 /* UploadPostViewController.swift */; };
 		A5A92E992BCD888A006434C6 /* UploadPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A92E982BCD888A006434C6 /* UploadPostViewModel.swift */; };
 		A5B496672BCE9CC30079A3B1 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B496662BCE9CC30079A3B1 /* LoginModel.swift */; };
+		A5B4966A2BCECE330079A3B1 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5B496692BCECE330079A3B1 /* IQKeyboardManagerSwift */; };
+		A5B496772BD045560079A3B1 /* Tabman in Frameworks */ = {isa = PBXBuildFile; productRef = A5B496762BD045560079A3B1 /* Tabman */; };
+		A5B4967A2BD0463E0079A3B1 /* TabManController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B496792BD0463D0079A3B1 /* TabManController.swift */; };
+		A5B4967C2BD04A500079A3B1 /* TotalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B4967B2BD04A500079A3B1 /* TotalViewController.swift */; };
+		A5B4967F2BD04F330079A3B1 /* ContentPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B4967E2BD04F330079A3B1 /* ContentPostViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -86,8 +91,8 @@
 		A55990E12BCC1C3B0096B98A /* LoginQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginQuery.swift; sourceTree = "<group>"; };
 		A55990E32BCC1C530096B98A /* ValidationEmailQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationEmailQuery.swift; sourceTree = "<group>"; };
 		A55990E52BCC1C5E0096B98A /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
-		A55990E92BCC1DCE0096B98A /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
-		A55990EB2BCC1DD90096B98A /* CategoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewModel.swift; sourceTree = "<group>"; };
+		A55990E92BCC1DCE0096B98A /* TotalPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalPostViewController.swift; sourceTree = "<group>"; };
+		A55990EB2BCC1DD90096B98A /* TotalPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalPostViewModel.swift; sourceTree = "<group>"; };
 		A55990F02BCC1FE30096B98A /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		A55990F22BCC24AA0096B98A /* JoinQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinQuery.swift; sourceTree = "<group>"; };
 		A55990F62BCC44670096B98A /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
@@ -98,6 +103,9 @@
 		A5A92E962BCD79D7006434C6 /* UploadPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPostViewController.swift; sourceTree = "<group>"; };
 		A5A92E982BCD888A006434C6 /* UploadPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPostViewModel.swift; sourceTree = "<group>"; };
 		A5B496662BCE9CC30079A3B1 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
+		A5B496792BD0463D0079A3B1 /* TabManController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabManController.swift; sourceTree = "<group>"; };
+		A5B4967B2BD04A500079A3B1 /* TotalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalViewController.swift; sourceTree = "<group>"; };
+		A5B4967E2BD04F330079A3B1 /* ContentPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPostViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +113,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5B4966A2BCECE330079A3B1 /* IQKeyboardManagerSwift in Frameworks */,
+				A5B496772BD045560079A3B1 /* Tabman in Frameworks */,
 				A55990B82BCC012F0096B98A /* Toast in Frameworks */,
 				A55990B02BCC01150096B98A /* RxCocoa in Frameworks */,
 				A55990AD2BCC00C90096B98A /* Kingfisher in Frameworks */,
@@ -139,8 +149,9 @@
 				A55990D82BCC1BD50096B98A /* Network */,
 				A55990A22BCBFF9C0096B98A /* SignIn */,
 				A55990A32BCBFFB50096B98A /* SignUp */,
-				A55990E72BCC1D460096B98A /* Category */,
 				A55990F82BCC49FF0096B98A /* Tabbar */,
+				A55990E72BCC1D460096B98A /* TotalPost */,
+				A5B4967D2BD04F160079A3B1 /* ContentPost */,
 				A5A92E952BCD79B3006434C6 /* UploadPost */,
 				A55990C72BCC1AA00096B98A /* Protocol */,
 				A55990C42BCC1A870096B98A /* Extension */,
@@ -155,6 +166,7 @@
 				A55990992BCBFED20096B98A /* LaunchScreen.storyboard */,
 				A559909C2BCBFED20096B98A /* Info.plist */,
 				A55990F02BCC1FE30096B98A /* .gitignore */,
+				A5B496782BD045720079A3B1 /* useless */,
 			);
 			path = BuyOrNot;
 			sourceTree = "<group>";
@@ -239,13 +251,13 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
-		A55990E72BCC1D460096B98A /* Category */ = {
+		A55990E72BCC1D460096B98A /* TotalPost */ = {
 			isa = PBXGroup;
 			children = (
-				A55990E92BCC1DCE0096B98A /* CategoryViewController.swift */,
-				A55990EB2BCC1DD90096B98A /* CategoryViewModel.swift */,
+				A55990E92BCC1DCE0096B98A /* TotalPostViewController.swift */,
+				A55990EB2BCC1DD90096B98A /* TotalPostViewModel.swift */,
 			);
-			path = Category;
+			path = TotalPost;
 			sourceTree = "<group>";
 		};
 		A55990F82BCC49FF0096B98A /* Tabbar */ = {
@@ -285,6 +297,23 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		A5B496782BD045720079A3B1 /* useless */ = {
+			isa = PBXGroup;
+			children = (
+				A5B4967B2BD04A500079A3B1 /* TotalViewController.swift */,
+				A5B496792BD0463D0079A3B1 /* TabManController.swift */,
+			);
+			path = useless;
+			sourceTree = "<group>";
+		};
+		A5B4967D2BD04F160079A3B1 /* ContentPost */ = {
+			isa = PBXGroup;
+			children = (
+				A5B4967E2BD04F330079A3B1 /* ContentPostViewController.swift */,
+			);
+			path = ContentPost;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -308,6 +337,8 @@
 				A55990B12BCC01150096B98A /* RxSwift */,
 				A55990B42BCC01290096B98A /* SnapKit */,
 				A55990B72BCC012F0096B98A /* Toast */,
+				A5B496692BCECE330079A3B1 /* IQKeyboardManagerSwift */,
+				A5B496762BD045560079A3B1 /* Tabman */,
 			);
 			productName = BuyOrNot;
 			productReference = A559908B2BCBFED00096B98A /* BuyOrNot.app */;
@@ -343,6 +374,8 @@
 				A55990AE2BCC01150096B98A /* XCRemoteSwiftPackageReference "RxSwift" */,
 				A55990B32BCC01290096B98A /* XCRemoteSwiftPackageReference "SnapKit" */,
 				A55990B62BCC012F0096B98A /* XCRemoteSwiftPackageReference "Toast-Swift" */,
+				A5B496682BCECE330079A3B1 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+				A5B496752BD045560079A3B1 /* XCRemoteSwiftPackageReference "Tabman" */,
 			);
 			productRefGroup = A559908C2BCBFED00096B98A /* Products */;
 			projectDirPath = "";
@@ -375,6 +408,7 @@
 				A55990DC2BCC1BF60096B98A /* TargetType.swift in Sources */,
 				A55990DE2BCC1C020096B98A /* APIKey.swift in Sources */,
 				A55990C02BCC01F80096B98A /* SignTextField.swift in Sources */,
+				A5B4967F2BD04F330079A3B1 /* ContentPostViewController.swift in Sources */,
 				A55990D32BCC1B9E0096B98A /* PasswordViewModel.swift in Sources */,
 				A55990F32BCC24AA0096B98A /* JoinQuery.swift in Sources */,
 				A55990D72BCC1BC60096B98A /* NicknameViewModel.swift in Sources */,
@@ -384,7 +418,7 @@
 				A55990D52BCC1BB60096B98A /* NicknameViewController.swift in Sources */,
 				A55990FA2BCC4A190096B98A /* CustomTabbarController.swift in Sources */,
 				A55990E02BCC1C200096B98A /* HTTPHeader.swift in Sources */,
-				A55990EA2BCC1DCE0096B98A /* CategoryViewController.swift in Sources */,
+				A55990EA2BCC1DCE0096B98A /* TotalPostViewController.swift in Sources */,
 				A5B496672BCE9CC30079A3B1 /* LoginModel.swift in Sources */,
 				A5A92E932BCD7632006434C6 /* PostQuery.swift in Sources */,
 				A55990F72BCC44670096B98A /* UserDefaultsKeys.swift in Sources */,
@@ -392,9 +426,11 @@
 				A55990932BCBFED00096B98A /* ViewController.swift in Sources */,
 				A5A92E972BCD79D7006434C6 /* UploadPostViewController.swift in Sources */,
 				A55990BE2BCC01C20096B98A /* Color.swift in Sources */,
+				A5B4967C2BD04A500079A3B1 /* TotalViewController.swift in Sources */,
 				A55990BB2BCC015B0096B98A /* PointButton.swift in Sources */,
 				A55990CF2BCC1B6D0096B98A /* SignUpViewModel.swift in Sources */,
 				A5A92E912BCD5730006434C6 /* Notification.Name+Ex.swift in Sources */,
+				A5B4967A2BD0463E0079A3B1 /* TabManController.swift in Sources */,
 				A55990C32BCC1A450096B98A /* BaseViewController.swift in Sources */,
 				A559908F2BCBFED00096B98A /* AppDelegate.swift in Sources */,
 				A55990CB2BCC1AC30096B98A /* ViewModelType.swift in Sources */,
@@ -406,7 +442,7 @@
 				A55990E62BCC1C5E0096B98A /* NetworkManager.swift in Sources */,
 				A55990FC2BCCABD50096B98A /* ImagePostQuery.swift in Sources */,
 				A55990CD2BCC1B460096B98A /* SignUpViewController.swift in Sources */,
-				A55990EC2BCC1DD90096B98A /* CategoryViewModel.swift in Sources */,
+				A55990EC2BCC1DD90096B98A /* TotalPostViewModel.swift in Sources */,
 				A55990912BCBFED00096B98A /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -682,6 +718,22 @@
 				minimumVersion = 5.1.1;
 			};
 		};
+		A5B496682BCECE330079A3B1 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.2;
+			};
+		};
+		A5B496752BD045560079A3B1 /* XCRemoteSwiftPackageReference "Tabman" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/uias/Tabman.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -714,6 +766,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A55990B62BCC012F0096B98A /* XCRemoteSwiftPackageReference "Toast-Swift" */;
 			productName = Toast;
+		};
+		A5B496692BCECE330079A3B1 /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A5B496682BCECE330079A3B1 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
+		A5B496762BD045560079A3B1 /* Tabman */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A5B496752BD045560079A3B1 /* XCRemoteSwiftPackageReference "Tabman" */;
+			productName = Tabman;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
