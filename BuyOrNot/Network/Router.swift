@@ -20,7 +20,7 @@ enum Router {
 
 	case lookPosts(query: PostQueryItems)
 
-	case likePost(id: String, query: Encodable)
+	case likePost(id: String, query: Encodable, like: String)
 }
 
 extension Router: TargetType {
@@ -61,8 +61,8 @@ extension Router: TargetType {
 		case .uploadPost,
 				.lookPosts:
 			return "/v1/posts"
-		case .likePost(let id, _):
-			return "/v1/posts/\(id)/like"
+		case .likePost(let id, _, let like):
+			return "/v1/posts/\(id)/\(like)"
 		}
 	}
 
@@ -129,7 +129,7 @@ extension Router: TargetType {
 			.validationEmail(let query),
 			.join(let query),
 			.uploadPost(let query),
-			.likePost(_, let query):
+			.likePost(_, let query, _):
 			let encoder = JSONEncoder()
 			return try? encoder.encode(query)
 

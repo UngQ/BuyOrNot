@@ -24,10 +24,14 @@ class PostTableViewCell: UITableViewCell {
 	let captionLabel = UILabel()
 	let timeLabel = UILabel()
 
+	var leftTap = {}
+	var rightTap = {}
+
 	let likeDislikeProgressView = UIProgressView(progressViewStyle: .default)
 
 	override func prepareForReuse() {
 		disposeBag = DisposeBag()
+		
 	}
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -62,8 +66,9 @@ class PostTableViewCell: UITableViewCell {
 		postImageView.contentMode = .scaleAspectFill
 		postImageView.clipsToBounds = true
 
-		likeButton.setImage(UIImage(systemName: "hand.thumbsup"), for: .normal)
-		dislikeButton.setImage(UIImage(systemName: "hand.thumbsdown"), for: .normal)
+
+		likeButton.setImage(UIImage(systemName: "hand.thumbsup.circle"), for: .normal)
+		dislikeButton.setImage(UIImage(systemName: "hand.thumbsdown.circle"), for: .normal)
 
 		bookmarkButton.setImage(UIImage(systemName: "message"), for: .normal)
 
@@ -75,10 +80,16 @@ class PostTableViewCell: UITableViewCell {
 		timeLabel.textColor = .gray
 
 
+		likeDislikeProgressView.progressTintColor = .systemBlue
+		likeDislikeProgressView.trackTintColor = .systemRed
+		likeDislikeProgressView.layer.cornerRadius = 12
+		likeDislikeProgressView.layer.masksToBounds = true
+
 		postImageView.isUserInteractionEnabled = true
 		let imageTapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTap))
 		imageTapGesture.numberOfTapsRequired = 2
 		postImageView.addGestureRecognizer(imageTapGesture)
+
 
 
 	}
@@ -89,9 +100,11 @@ class PostTableViewCell: UITableViewCell {
 		let width = gesture.view?.bounds.width ?? 0
 		if touchPoint.x < width / 2 {
 			print("Left half tapped")
+			leftTap()
 
 		} else if touchPoint.x > width / 2 {
 			print("Right half tapped")
+			rightTap()
 
 		}
 	}
@@ -114,31 +127,33 @@ class PostTableViewCell: UITableViewCell {
 			make.height.equalTo(postImageView.snp.width)
 		}
 
-		likeDislikeProgressView.snp.makeConstraints { make in
-			make.top.equalTo(postImageView.snp.bottom).offset(10)
-			make.left.right.equalToSuperview().inset(10)
-			make.height.equalTo(20)
-//			make.bottom.equalToSuperview().offset(-10).priority(750)
-		}
+
 
 		likeButton.snp.makeConstraints { make in
 
-			make.top.equalTo(likeDislikeProgressView.snp.bottom).offset(10)
+			make.top.equalTo(postImageView.snp.bottom).offset(10)
 			make.centerX.equalToSuperview().offset(-20)
 			make.size.equalTo(25)
 		}
 
 		dislikeButton.snp.makeConstraints { make in
-			make.top.equalTo(likeDislikeProgressView.snp.bottom).offset(10)
+			make.top.equalTo(postImageView.snp.bottom).offset(10)
 			make.centerX.equalToSuperview().offset(20)
 			make.size.equalTo(25)
 		}
 
 
 		bookmarkButton.snp.makeConstraints { make in
-			make.top.equalTo(likeDislikeProgressView.snp.bottom).offset(10)
+			make.top.equalTo(postImageView.snp.bottom).offset(10)
 			make.right.equalToSuperview().offset(-10)
 			make.size.equalTo(25)
+		}
+
+		likeDislikeProgressView.snp.makeConstraints { make in
+			make.bottom.equalTo(postImageView.snp.bottom).offset(-5)
+			make.left.right.equalToSuperview().inset(10)
+			make.height.equalTo(32)
+//			make.bottom.equalToSuperview().offset(-10).priority(750)
 		}
 
 		likesLabel.snp.makeConstraints { make in

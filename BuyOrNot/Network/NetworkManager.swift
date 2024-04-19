@@ -39,7 +39,7 @@ struct PostModel: Decodable {
 	let creator: CreatorModel
 	let files: [String]
 	var likes: [String]
-	let likes2: [String]
+	var likes2: [String]
 	let hashTags: [String]
 	let comments: [String]
 }

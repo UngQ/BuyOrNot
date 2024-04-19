@@ -39,8 +39,11 @@ class TotalPostViewController: BaseViewController {
 
 override func bind() {
 	let likeButtonTapped = PublishSubject<Int>()
+	let disLikeButtonTapped = PublishSubject<Int>()
 
-	let input = TotalPostViewModel.Input(likeButtonTap: likeButtonTapped.asObservable())
+	let input = TotalPostViewModel.Input(
+		likeButtonTap: likeButtonTapped.asObservable(),
+										 disLikeButtonTap: disLikeButtonTapped.asObservable())
 
 	let output = viewModel.transform(input: input)
 
@@ -49,10 +52,13 @@ override func bind() {
 		.drive(tableView.rx.items(cellIdentifier: PostTableViewCell.id, cellType: PostTableViewCell.self)) {
 			row, element, cell in
 			let likes = element.likes
+			let disLikes = element.likes2
 			guard let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) else {
 				return
 			}
 			var myLike = likes.contains(myId)
+			var myDisLike = disLikes.contains(myId)
+
 			cell.selectionStyle = .none
 
 
@@ -79,14 +85,18 @@ override func bind() {
 			cell.usernameLabel.text = element.creator.nick
 
 			//좋아요/싫어요 진행바
-//			let totalVotes = max(post.likes + post.dislikes, 1) // Avoid division by zero
-//			  let likeRatio = Float(post.likes) / Float(totalVotes)
-			
+			let totalVotes = max(element.likes.count + element.likes2.count, 1) // Avoid division by zero
+			let likeRatio = Float(element.likes.count) / Float(totalVotes)
+
 
 			if element.likes.count == 0 && element.likes2.count == 0 {
+				cell.likeDislikeProgressView.trackTintColor = .lightGray
 				cell.likeDislikeProgressView.setProgress(0, animated: true)
+
 			} else {
-				cell.likeDislikeProgressView.setProgress(0.7, animated: true)
+				cell.likeDislikeProgressView.trackTintColor = .systemRed
+				cell.likeDislikeProgressView.setProgress(likeRatio, animated: true)
+				
 			}
 
 
@@ -118,12 +128,32 @@ override func bind() {
 				cell.likeButton.setImage(UIImage(systemName: "hand.thumbsup"), for: .normal)
 			}
 
+			if myDisLike {
+				cell.dislikeButton.setImage(UIImage(systemName: "hand.thumbsdown.fill"), for: .normal)
+			} else {
+				cell.dislikeButton.setImage(UIImage(systemName: "hand.thumbsdown"), for: .normal)
+			}
 
+			cell.leftTap = {
+				likeButtonTapped.onNext(row)
+			}
+			cell.rightTap = {
+				disLikeButtonTapped.onNext(row)
+			}
 
 			cell.likeButton.rx.tap
 				.map { row }
 				.bind(to: likeButtonTapped)
 				.disposed(by: cell.disposeBag)
+
+
+
+			cell.dislikeButton.rx.tap
+				.map { row }
+				.bind(to: disLikeButtonTapped)
+				.disposed(by: cell.disposeBag)
+
+
 
 //			cell.likeButton.rx.tap
 //				.bind(with: self) { owner, _ in
@@ -141,6 +171,11 @@ override func bind() {
 
 		.disposed(by: disposeBag)
 
+	output.cautionMessage
+		.drive(with: self) { owner, message in
+			owner.view.makeToast(message, position: .center)
+		}
+		.disposed(by: disposeBag)
 
 	}
 
