@@ -63,6 +63,7 @@ final class SignInViewModel: ViewModelType {
 					 }
 			.subscribe(with: self, onNext: { owner, loginModel in
 				print("통신성공")
+				UserDefaults.standard.set(loginModel.user_id, forKey: UserDefaultsKey.userId.key)
 				UserDefaults.standard.set(loginModel.accessToken, forKey: UserDefaultsKey.accessToken.key)
 				UserDefaults.standard.set(loginModel.refreshToken, forKey: UserDefaultsKey.refreshToken.key)
 				loginSuccessTrigger.accept(())

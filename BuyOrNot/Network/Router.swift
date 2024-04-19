@@ -18,7 +18,9 @@ enum Router {
 	case uploadImage(query: Encodable)
 	case uploadPost(query: Encodable)
 
-	case posts(query: PostQueryItems)
+	case lookPosts(query: PostQueryItems)
+
+	case likePost(id: String, query: Encodable)
 }
 
 extension Router: TargetType {
@@ -30,14 +32,15 @@ extension Router: TargetType {
 	var method: Alamofire.HTTPMethod {
 		switch self {
 		case .tokenRefresh,
-				.posts:
+				.lookPosts:
 			return .get
 
 		case .login,
 			 .validationEmail,
 			 .join,
 			 .uploadImage,
-			 .uploadPost:
+			 .uploadPost,
+			 .likePost:
 			return .post
 
 		}
@@ -56,8 +59,10 @@ extension Router: TargetType {
 		case .uploadImage:
 			return "/v1/posts/files"
 		case .uploadPost,
-				.posts:
+				.lookPosts:
 			return "/v1/posts"
+		case .likePost(let id, _):
+			return "/v1/posts/\(id)/like"
 		}
 	}
 
@@ -83,12 +88,13 @@ extension Router: TargetType {
 					HTTPHeader.contentType.rawValue: HTTPHeader.multipart.rawValue,
 					HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
 
-			case .uploadPost:
+			case .uploadPost,
+				.likePost:
 			return [HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
 					HTTPHeader.contentType.rawValue: HTTPHeader.json.rawValue,
 					HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
 
-		case .posts:
+		case .lookPosts:
 			return [
 				HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
 				HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
@@ -102,7 +108,7 @@ extension Router: TargetType {
 
 	var queryItems: [URLQueryItem]? {
 		switch self {
-		case .posts(let query):
+		case .lookPosts(let query):
 				return [
 					URLQueryItem(name: "next", value: query.next),
 					URLQueryItem(name: "limit", value: query.limit),
@@ -117,12 +123,13 @@ extension Router: TargetType {
 		switch self {
 		case .tokenRefresh,
 				.uploadImage,
-				.posts:
+				.lookPosts:
 			return nil
 		case .login(let query),
 			.validationEmail(let query),
 			.join(let query),
-			.uploadPost(let query):
+			.uploadPost(let query),
+			.likePost(_, let query):
 			let encoder = JSONEncoder()
 			return try? encoder.encode(query)
 

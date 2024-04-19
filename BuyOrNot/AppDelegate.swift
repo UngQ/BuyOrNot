@@ -44,6 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 				let alert = UIAlertController(title: "로그인 정보 만료", message: "다시 로그인 해주세요", preferredStyle: .alert)
 				alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { _ in
 					self.changeRootViewToLogin()
+
+
 				}))
 				rootVC.present(alert, animated: true)
 			}

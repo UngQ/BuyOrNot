@@ -16,7 +16,7 @@ class TotalPostViewController: BaseViewController {
 
 	let viewModel = TotalPostViewModel()
 
-	
+	private var currentCategory = "전체"
 	let tableView = UITableView()
 	
 
@@ -31,69 +31,136 @@ class TotalPostViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-		navigationItem.title = "Asdf"
 
-    }
+	
+	 }
 
-	override func bind() {
+	
+
+override func bind() {
+	let likeButtonTapped = PublishSubject<Int>()
+
+	let input = TotalPostViewModel.Input(likeButtonTap: likeButtonTapped.asObservable())
+
+	let output = viewModel.transform(input: input)
 
 
-		let input = TotalPostViewModel.Input()
+	output.data
+		.drive(tableView.rx.items(cellIdentifier: PostTableViewCell.id, cellType: PostTableViewCell.self)) {
+			row, element, cell in
+			let likes = element.likes
+			guard let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) else {
+				return
+			}
+			var myLike = likes.contains(myId)
+			cell.selectionStyle = .none
 
-		let output = viewModel.transform(input: input)
 
-		output.data
-			.drive(tableView.rx.items(cellIdentifier: "cell", cellType: UITableViewCell.self)) {
-				row, element, cell in
-				cell.textLabel?.text = "\(element.title) / \(element.content1)"
+			//셀 프로필 이미지
+			let profileImage = "\(APIKey.baseURL.rawValue)/v1/\(element.creator.profileImage)"
+			cell.profileImageView.kf.setImage(with: URL(string: profileImage), options: [.requestModifier(NetworkManager.imageDownloadRequest)], completionHandler: { response in
+				switch response {
+				case .success(let data):
+					DispatchQueue.main.async {
+						cell.profileImageView.image = data.image
 
-				cell.imageView?.image = UIImage(systemName: "pencil")
-
-				guard let test = element.files, test != [""] else { return }
-				let image = "\(APIKey.baseURL.rawValue)/v1/\(test[0])"
-
-				cell.imageView?.kf.setImage(with: URL(string: image), options: [.requestModifier(NetworkManager.imageDownloadRequest)], completionHandler: { response in
-					switch response {
-					case .success(let data):
-						DispatchQueue.main.async {
-							cell.imageView?.image = data.image
-
-							cell.layoutSubviews() // Refresh cell layout if needed
-						}
-					case .failure(let error):
-						print("Error setting image: \(error)")
-						DispatchQueue.main.async {
-							cell.imageView?.image = UIImage(systemName: "exclamationmark.triangle") // Fallback image in case of error
-						}
+						cell.layoutSubviews() // Refresh cell layout if needed
+					}
+				case .failure(let error):
+					print("Error setting image: \(error)")
+					DispatchQueue.main.async {
+						cell.imageView?.image = UIImage(systemName: "exclamationmark.triangle") // Fallback image in case of error
 					}
 				}
-				)
-
-//				KingfisherManager.shared.retrieveImage(with: URL(string: image)!, options: [.requestModifier(self.imageDownloadRequest)], completionHandler: { result in
-//
-//				})
-
-
 			}
-			.disposed(by: disposeBag)
+			)
 
-		tableView.rx.itemSelected
-			.bind(with: self) { owner, indexPath in
-				owner.navigationController?.pushViewController(TotalPostViewController(), animated: true)
+			//셀 작성자 이름
+			cell.usernameLabel.text = element.creator.nick
+
+			//좋아요/싫어요 진행바
+//			let totalVotes = max(post.likes + post.dislikes, 1) // Avoid division by zero
+//			  let likeRatio = Float(post.likes) / Float(totalVotes)
+			
+
+			if element.likes.count == 0 && element.likes2.count == 0 {
+				cell.likeDislikeProgressView.setProgress(0, animated: true)
+			} else {
+				cell.likeDislikeProgressView.setProgress(0.7, animated: true)
 			}
-			.disposed(by: disposeBag)
+
+
+			//셀 포스트 이미지
+			let postImage = "\(APIKey.baseURL.rawValue)/v1/\(element.files[0])"
+			cell.postImageView.kf.setImage(with: URL(string: postImage), options: [.requestModifier(NetworkManager.imageDownloadRequest)], completionHandler: { response in
+				switch response {
+				case .success(let data):
+					DispatchQueue.main.async {
+						cell.postImageView.image = data.image
+
+						cell.layoutSubviews() // Refresh cell layout if needed
+					}
+				case .failure(let error):
+					print("Error setting image: \(error)")
+					DispatchQueue.main.async {
+						cell.imageView?.image = UIImage(systemName: "exclamationmark.triangle") // Fallback image in case of error
+					}
+				}
+			}
+			)
+
+
+
+
+			if myLike {
+				cell.likeButton.setImage(UIImage(systemName: "hand.thumbsup.fill"), for: .normal)
+			} else {
+				cell.likeButton.setImage(UIImage(systemName: "hand.thumbsup"), for: .normal)
+			}
+
+
+
+			cell.likeButton.rx.tap
+				.map { row }
+				.bind(to: likeButtonTapped)
+				.disposed(by: cell.disposeBag)
+
+//			cell.likeButton.rx.tap
+//				.bind(with: self) { owner, _ in
+//					myLike.toggle()
+//					if myLike {
+//						cell.likeButton.setImage(UIImage(systemName: "hand.thumbsup.fill"), for: .normal)
+//					} else {
+//						cell.likeButton.setImage(UIImage(systemName: "hand.thumbsup"), for: .normal)
+//					}
+//				}
+//				.disposed(by: cell.disposeBag)
+
+		
+		}
+
+		.disposed(by: disposeBag)
+
+
 	}
 
 	override func configureLayout() {
 		view.addSubview(tableView)
+//		tableView.estimatedRowHeight = 200
+//		tableView.rowHeight = UITableView.automaticDimension
+
 
 		tableView.snp.makeConstraints { make in
 			make.top.equalTo(view.safeAreaLayoutGuide)
 			make.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
 		}
 
-		tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+		tableView.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.id)
+
+
 	}
+
+
 
 
 }

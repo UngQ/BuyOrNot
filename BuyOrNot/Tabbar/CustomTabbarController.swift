@@ -21,7 +21,7 @@ class CustomTabBarController: UITabBarController {
 //	private let secondVC = UINavigationController(rootViewController: SignInViewController())
 //	private let thirdVC = UINavigationController(rootViewController: SignUpViewController())
 
-	private let firstVC = UINavigationController(rootViewController: TotalPostViewController())
+	private let firstVC = TotalPostViewController()
 	private let thirdVC = SignUpViewController()
 
 	override func viewDidLoad() {
@@ -38,6 +38,32 @@ class CustomTabBarController: UITabBarController {
 		thirdVC.tabBarItem.image = UIImage(systemName: "gearshape.fill")
 
 		viewControllers = [firstVC, UIViewController(), thirdVC]
+
+
+		let menuButton = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: self, action: nil)
+		self.navigationItem.leftBarButtonItem = menuButton
+
+		// Define the menu actions
+		let menuActions = createMenuActions()
+
+		// Attach the menu to the bar button item
+		menuButton.menu = UIMenu(title: "", children: menuActions)
+		menuButton.primaryAction = nil  // Ensure tapping the button opens the menu
+	}
+
+	func createMenuActions() -> [UIMenuElement] {
+		let categories = ["전체", "상의", "하의", "신발", "악세사리"]  // ["All", "Tops", "Bottoms", "Shoes", "Accessories"]
+		return categories.map { category in
+			UIAction(title: category, image: nil, handler: { action in
+				// Handle selection
+				self.handleCategorySelection(category)
+			})
+		}
+	}
+
+	func handleCategorySelection(_ category: String) {
+		print("Selected category: \(category)")
+		// Update your UI or perform filtering based on the selected category
 	}
 
 	func setupMiddleButton() {

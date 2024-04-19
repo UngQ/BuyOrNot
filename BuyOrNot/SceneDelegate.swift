@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
 
-		let rootViewController = CustomTabBarController()
+		let rootViewController = UINavigationController(rootViewController: CustomTabBarController()) 
 
 
 		window?.rootViewController = rootViewController

@@ -56,6 +56,7 @@ class UploadPostViewModel: ViewModelType {
 				return NetworkManager.performRequest(route: .uploadPost(query: query), decodingType: PostModel.self)
 			}
 			.subscribe(with: self, onNext: { owner, result in
+				print(result)
 				isPostCompleted.accept(true)
 			})
 

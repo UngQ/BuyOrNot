@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A5589FAF2BD1F8CC000C1B9D /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5589FAE2BD1F8CC000C1B9D /* PostTableViewCell.swift */; };
+		A5589FE92BD2907A000C1B9D /* LikeQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5589FE82BD2907A000C1B9D /* LikeQuery.swift */; };
 		A559908F2BCBFED00096B98A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A559908E2BCBFED00096B98A /* AppDelegate.swift */; };
 		A55990912BCBFED00096B98A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990902BCBFED00096B98A /* SceneDelegate.swift */; };
 		A55990932BCBFED00096B98A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990922BCBFED00096B98A /* ViewController.swift */; };
@@ -61,6 +63,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A5589FAE2BD1F8CC000C1B9D /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
+		A5589FE82BD2907A000C1B9D /* LikeQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeQuery.swift; sourceTree = "<group>"; };
 		A559908B2BCBFED00096B98A /* BuyOrNot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BuyOrNot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A559908E2BCBFED00096B98A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A55990902BCBFED00096B98A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -127,6 +131,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A5589FAD2BD1F8A2000C1B9D /* TableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				A5589FAE2BD1F8CC000C1B9D /* PostTableViewCell.swift */,
+			);
+			path = TableViewCell;
+			sourceTree = "<group>";
+		};
 		A55990822BCBFED00096B98A = {
 			isa = PBXGroup;
 			children = (
@@ -153,6 +165,7 @@
 				A55990E72BCC1D460096B98A /* TotalPost */,
 				A5B4967D2BD04F160079A3B1 /* ContentPost */,
 				A5A92E952BCD79B3006434C6 /* UploadPost */,
+				A5589FAD2BD1F8A2000C1B9D /* TableViewCell */,
 				A55990C72BCC1AA00096B98A /* Protocol */,
 				A55990C42BCC1A870096B98A /* Extension */,
 				A55990C12BCC1A330096B98A /* Base */,
@@ -276,6 +289,7 @@
 				A55990F22BCC24AA0096B98A /* JoinQuery.swift */,
 				A55990FB2BCCABD50096B98A /* ImagePostQuery.swift */,
 				A5A92E922BCD7632006434C6 /* PostQuery.swift */,
+				A5589FE82BD2907A000C1B9D /* LikeQuery.swift */,
 			);
 			path = Query;
 			sourceTree = "<group>";
@@ -415,6 +429,7 @@
 				A55990C62BCC1A950096B98A /* UIViewController+Ex.swift in Sources */,
 				A55990E42BCC1C530096B98A /* ValidationEmailQuery.swift in Sources */,
 				A55990A52BCC00760096B98A /* SignInViewController.swift in Sources */,
+				A5589FE92BD2907A000C1B9D /* LikeQuery.swift in Sources */,
 				A55990D52BCC1BB60096B98A /* NicknameViewController.swift in Sources */,
 				A55990FA2BCC4A190096B98A /* CustomTabbarController.swift in Sources */,
 				A55990E02BCC1C200096B98A /* HTTPHeader.swift in Sources */,
@@ -432,6 +447,7 @@
 				A5A92E912BCD5730006434C6 /* Notification.Name+Ex.swift in Sources */,
 				A5B4967A2BD0463E0079A3B1 /* TabManController.swift in Sources */,
 				A55990C32BCC1A450096B98A /* BaseViewController.swift in Sources */,
+				A5589FAF2BD1F8CC000C1B9D /* PostTableViewCell.swift in Sources */,
 				A559908F2BCBFED00096B98A /* AppDelegate.swift in Sources */,
 				A55990CB2BCC1AC30096B98A /* ViewModelType.swift in Sources */,
 				A55990E22BCC1C3B0096B98A /* LoginQuery.swift in Sources */,

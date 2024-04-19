@@ -31,17 +31,23 @@ struct ImageModel: Decodable {
 	let files: [String]
 }
 struct PostModel: Decodable {
-	let post_id: String?
-	let product_id: String?
-	let title: String?
-	let content: String?
-	let content1: String?
-//	let creator
-	let files: [String]?
-//	let likes: [String]
-//	let likes2: [String]
-//	let hashTags: [String]
-//	let comments: [String]
+	let post_id: String
+	let product_id: String
+	let title: String
+	let content: String
+	let content1: String
+	let creator: CreatorModel
+	let files: [String]
+	var likes: [String]
+	let likes2: [String]
+	let hashTags: [String]
+	let comments: [String]
+}
+
+struct CreatorModel: Decodable {
+	let user_id: String
+	let nick: String
+	let profileImage: String
 }
 
 struct PostsModel: Decodable {
@@ -86,6 +92,7 @@ struct NetworkManager {
 					AF.request(urlRequest)
 						.validate(statusCode: 200..<300)
 						.responseDecodable(of: T.self) { response in
+							print(response.request?.url)
 							switch response.result {
 							case .success(let result):
 								single(.success(result))
