@@ -19,6 +19,7 @@ enum Router {
 	case uploadPost(query: Encodable)
 
 	case lookPosts(query: PostQueryItems)
+	case hashTag(query: PostQueryItems)
 
 	case likePost(id: String, query: Encodable, like: String)
 }
@@ -32,7 +33,8 @@ extension Router: TargetType {
 	var method: Alamofire.HTTPMethod {
 		switch self {
 		case .tokenRefresh,
-				.lookPosts:
+				.lookPosts,
+				.hashTag:
 			return .get
 
 		case .login,
@@ -63,6 +65,8 @@ extension Router: TargetType {
 			return "/v1/posts"
 		case .likePost(let id, _, let like):
 			return "/v1/posts/\(id)/\(like)"
+		case .hashTag:
+			return "/v1/posts/hashtags"
 		}
 	}
 
@@ -94,7 +98,8 @@ extension Router: TargetType {
 					HTTPHeader.contentType.rawValue: HTTPHeader.json.rawValue,
 					HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
 
-		case .lookPosts:
+		case .lookPosts,
+			.hashTag:
 			return [
 				HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
 				HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
@@ -114,6 +119,15 @@ extension Router: TargetType {
 					URLQueryItem(name: "limit", value: query.limit),
 					URLQueryItem(name: "product_id", value: query.product_id)
 				]
+
+		case .hashTag(let query):
+			return [
+				URLQueryItem(name: "next", value: query.next),
+				URLQueryItem(name: "limit", value: query.limit),
+				URLQueryItem(name: "product_id", value: query.product_id),
+				URLQueryItem(name: "hashTag", value: query.hashTag)
+			]
+
 		default:
 			return nil
 		}
@@ -123,7 +137,8 @@ extension Router: TargetType {
 		switch self {
 		case .tokenRefresh,
 				.uploadImage,
-				.lookPosts:
+				.lookPosts,
+				.hashTag:
 			return nil
 		case .login(let query),
 			.validationEmail(let query),

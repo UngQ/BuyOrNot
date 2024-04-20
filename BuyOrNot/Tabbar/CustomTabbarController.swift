@@ -21,8 +21,20 @@ class CustomTabBarController: UITabBarController {
 //	private let secondVC = UINavigationController(rootViewController: SignInViewController())
 //	private let thirdVC = UINavigationController(rootViewController: SignUpViewController())
 
-	private let firstVC = TotalPostViewController()
+	private let firstVC = UINavigationController(rootViewController: TotalPostViewController())
 	private let thirdVC = SignUpViewController()
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		self.navigationController?.isNavigationBarHidden = true
+	}
+
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+
+		self.navigationController?.isNavigationBarHidden = false
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -40,32 +52,11 @@ class CustomTabBarController: UITabBarController {
 		viewControllers = [firstVC, UIViewController(), thirdVC]
 
 
-		let menuButton = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: self, action: nil)
-		self.navigationItem.leftBarButtonItem = menuButton
 
-		// Define the menu actions
-		let menuActions = createMenuActions()
 
-		// Attach the menu to the bar button item
-		menuButton.menu = UIMenu(title: "", children: menuActions)
-		menuButton.primaryAction = nil  // Ensure tapping the button opens the menu
 	}
 
-	func createMenuActions() -> [UIMenuElement] {
-		let categories = ["전체", "상의", "하의", "신발", "악세사리"]  // ["All", "Tops", "Bottoms", "Shoes", "Accessories"]
-		return categories.map { category in
-			UIAction(title: category, image: nil, handler: { action in
-				// Handle selection
-				self.handleCategorySelection(category)
-			})
-		}
-	}
-
-	func handleCategorySelection(_ category: String) {
-		print("Selected category: \(category)")
-		// Update your UI or perform filtering based on the selected category
-	}
-
+	
 	func setupMiddleButton() {
 		let middleBtn = UIButton(frame: CGRect(x: (self.tabBar.bounds.width / 2) - 35, y: -20, width: 70, height: 70))
 		middleBtn.layer.cornerRadius = 35
@@ -125,6 +116,7 @@ class CustomTabBarController: UITabBarController {
 			vc.allowsEditing = true
 			vc.delegate = self
 
+			vc.modalPresentationStyle = .fullScreen
 			self.present(vc, animated: true)
 		}
 		let camera = UIAlertAction(title: "카메라", style: .default) { action in

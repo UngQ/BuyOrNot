@@ -19,6 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		IQKeyboardManager.shared.enableAutoToolbar = true
 		IQKeyboardManager.shared.resignOnTouchOutside = true
 
+		
+
 
 		NotificationCenter.default.addObserver(self, selector: #selector(handleAuthenticationFailure), name: .authenticationFailed, object: nil)
 

@@ -118,31 +118,9 @@ class UploadPostViewController: BaseViewController {
 
 
 		let image = "\(APIKey.baseURL.rawValue)/v1/\(viewModel.image[0])"
+		self.imageView.loadImage(from: image)
 
-		self.imageView.kf.setImage(with: URL(string: image), options: [.requestModifier(NetworkManager.imageDownloadRequest)], completionHandler: { response in
-			switch response {
-			case .success(let data):
-				DispatchQueue.main.async {
-					print("adfasdf")
-					self.imageView.image = data.image
-				}
-			case .failure(let error):
-				print("Error setting image: \(error)")
-				DispatchQueue.main.async {
-					self.imageView.image = UIImage(systemName: "xmark")
-				}
-			}
-		}
-		)
 
-//		NetworkManager.performRequest(route: .lookImage(endPoint: viewModel.image[0]), decodingType: (Data).self)
-//			.subscribe(with: self) { owner, data in
-//				if let image = UIImage(data: data) {
-//					print(data)
-//					owner.imageView.image = image
-//				}
-//			}
-//			.disposed(by: disposeBag)
 	}
 
 

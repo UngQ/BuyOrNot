@@ -18,22 +18,61 @@ class TotalPostViewController: BaseViewController {
 
 	private var currentCategory = "전체"
 	let tableView = UITableView()
-	
+	private let refreshControl = UIRefreshControl()
+
+
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		print("GGG")
-		viewModel.viewWillAppearTrigger.accept(())
-		tableView.reloadData()
+
+		reloadData()
+	}
+
+	@objc func reloadData() {
+		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+			self.viewModel.viewWillAppearTrigger.accept(())
+			self.refreshControl.endRefreshing()
+			  }
+
 	}
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
 
-	
-	 }
+
+		self.navigationItem.title = "최근 게시물"
+
+		let menuButton = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: self, action: nil)
+		self.navigationItem.leftBarButtonItem = menuButton
+
+		// Define the menu actions
+		let menuActions = createMenuActions()
+
+		// Attach the menu to the bar button item
+		menuButton.menu = UIMenu(title: "", children: menuActions)
+		menuButton.primaryAction = nil  // Ensure tapping the button opens the menu
+	}
+
+	func createMenuActions() -> [UIMenuElement] {
+		let categories = ["Top", "Bottom", "신발", "악세사리"]
+		return categories.map { category in
+			UIAction(title: category, image: nil, handler: { action in
+				// Handle selection
+				self.handleCategorySelection(category)
+			})
+		}
+	}
+
+	func handleCategorySelection(_ category: String) {
+		print("Selected category: \(category)")
+		let vc = ContentPostViewController()
+		vc.viewModel.hashTag = category
+		navigationController?.pushViewController(vc, animated: true)
+
+	}
+
 
 	
 
@@ -51,35 +90,25 @@ override func bind() {
 	output.data
 		.drive(tableView.rx.items(cellIdentifier: PostTableViewCell.id, cellType: PostTableViewCell.self)) {
 			row, element, cell in
+			cell.selectionStyle = .none
+
 			let likes = element.likes
 			let disLikes = element.likes2
 			guard let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) else {
 				return
 			}
-			var myLike = likes.contains(myId)
-			var myDisLike = disLikes.contains(myId)
+			let myLike = likes.contains(myId)
+			let myDisLike = disLikes.contains(myId)
 
-			cell.selectionStyle = .none
+
 
 
 			//셀 프로필 이미지
-			let profileImage = "\(APIKey.baseURL.rawValue)/v1/\(element.creator.profileImage)"
-			cell.profileImageView.kf.setImage(with: URL(string: profileImage), options: [.requestModifier(NetworkManager.imageDownloadRequest)], completionHandler: { response in
-				switch response {
-				case .success(let data):
-					DispatchQueue.main.async {
-						cell.profileImageView.image = data.image
-
-						cell.layoutSubviews() // Refresh cell layout if needed
-					}
-				case .failure(let error):
-					print("Error setting image: \(error)")
-					DispatchQueue.main.async {
-						cell.imageView?.image = UIImage(systemName: "exclamationmark.triangle") // Fallback image in case of error
-					}
-				}
+			if let endPoint = element.creator.profileImage {
+				let profileImage = "\(APIKey.baseURL.rawValue)/v1/\(endPoint)"
+				cell.profileImageView.loadImage(from: profileImage)
 			}
-			)
+
 
 			//셀 작성자 이름
 			cell.usernameLabel.text = element.creator.nick
@@ -102,23 +131,7 @@ override func bind() {
 
 			//셀 포스트 이미지
 			let postImage = "\(APIKey.baseURL.rawValue)/v1/\(element.files[0])"
-			cell.postImageView.kf.setImage(with: URL(string: postImage), options: [.requestModifier(NetworkManager.imageDownloadRequest)], completionHandler: { response in
-				switch response {
-				case .success(let data):
-					DispatchQueue.main.async {
-						cell.postImageView.image = data.image
-
-						cell.layoutSubviews() // Refresh cell layout if needed
-					}
-				case .failure(let error):
-					print("Error setting image: \(error)")
-					DispatchQueue.main.async {
-						cell.imageView?.image = UIImage(systemName: "exclamationmark.triangle") // Fallback image in case of error
-					}
-				}
-			}
-			)
-
+			cell.postImageView.loadImage(from: postImage)
 
 
 
@@ -139,10 +152,12 @@ override func bind() {
 			}
 			cell.rightTap = {
 				disLikeButtonTapped.onNext(row)
+				
 			}
 
 			cell.likeButton.rx.tap
 				.map { row }
+				.do { _ in cell.animateButton(cell.likeButton, shouldFill: !cell.likeButton.isSelected) }
 				.bind(to: likeButtonTapped)
 				.disposed(by: cell.disposeBag)
 
@@ -150,6 +165,7 @@ override func bind() {
 
 			cell.dislikeButton.rx.tap
 				.map { row }
+				.do { _ in cell.animateButton(cell.dislikeButton, shouldFill: !cell.dislikeButton.isSelected) }
 				.bind(to: disLikeButtonTapped)
 				.disposed(by: cell.disposeBag)
 
@@ -191,6 +207,8 @@ override func bind() {
 		}
 
 		tableView.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.id)
+		tableView.refreshControl = refreshControl
+		refreshControl.addTarget(self, action: #selector(reloadData), for: .valueChanged)
 
 
 	}

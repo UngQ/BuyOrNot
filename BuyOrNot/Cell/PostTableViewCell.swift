@@ -30,8 +30,14 @@ class PostTableViewCell: UITableViewCell {
 	let likeDislikeProgressView = UIProgressView(progressViewStyle: .default)
 
 	override func prepareForReuse() {
+		super.prepareForReuse()
+
+		likeButton.transform = CGAffineTransform.identity
+		dislikeButton.transform = CGAffineTransform.identity
+		likeButton.alpha = 1
+		dislikeButton.alpha = 1
 		disposeBag = DisposeBag()
-		
+
 	}
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -50,6 +56,21 @@ class PostTableViewCell: UITableViewCell {
 
 		setupViews()
 		setupConstraints()
+
+		likeButton.rx.tap
+			.subscribe(with: self) { owner, _ in
+				owner.animateButton(owner.likeButton, shouldFill: !(owner.likeButton.isSelected))
+				owner.likeButton.isSelected = !(owner.likeButton.isSelected)  // Toggle the selected state to track the icon status
+			}
+			.disposed(by: disposeBag)
+
+
+		dislikeButton.rx.tap
+			.subscribe(with: self) { owner, _ in
+				owner.animateButton(owner.dislikeButton, shouldFill: !(owner.dislikeButton.isSelected))
+				owner.dislikeButton.isSelected = !(owner.dislikeButton.isSelected)
+			}
+			.disposed(by: disposeBag)
 	}
 
 	required init?(coder: NSCoder) {
@@ -95,18 +116,21 @@ class PostTableViewCell: UITableViewCell {
 	}
 
 	@objc private func imageTap(gesture: UITapGestureRecognizer) {
-		print(#function)
 		let touchPoint = gesture.location(in: gesture.view)
 		let width = gesture.view?.bounds.width ?? 0
-		if touchPoint.x < width / 2 {
-			print("Left half tapped")
-			leftTap()
+		let targetButton = touchPoint.x < width / 2 ? likeButton : dislikeButton
 
-		} else if touchPoint.x > width / 2 {
-			print("Right half tapped")
-			rightTap()
+		// Determine whether to fill or unfill the icon based on the current image
+		let shouldFill = targetButton.currentImage == UIImage(systemName: "hand.thumbsup") || targetButton.currentImage == UIImage(systemName: "hand.thumbsdown")
 
-		}
+		animateButton(targetButton, shouldFill: shouldFill)
+
+			// Execute the appropriate tap action
+			if touchPoint.x < width / 2 {
+				leftTap()
+			} else {
+				rightTap()
+			}
 	}
 
 
@@ -177,4 +201,25 @@ class PostTableViewCell: UITableViewCell {
 
 
 	}
+
+	func animateButton(_ button: UIButton, shouldFill: Bool) {
+		let iconName = shouldFill ? "hand.thumbsup.fill" : "hand.thumbsup"  // Decide the icon based on shouldFill
+		  let initialScale = CGAffineTransform(scaleX: 1.5, y: 1.5)  // Initial scale for animation
+
+		  UIView.animate(withDuration: 0.2, animations: {
+			  button.transform = initialScale  // Scale up
+		  }) { _ in
+			  UIView.animate(withDuration: 0.1, animations: {
+				  button.transform = CGAffineTransform.identity  // Scale down
+				  button.alpha = 0  // Begin to fade out
+			  }) { _ in
+				  // Cross-dissolve transition for the image change
+				  UIView.transition(with: button, duration: 0.1, options: .transitionCrossDissolve, animations: {
+					  button.setImage(UIImage(systemName: iconName), for: .normal)
+				  }) { _ in
+					  button.alpha = 1  // Restore visibility
+				  }
+			  }
+		  }
+	  }
 }

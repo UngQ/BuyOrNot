@@ -47,7 +47,7 @@ struct PostModel: Decodable {
 struct CreatorModel: Decodable {
 	let user_id: String
 	let nick: String
-	let profileImage: String
+	let profileImage: String?
 }
 
 struct PostsModel: Decodable {
@@ -95,11 +95,14 @@ struct NetworkManager {
 							print(response.request?.url)
 							switch response.result {
 							case .success(let result):
+								print("success")
 								single(.success(result))
 								print(response.response?.statusCode)
 							case .failure(let error):
-								single(.failure(error))
+								print("fail")
 								print(response.response?.statusCode)
+								single(.failure(error))
+
 							}
 						}
 				}

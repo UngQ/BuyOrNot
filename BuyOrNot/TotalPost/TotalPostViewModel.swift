@@ -37,11 +37,14 @@ class TotalPostViewModel: ViewModelType {
 
 		viewWillAppearTrigger
 			.flatMap {
-				NetworkManager.performRequest(route: .lookPosts(query: PostQueryItems(next: nil, limit: "20")), decodingType: PostsModel.self)
+				NetworkManager.performRequest(route: .lookPosts(query: PostQueryItems(next: nil, limit: "20", hashTag: nil)), decodingType: PostsModel.self)
+					.catch { error in
+						print(error.asAFError?.responseCode)
+						return Single.never()
+					}
 			}
 			.subscribe(with: self) { owner, result in
 				owner.postsData.accept(result.data)
-
 			}
 			.disposed(by: disposeBag)
 

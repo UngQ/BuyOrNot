@@ -20,4 +20,5 @@ struct PostQueryItems {
 	let next: String?
 	let limit: String?
 	let product_id = "buyOrNot"
+	let hashTag: String?
 }
