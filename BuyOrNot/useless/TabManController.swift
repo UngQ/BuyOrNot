@@ -18,7 +18,7 @@
 //
 //	var viewControllers: [UIViewController] = []
 //
-//	private let totalVC = UINavigationController(rootViewController: TotalPostViewController())
+//	private let totalVC = UINavigationController(rootViewController: PostViewController())
 //	private let topVC = ContentPostViewController()
 //	private let bottomVC = ContentPostViewController()
 //	private let shoesVC = ContentPostViewController()

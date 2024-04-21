@@ -19,9 +19,12 @@ enum Router {
 	case uploadPost(query: Encodable)
 
 	case lookPosts(query: PostQueryItems)
+	case lookPost(id: String)
 	case hashTag(query: PostQueryItems)
 
 	case likePost(id: String, query: Encodable, like: String)
+
+	case userPost(query: PostQueryItems, id: String)
 }
 
 extension Router: TargetType {
@@ -34,7 +37,9 @@ extension Router: TargetType {
 		switch self {
 		case .tokenRefresh,
 				.lookPosts,
-				.hashTag:
+				.lookPost,
+				.hashTag,
+				.userPost:
 			return .get
 
 		case .login,
@@ -63,10 +68,14 @@ extension Router: TargetType {
 		case .uploadPost,
 				.lookPosts:
 			return "/v1/posts"
+		case .lookPost(let id):
+			return "/v1/posts/\(id)"
 		case .likePost(let id, _, let like):
 			return "/v1/posts/\(id)/\(like)"
 		case .hashTag:
 			return "/v1/posts/hashtags"
+		case .userPost(_, let id):
+			return "/v1/posts/users/\(id)"
 		}
 	}
 
@@ -99,7 +108,9 @@ extension Router: TargetType {
 					HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
 
 		case .lookPosts,
-			.hashTag:
+				.lookPost,
+			.hashTag,
+			.userPost:
 			return [
 				HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
 				HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
@@ -113,7 +124,8 @@ extension Router: TargetType {
 
 	var queryItems: [URLQueryItem]? {
 		switch self {
-		case .lookPosts(let query):
+		case .lookPosts(let query),
+				.userPost(let query, _):
 				return [
 					URLQueryItem(name: "next", value: query.next),
 					URLQueryItem(name: "limit", value: query.limit),
@@ -138,7 +150,9 @@ extension Router: TargetType {
 		case .tokenRefresh,
 				.uploadImage,
 				.lookPosts,
-				.hashTag:
+				.hashTag,
+				.lookPost,
+				.userPost:
 			return nil
 		case .login(let query),
 			.validationEmail(let query),

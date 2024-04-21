@@ -11,12 +11,15 @@ import RxCocoa
 
 class ContentPostViewModel: ViewModelType {
 
+	var isLoading = false
+	var nextCursor: String? = nil
+	var title: String?
 	var hashTag: String?
 
 	var disposeBag = DisposeBag()
 
 	let viewWillAppearTrigger = PublishRelay<Void>()
-	private let postsData = BehaviorRelay<[PostModel]>(value: [])
+	 let postsData = BehaviorRelay<[PostModel]>(value: [])
 
 
 	struct Input {
@@ -33,14 +36,21 @@ class ContentPostViewModel: ViewModelType {
 
 		viewWillAppearTrigger
 			.flatMap {
-				NetworkManager.performRequest(route: .hashTag(query: PostQueryItems(next: nil, limit: "20", hashTag: self.hashTag)), decodingType: PostsModel.self)
+				NetworkManager.performRequest(route: .hashTag(query: PostQueryItems(next: self.nextCursor, limit: "21", hashTag: self.hashTag)), decodingType: PostsModel.self)
 					.catch { error in
 						print(error.asAFError?.responseCode)
 						return Single.never()
 					}
 			}
 			.subscribe(with: self) { owner, result in
-				owner.postsData.accept(result.data)
+				if !owner.isLoading {
+					owner.nextCursor = result.next_cursor
+					owner.postsData.accept(result.data)
+				} else {
+					var newData = owner.postsData.value
+					newData.append(contentsOf: result.data)
+					owner.postsData.accept(newData)
+				}
 				print(result)
 			}
 			.disposed(by: disposeBag)
@@ -48,3 +58,5 @@ class ContentPostViewModel: ViewModelType {
 		return Output(data: postsData.asDriver())
 	}
 }
+
+

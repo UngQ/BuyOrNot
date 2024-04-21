@@ -15,34 +15,41 @@ class ContentPostViewController: BaseViewController {
 	lazy var viewModel = ContentPostViewModel()
 
 	private lazy var imageCollectionView: UICollectionView = {
-			let layout = UICollectionViewFlowLayout()
-		let width = view.bounds.width / 3
-			layout.itemSize = CGSize(width: width, height: width) // 셀 크기 조정
-			layout.minimumLineSpacing = 0
-			layout.minimumInteritemSpacing = 0
+		let layout = UICollectionViewFlowLayout.createThreeColumnFlowLayout(in: self.view)
 		let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-			collectionView.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: ImageCollectionViewCell.id)
-//			collectionView.delegate = self
-//			collectionView.dataSource = self
-			return collectionView
-		}()
+		collectionView.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: ImageCollectionViewCell.id)
+		collectionView.refreshControl = refreshControl
+		return collectionView
+	}()
+	private let refreshControl = UIRefreshControl()
+
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		self.viewModel.viewWillAppearTrigger.accept(())
-
+		reloadData()
 
 	}
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	@objc func reloadData() {
+		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+			self.viewModel.isLoading = false
+			self.viewModel.nextCursor = nil
+			self.viewModel.viewWillAppearTrigger.accept(())
+			self.refreshControl.endRefreshing()
+		}
+
+	}
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
+
+		navigationItem.title = viewModel.title
+
+		self.imageCollectionView.delegate = self
 
 
-		
-
-
-    }
+	}
 
 	override func bind() {
 		let input = ContentPostViewModel.Input()
@@ -55,8 +62,29 @@ class ContentPostViewController: BaseViewController {
 
 			let postImage = "\(APIKey.baseURL.rawValue)/v1/\(element.files[0])"
 			cell.imageView.loadImage(from: postImage)
-			}
+
+
+		}
+
+
+
+
+
 		.disposed(by: disposeBag)
+
+		imageCollectionView.rx.itemSelected
+			.asDriver()
+			.drive(with: self) { owner, index in
+				let vc = PostViewController()
+				vc.TotalOrDetail = false
+				vc.viewModel.id = owner.viewModel.postsData.value[index.row].post_id
+				vc.viewModel.totalOrDetail = false
+				owner.navigationController?.pushViewController(vc, animated: true)
+
+			}
+			.disposed(by: disposeBag)
+
+
 
 
 	}
@@ -68,12 +96,28 @@ class ContentPostViewController: BaseViewController {
 			make.edges.equalTo(view.safeAreaLayoutGuide)
 		}
 
-		imageCollectionView.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: ImageCollectionViewCell.id)
 
 		imageCollectionView.backgroundColor = .brown
+
+		refreshControl.addTarget(self, action: #selector(reloadData), for: .valueChanged)
+
 	}
 
 
 }
 
 
+
+extension ContentPostViewController: UIScrollViewDelegate, UICollectionViewDelegate {
+	func scrollViewDidScroll(_ scrollView: UIScrollView) {
+		let position = scrollView.contentOffset.y
+		if position > (scrollView.contentSize.height-100 - scrollView.frame.size.height) {
+			// Trigger the fetch only if we're not already loading data
+			print("asdf")
+			if !viewModel.isLoading {
+				viewModel.isLoading = true
+				viewModel.viewWillAppearTrigger.accept(())  // This method would trigger `viewWillAppearTrigger`
+			}
+		}
+	}
+}

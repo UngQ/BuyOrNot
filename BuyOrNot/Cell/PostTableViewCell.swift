@@ -20,8 +20,9 @@ class PostTableViewCell: UITableViewCell {
 	let dislikeButton = UIButton(type: .system)
 
 	let bookmarkButton = UIButton(type: .system)
-	let likesLabel = UILabel()
-	let captionLabel = UILabel()
+	let titleNPriceLabel = UILabel()
+	let likeLabel = UILabel()
+	let dislikeLabel = UILabel()
 	let timeLabel = UILabel()
 
 	var leftTap = {}
@@ -31,11 +32,24 @@ class PostTableViewCell: UITableViewCell {
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
-
 		likeButton.transform = CGAffineTransform.identity
-		dislikeButton.transform = CGAffineTransform.identity
+		  dislikeButton.transform = CGAffineTransform.identity
 		likeButton.alpha = 1
-		dislikeButton.alpha = 1
+		 dislikeButton.alpha = 1
+		likeButton.removeTarget(nil, action: nil, for: .allEvents)
+		   dislikeButton.removeTarget(nil, action: nil, for: .allEvents)
+
+		profileImageView.image = UIImage(systemName: "person.circle.fill")
+		usernameLabel.text = ""
+		likeLabel.text = ""
+		dislikeLabel.text = ""
+		timeLabel.text = ""
+
+
+		likeDislikeProgressView.setProgress(0, animated: false)
+			likeDislikeProgressView.trackTintColor = .systemGray4
+			likeDislikeProgressView.progressTintColor = .systemBlue
+
 		disposeBag = DisposeBag()
 
 	}
@@ -49,28 +63,17 @@ class PostTableViewCell: UITableViewCell {
 		contentView.addSubview(dislikeButton)
 
 		contentView.addSubview(bookmarkButton)
-		contentView.addSubview(likesLabel)
-		contentView.addSubview(captionLabel)
+		contentView.addSubview(titleNPriceLabel)
+		contentView.addSubview(likeLabel)
 		contentView.addSubview(timeLabel)
 		contentView.addSubview(likeDislikeProgressView)
+
+		contentView.addSubview(dislikeLabel)
 
 		setupViews()
 		setupConstraints()
 
-		likeButton.rx.tap
-			.subscribe(with: self) { owner, _ in
-				owner.animateButton(owner.likeButton, shouldFill: !(owner.likeButton.isSelected))
-				owner.likeButton.isSelected = !(owner.likeButton.isSelected)  // Toggle the selected state to track the icon status
-			}
-			.disposed(by: disposeBag)
 
-
-		dislikeButton.rx.tap
-			.subscribe(with: self) { owner, _ in
-				owner.animateButton(owner.dislikeButton, shouldFill: !(owner.dislikeButton.isSelected))
-				owner.dislikeButton.isSelected = !(owner.dislikeButton.isSelected)
-			}
-			.disposed(by: disposeBag)
 	}
 
 	required init?(coder: NSCoder) {
@@ -81,6 +84,7 @@ class PostTableViewCell: UITableViewCell {
 		profileImageView.contentMode = .scaleAspectFill
 		profileImageView.layer.cornerRadius = 15
 		profileImageView.clipsToBounds = true
+		profileImageView.image = UIImage(systemName: "person.circle.fill")
 
 		usernameLabel.font = .systemFont(ofSize: 14, weight: .bold)
 
@@ -93,9 +97,12 @@ class PostTableViewCell: UITableViewCell {
 
 		bookmarkButton.setImage(UIImage(systemName: "message"), for: .normal)
 
-		likesLabel.font = .systemFont(ofSize: 14, weight: .bold)
-		captionLabel.font = .systemFont(ofSize: 14)
-		captionLabel.numberOfLines = 0
+		titleNPriceLabel.font = .systemFont(ofSize: 14, weight: .bold)
+		titleNPriceLabel.textAlignment = .center
+		likeLabel.font = .systemFont(ofSize: 14)
+		likeLabel.numberOfLines = 0
+		dislikeLabel.font = .systemFont(ofSize: 14)
+		dislikeLabel.numberOfLines = 0
 
 		timeLabel.font = .systemFont(ofSize: 12)
 		timeLabel.textColor = .gray
@@ -117,13 +124,9 @@ class PostTableViewCell: UITableViewCell {
 
 	@objc private func imageTap(gesture: UITapGestureRecognizer) {
 		let touchPoint = gesture.location(in: gesture.view)
-		let width = gesture.view?.bounds.width ?? 0
-		let targetButton = touchPoint.x < width / 2 ? likeButton : dislikeButton
+			let width = gesture.view?.bounds.width ?? 0
+			let targetButton = touchPoint.x < width / 2 ? likeButton : dislikeButton
 
-		// Determine whether to fill or unfill the icon based on the current image
-		let shouldFill = targetButton.currentImage == UIImage(systemName: "hand.thumbsup") || targetButton.currentImage == UIImage(systemName: "hand.thumbsdown")
-
-		animateButton(targetButton, shouldFill: shouldFill)
 
 			// Execute the appropriate tap action
 			if touchPoint.x < width / 2 {
@@ -131,6 +134,10 @@ class PostTableViewCell: UITableViewCell {
 			} else {
 				rightTap()
 			}
+
+
+//			self.animateButton(targetButton)
+
 	}
 
 
@@ -166,6 +173,19 @@ class PostTableViewCell: UITableViewCell {
 			make.size.equalTo(25)
 		}
 
+		likeLabel.snp.makeConstraints { make in
+			make.centerY.equalTo(likeButton)
+			make.trailing.equalTo(likeButton.snp.leading).offset(-10)
+		}
+		likeLabel.text = "caption"
+
+		dislikeLabel.snp.makeConstraints { make in
+			make.centerY.equalTo(dislikeButton)
+			make.leading.equalTo(dislikeButton.snp.trailing).offset(10)
+		}
+
+		dislikeLabel.text = "adff"
+
 
 		bookmarkButton.snp.makeConstraints { make in
 			make.top.equalTo(postImageView.snp.bottom).offset(10)
@@ -180,21 +200,17 @@ class PostTableViewCell: UITableViewCell {
 //			make.bottom.equalToSuperview().offset(-10).priority(750)
 		}
 
-		likesLabel.snp.makeConstraints { make in
-			make.top.equalTo(likeButton.snp.bottom).offset(10)
-			make.left.equalToSuperview().offset(10)
+		titleNPriceLabel.snp.makeConstraints { make in
+			make.top.equalTo(likeButton.snp.bottom).offset(4)
+			make.horizontalEdges.equalToSuperview().inset(10)
 		}
 
-		likesLabel.text = "likes"
-		captionLabel.snp.makeConstraints { make in
-			make.top.equalTo(likesLabel.snp.bottom).offset(4)
-			make.left.right.equalToSuperview().inset(10)
-		}
-		captionLabel.text = "caption"
+		titleNPriceLabel.text = "likes"
+
 
 		timeLabel.snp.makeConstraints { make in
-			make.top.equalTo(captionLabel.snp.bottom).offset(4)
-			make.left.equalToSuperview().offset(10)
+			make.top.equalTo(titleNPriceLabel.snp.bottom).offset(4)
+			make.trailing.equalToSuperview().offset(-10)
 			make.bottom.equalToSuperview().offset(-10).priority(750)
 		}
 		timeLabel.text = "time"
@@ -202,24 +218,22 @@ class PostTableViewCell: UITableViewCell {
 
 	}
 
-	func animateButton(_ button: UIButton, shouldFill: Bool) {
-		let iconName = shouldFill ? "hand.thumbsup.fill" : "hand.thumbsup"  // Decide the icon based on shouldFill
-		  let initialScale = CGAffineTransform(scaleX: 1.5, y: 1.5)  // Initial scale for animation
-
-		  UIView.animate(withDuration: 0.2, animations: {
-			  button.transform = initialScale  // Scale up
-		  }) { _ in
-			  UIView.animate(withDuration: 0.1, animations: {
-				  button.transform = CGAffineTransform.identity  // Scale down
-				  button.alpha = 0  // Begin to fade out
-			  }) { _ in
-				  // Cross-dissolve transition for the image change
-				  UIView.transition(with: button, duration: 0.1, options: .transitionCrossDissolve, animations: {
-					  button.setImage(UIImage(systemName: iconName), for: .normal)
-				  }) { _ in
-					  button.alpha = 1  // Restore visibility
-				  }
-			  }
-		  }
-	  }
+//	func animateButton(_ button: UIButton) {
+//		DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+//			UIView.animate(withDuration: 0.2, animations: {
+//				// Scale up the button image
+//				button.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+//				button.alpha = 0.5  // Slightly fade the button to see the effect
+//			}) { _ in
+//				UIView.animate(withDuration: 0.1, animations: {
+//					// Return to normal size but keep invisible
+//					button.transform = CGAffineTransform.identity
+//					button.alpha = 0
+//				}) { _ in
+//					// Ensure visibility is restored after animation
+//					button.alpha = 1
+//				}
+//			}
+//		}
+//	}
 }

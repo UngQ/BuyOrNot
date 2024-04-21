@@ -56,7 +56,7 @@ class UploadPostViewController: BaseViewController {
 			.drive(with: self) { owner, result in
 				if result {
 
-//					owner.navigationController?.pushViewController(TotalPostViewController(), animated: true)
+//					owner.navigationController?.pushViewController(PostViewController(), animated: true)
 					owner.navigationController?.popViewController(animated: true)
 				}
 			}

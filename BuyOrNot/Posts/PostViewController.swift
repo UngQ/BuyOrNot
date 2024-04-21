@@ -12,9 +12,11 @@ import Kingfisher
 
 
 
-class TotalPostViewController: BaseViewController {
+class PostViewController: BaseViewController {
 
-	let viewModel = TotalPostViewModel()
+	var TotalOrDetail = true
+
+	let viewModel = PostViewModel()
 
 	private var currentCategory = "전체"
 	let tableView = UITableView()
@@ -41,34 +43,44 @@ class TotalPostViewController: BaseViewController {
         super.viewDidLoad()
 
 
+		if TotalOrDetail {
+			self.navigationItem.title = "최근 게시물"
 
-		self.navigationItem.title = "최근 게시물"
+			let menuButton = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: self, action: nil)
+		 self.navigationItem.leftBarButtonItem = menuButton
 
-		let menuButton = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: self, action: nil)
-		self.navigationItem.leftBarButtonItem = menuButton
+		 // Define the menu actions
+		 let menuActions = createMenuActions()
 
-		// Define the menu actions
-		let menuActions = createMenuActions()
+		 // Attach the menu to the bar button item
+		 menuButton.menu = UIMenu(title: "", children: menuActions)
+		 menuButton.primaryAction = nil  // Ensure tapping the button opens the menu
+		} else {
+			self.navigationItem.title = "게시물"
+		}
 
-		// Attach the menu to the bar button item
-		menuButton.menu = UIMenu(title: "", children: menuActions)
-		menuButton.primaryAction = nil  // Ensure tapping the button opens the menu
 	}
 
 	func createMenuActions() -> [UIMenuElement] {
-		let categories = ["Top", "Bottom", "신발", "악세사리"]
+		let categories = [Category.top,
+						  Category.bottom,
+						  Category.shoes,
+						  Category.acc]
+
 		return categories.map { category in
-			UIAction(title: category, image: nil, handler: { action in
-				// Handle selection
+			UIAction(title: category.title, image: nil, handler: { action in
+
 				self.handleCategorySelection(category)
 			})
 		}
 	}
 
-	func handleCategorySelection(_ category: String) {
+	func handleCategorySelection(_ category: Category) {
 		print("Selected category: \(category)")
 		let vc = ContentPostViewController()
-		vc.viewModel.hashTag = category
+		vc.viewModel.title = category.title
+		vc.viewModel.hashTag = category.rawValue
+		
 		navigationController?.pushViewController(vc, animated: true)
 
 	}
@@ -80,7 +92,7 @@ override func bind() {
 	let likeButtonTapped = PublishSubject<Int>()
 	let disLikeButtonTapped = PublishSubject<Int>()
 
-	let input = TotalPostViewModel.Input(
+	let input = PostViewModel.Input(
 		likeButtonTap: likeButtonTapped.asObservable(),
 										 disLikeButtonTap: disLikeButtonTapped.asObservable())
 
@@ -91,6 +103,10 @@ override func bind() {
 		.drive(tableView.rx.items(cellIdentifier: PostTableViewCell.id, cellType: PostTableViewCell.self)) {
 			row, element, cell in
 			cell.selectionStyle = .none
+
+			cell.likeButton.tag = row
+			cell.dislikeButton.tag = row
+
 
 			let likes = element.likes
 			let disLikes = element.likes2
@@ -107,7 +123,7 @@ override func bind() {
 			if let endPoint = element.creator.profileImage {
 				let profileImage = "\(APIKey.baseURL.rawValue)/v1/\(endPoint)"
 				cell.profileImageView.loadImage(from: profileImage)
-			}
+			} 
 
 
 			//셀 작성자 이름
@@ -125,15 +141,19 @@ override func bind() {
 			} else {
 				cell.likeDislikeProgressView.trackTintColor = .systemRed
 				cell.likeDislikeProgressView.setProgress(likeRatio, animated: true)
-				
 			}
+
+
 
 
 			//셀 포스트 이미지
 			let postImage = "\(APIKey.baseURL.rawValue)/v1/\(element.files[0])"
 			cell.postImageView.loadImage(from: postImage)
 
-
+			cell.titleNPriceLabel.text = "\(element.title) / \(element.content1)"
+			cell.likeLabel.text = "사요 \(element.likes.count)개"
+			cell.dislikeLabel.text = "마요 \(element.likes2.count)개"
+			cell.timeLabel.text = element.createdAt.formattedDate()
 
 			if myLike {
 				cell.likeButton.setImage(UIImage(systemName: "hand.thumbsup.fill"), for: .normal)
@@ -152,35 +172,21 @@ override func bind() {
 			}
 			cell.rightTap = {
 				disLikeButtonTapped.onNext(row)
-				
 			}
 
 			cell.likeButton.rx.tap
-				.map { row }
-				.do { _ in cell.animateButton(cell.likeButton, shouldFill: !cell.likeButton.isSelected) }
+				.map { cell.likeButton.tag }
+//				.do { _ in cell.animateButton(cell.likeButton) }
 				.bind(to: likeButtonTapped)
 				.disposed(by: cell.disposeBag)
 
 
 
 			cell.dislikeButton.rx.tap
-				.map { row }
-				.do { _ in cell.animateButton(cell.dislikeButton, shouldFill: !cell.dislikeButton.isSelected) }
+				.map { cell.dislikeButton.tag }
+//				.do { _ in cell.animateButton(cell.dislikeButton) }
 				.bind(to: disLikeButtonTapped)
 				.disposed(by: cell.disposeBag)
-
-
-
-//			cell.likeButton.rx.tap
-//				.bind(with: self) { owner, _ in
-//					myLike.toggle()
-//					if myLike {
-//						cell.likeButton.setImage(UIImage(systemName: "hand.thumbsup.fill"), for: .normal)
-//					} else {
-//						cell.likeButton.setImage(UIImage(systemName: "hand.thumbsup"), for: .normal)
-//					}
-//				}
-//				.disposed(by: cell.disposeBag)
 
 		
 		}

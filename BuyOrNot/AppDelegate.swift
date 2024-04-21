@@ -19,7 +19,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		IQKeyboardManager.shared.enableAutoToolbar = true
 		IQKeyboardManager.shared.resignOnTouchOutside = true
 
-		
+		let barAppearance = UINavigationBar.appearance()
+		barAppearance.backIndicatorImage = UIImage(systemName: "chevron.backward")  // Set your custom back icon image
+		barAppearance.backIndicatorTransitionMaskImage = UIImage(systemName: "chevron.backward")
+		UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffset(horizontal: -200, vertical: 0), for: .default)
+
 
 
 		NotificationCenter.default.addObserver(self, selector: #selector(handleAuthenticationFailure), name: .authenticationFailed, object: nil)

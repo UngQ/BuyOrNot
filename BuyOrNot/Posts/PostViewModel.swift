@@ -11,7 +11,10 @@ import RxCocoa
 import Kingfisher
 
 
-class TotalPostViewModel: ViewModelType {
+class PostViewModel: ViewModelType {
+
+	var totalOrDetail = true
+	var id: String?
 
 	var disposeBag = DisposeBag()
 
@@ -35,32 +38,51 @@ class TotalPostViewModel: ViewModelType {
 
 		let message = BehaviorRelay(value: "")
 
-		viewWillAppearTrigger
-			.flatMap {
-				NetworkManager.performRequest(route: .lookPosts(query: PostQueryItems(next: nil, limit: "20", hashTag: nil)), decodingType: PostsModel.self)
-					.catch { error in
-						print(error.asAFError?.responseCode)
-						return Single.never()
-					}
-			}
-			.subscribe(with: self) { owner, result in
-				owner.postsData.accept(result.data)
-			}
-			.disposed(by: disposeBag)
+		if totalOrDetail {
+			viewWillAppearTrigger
+				.flatMap {
+
+					NetworkManager.performRequest(route: .lookPosts(query: PostQueryItems(next: nil, limit: "20", hashTag: nil)), decodingType: PostsModel.self)
+						.catch { error in
+							print(error.asAFError?.responseCode)
+							return Single.never()
+						}
+
+				}
+				.subscribe(with: self) { owner, result in
+					owner.postsData.accept(result.data)
+				}
+				.disposed(by: disposeBag)
+		} else {
+			viewWillAppearTrigger
+				.flatMap {
+					NetworkManager.performRequest(route: .lookPost(id: self.id ?? ""), decodingType: PostModel.self)
+						.catch { error in
+							print(error.asAFError?.responseCode)
+							return Single.never()
+						}
+				}
+				.subscribe(with: self) { owner, result in
+					owner.postsData.accept([result])
+				}
+				.disposed(by: disposeBag)
+
+
+		}
 
 		input.likeButtonTap
 			.withLatestFrom(postsData) { index, posts -> PostModel? in
-
+				print(index)
 				guard index < posts.count else { return nil }
 				print(posts[index])
 				return posts[index]
 			}
 			.flatMap { post -> Single<LikeQueryAndModel> in
-				print("2")
+
 				guard let post = post else {
 					return Single.never()
 				}
-				print("3")
+
 				guard let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) else {
 					return Single.never()
 				}
@@ -72,7 +94,7 @@ class TotalPostViewModel: ViewModelType {
 					message.accept("반대 투표는 투표취소 후 가능합니다.")
 					return Single.never()
 				}
-				print("4")
+
 
 				print(post.post_id)
 
@@ -103,17 +125,18 @@ class TotalPostViewModel: ViewModelType {
 
 		input.disLikeButtonTap
 			.withLatestFrom(postsData) { index, posts -> PostModel? in
+				print(index)
 
 				guard index < posts.count else { return nil }
 				print(posts[index])
 				return posts[index]
 			}
 			.flatMap { post -> Single<LikeQueryAndModel> in
-				print("2")
+
 				guard let post = post else {
 					return Single.never()
 				}
-				print("3")
+
 				guard let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) else {
 					return Single.never()
 				}
@@ -121,7 +144,7 @@ class TotalPostViewModel: ViewModelType {
 
 
 				var like = post.likes2.contains(myId)
-				print("4")
+
 
 				if post.likes.contains(myId) {
 					message.accept("반대 투표는 투표취소 후 가능합니다.")

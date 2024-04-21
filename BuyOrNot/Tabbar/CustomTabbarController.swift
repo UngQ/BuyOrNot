@@ -17,12 +17,8 @@ class CustomTabBarController: UITabBarController {
 	let disposeBag = DisposeBag()
 	var category = ""
 
-//	private let firstVC = UINavigationController(rootViewController: TotalPostViewController())
-//	private let secondVC = UINavigationController(rootViewController: SignInViewController())
-//	private let thirdVC = UINavigationController(rootViewController: SignUpViewController())
-
-	private let firstVC = UINavigationController(rootViewController: TotalPostViewController())
-	private let thirdVC = SignUpViewController()
+	private let firstVC = UINavigationController(rootViewController: PostViewController())
+	private let thirdVC = UINavigationController(rootViewController: ProfileViewController())
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
@@ -81,21 +77,21 @@ class CustomTabBarController: UITabBarController {
 		let actionSheet = UIAlertController(title: .none, message: .none, preferredStyle: .actionSheet)
 
 
-		let topAction = UIAlertAction(title: "상의 (Top)", style: .default, handler: { _ in
+		let topAction = UIAlertAction(title: Category.top.title, style: .default, handler: { _ in
 			self.imagePicker()
-			self.category = "#Top"
+			self.category = Category.top.hashTag
 		})
-		let bottomAction = UIAlertAction(title: "바지 (Bottom)", style: .default, handler: { _ in
+		let bottomAction = UIAlertAction(title: Category.bottom.title, style: .default, handler: { _ in
 			self.imagePicker()
-			self.category = "#Bottom"
+			self.category = Category.bottom.hashTag
 		})
-		let shoesAction = UIAlertAction(title: "신발 (Shoes)", style: .default, handler: { _ in
+		let shoesAction = UIAlertAction(title: Category.shoes.title, style: .default, handler: { _ in
 			self.imagePicker()
-			self.category = "#Shoes"
+			self.category = Category.shoes.hashTag
 		})
-		let accAction = UIAlertAction(title: "악세사리 (Acc)", style: .default, handler: { _ in
+		let accAction = UIAlertAction(title: Category.acc.title, style: .default, handler: { _ in
 			self.imagePicker()
-			self.category = "#Acc"
+			self.category = Category.acc.hashTag
 		})
 		let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
 
