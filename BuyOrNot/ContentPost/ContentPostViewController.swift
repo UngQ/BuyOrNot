@@ -46,8 +46,6 @@ class ContentPostViewController: BaseViewController {
 
 		navigationItem.title = viewModel.title
 
-		self.imageCollectionView.delegate = self
-
 
 	}
 
@@ -85,6 +83,20 @@ class ContentPostViewController: BaseViewController {
 			.disposed(by: disposeBag)
 
 
+		imageCollectionView.rx.reachedBottom
+			.skip(1)
+			.subscribe(with: self) { owner, position in
+		 print("HHHHH")
+				owner.viewModel.isLoading = true
+				owner.viewModel.viewWillAppearTrigger.accept(())
+			}
+			.disposed(by: disposeBag)
+
+		output.cautionMessage
+			.drive(with: self) { owner, message in
+				owner.view.makeToast(message, position: .center)
+			}
+			.disposed(by: disposeBag)
 
 
 	}
@@ -108,16 +120,3 @@ class ContentPostViewController: BaseViewController {
 
 
 
-extension ContentPostViewController: UIScrollViewDelegate, UICollectionViewDelegate {
-	func scrollViewDidScroll(_ scrollView: UIScrollView) {
-		let position = scrollView.contentOffset.y
-		if position > (scrollView.contentSize.height-100 - scrollView.frame.size.height) {
-			// Trigger the fetch only if we're not already loading data
-			print("asdf")
-			if !viewModel.isLoading {
-				viewModel.isLoading = true
-				viewModel.viewWillAppearTrigger.accept(())  // This method would trigger `viewWillAppearTrigger`
-			}
-		}
-	}
-}

@@ -33,6 +33,8 @@ class PostViewController: BaseViewController {
 
 	@objc func reloadData() {
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+			self.viewModel.isLoading = false
+			self.viewModel.nextCursor = nil
 			self.viewModel.viewWillAppearTrigger.accept(())
 			self.refreshControl.endRefreshing()
 			  }
@@ -139,6 +141,7 @@ override func bind() {
 				cell.likeDislikeProgressView.setProgress(0, animated: true)
 
 			} else {
+				
 				cell.likeDislikeProgressView.trackTintColor = .systemRed
 				cell.likeDislikeProgressView.setProgress(likeRatio, animated: true)
 			}
@@ -188,9 +191,30 @@ override func bind() {
 				.bind(to: disLikeButtonTapped)
 				.disposed(by: cell.disposeBag)
 
-		
+			
+			cell.commentButton.rx.tap
+				.asDriver()
+				.drive(with: self) { owner, _ in
+					let vc = CommentViewController()
+					vc.viewModel.postID = element.post_id
+					vc.viewModel.commentsData.accept(element.comments)
+					let nav = UINavigationController(rootViewController: vc)
+					owner.present(nav, animated: true)
+				}
+				.disposed(by: cell.disposeBag)
+
+
 		}
 
+		.disposed(by: disposeBag)
+
+	tableView.rx.reachedBottom
+		.skip(1)
+		.subscribe(with: self) { owner, position in
+	 print("HHHHH")
+			owner.viewModel.isLoading = true
+			owner.viewModel.viewWillAppearTrigger.accept(())
+		}
 		.disposed(by: disposeBag)
 
 	output.cautionMessage

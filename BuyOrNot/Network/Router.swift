@@ -17,6 +17,7 @@ enum Router {
 
 	case uploadImage(query: Encodable)
 	case uploadPost(query: Encodable)
+	case uploadComment(id: String, query: Encodable)
 
 	case lookPosts(query: PostQueryItems)
 	case lookPost(id: String)
@@ -47,6 +48,7 @@ extension Router: TargetType {
 			 .join,
 			 .uploadImage,
 			 .uploadPost,
+			 .uploadComment,
 			 .likePost:
 			return .post
 
@@ -68,6 +70,8 @@ extension Router: TargetType {
 		case .uploadPost,
 				.lookPosts:
 			return "/v1/posts"
+		case .uploadComment(let id, _):
+			return "/v1/posts/\(id)/comments"
 		case .lookPost(let id):
 			return "/v1/posts/\(id)"
 		case .likePost(let id, _, let like):
@@ -102,7 +106,8 @@ extension Router: TargetType {
 					HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
 
 			case .uploadPost,
-				.likePost:
+				.likePost,
+				.uploadComment:
 			return [HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
 					HTTPHeader.contentType.rawValue: HTTPHeader.json.rawValue,
 					HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
@@ -158,7 +163,8 @@ extension Router: TargetType {
 			.validationEmail(let query),
 			.join(let query),
 			.uploadPost(let query),
-			.likePost(_, let query, _):
+			.likePost(_, let query, _),
+			.uploadComment(_, let query):
 			let encoder = JSONEncoder()
 			return try? encoder.encode(query)
 

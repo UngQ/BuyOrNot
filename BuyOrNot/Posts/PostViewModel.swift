@@ -15,6 +15,8 @@ class PostViewModel: ViewModelType {
 
 	var totalOrDetail = true
 	var id: String?
+	var isLoading = false
+	var nextCursor: String? = nil
 
 	var disposeBag = DisposeBag()
 
@@ -40,9 +42,17 @@ class PostViewModel: ViewModelType {
 
 		if totalOrDetail {
 			viewWillAppearTrigger
-				.flatMap {
+				.flatMap {[weak self] _ -> Single<PostsModel> in
+					guard let self = self else { return .never()}
 
-					NetworkManager.performRequest(route: .lookPosts(query: PostQueryItems(next: nil, limit: "20", hashTag: nil)), decodingType: PostsModel.self)
+				 if self.isLoading && self.nextCursor == "0" {
+					 message.accept("더 이상 게시물이 없습니다.")
+					 return .never()
+				 }
+
+				 return
+
+					NetworkManager.performRequest(route: .lookPosts(query: PostQueryItems(next: self.nextCursor, limit: "5", hashTag: nil)), decodingType: PostsModel.self)
 						.catch { error in
 							print(error.asAFError?.responseCode)
 							return Single.never()
@@ -50,7 +60,20 @@ class PostViewModel: ViewModelType {
 
 				}
 				.subscribe(with: self) { owner, result in
-					owner.postsData.accept(result.data)
+
+					owner.nextCursor = result.next_cursor
+
+					if !owner.isLoading {
+						print("first")
+						owner.postsData.accept(result.data)
+					} else if owner.isLoading  {
+						print("second")
+						var newData = owner.postsData.value
+						newData.append(contentsOf: result.data)
+						owner.postsData.accept(newData)
+
+					}
+					
 				}
 				.disposed(by: disposeBag)
 		} else {
