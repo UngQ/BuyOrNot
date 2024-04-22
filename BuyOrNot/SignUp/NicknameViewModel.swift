@@ -71,7 +71,7 @@ class NicknameViewModel: ViewModelType {
 	}
 
 	func isValidNickname(_ nickname: String) -> Bool {
-		let nicknameRegex = "^[a-zA-Z0-9가-힣]{3,16}$"
+		let nicknameRegex = "^[a-zA-Z0-9가-힣]{3,10}$"
 		return NSPredicate(format: "SELF MATCHES %@", nicknameRegex).evaluate(with: nickname)
 	}
 }

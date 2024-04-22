@@ -19,6 +19,8 @@ enum Router {
 	case uploadPost(query: Encodable)
 	case uploadComment(id: String, query: Encodable)
 
+	case deleteComment(id: String, commentId: String)
+
 	case lookPosts(query: PostQueryItems)
 	case lookPost(id: String)
 	case hashTag(query: PostQueryItems)
@@ -52,6 +54,8 @@ extension Router: TargetType {
 			 .likePost:
 			return .post
 
+		case .deleteComment:
+			return .delete
 		}
 	}
 
@@ -80,6 +84,8 @@ extension Router: TargetType {
 			return "/v1/posts/hashtags"
 		case .userPost(_, let id):
 			return "/v1/posts/users/\(id)"
+		case .deleteComment(let id, let commentId):
+			return "/v1/posts/\(id)/comments/\(commentId)"
 		}
 	}
 
@@ -115,7 +121,8 @@ extension Router: TargetType {
 		case .lookPosts,
 				.lookPost,
 			.hashTag,
-			.userPost:
+			.userPost,
+			.deleteComment:
 			return [
 				HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
 				HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
@@ -157,7 +164,8 @@ extension Router: TargetType {
 				.lookPosts,
 				.hashTag,
 				.lookPost,
-				.userPost:
+				.userPost,
+				.deleteComment:
 			return nil
 		case .login(let query),
 			.validationEmail(let query),

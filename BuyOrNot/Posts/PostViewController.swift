@@ -106,10 +106,6 @@ override func bind() {
 			row, element, cell in
 			cell.selectionStyle = .none
 
-			cell.likeButton.tag = row
-			cell.dislikeButton.tag = row
-
-
 			let likes = element.likes
 			let disLikes = element.likes2
 			guard let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) else {
@@ -154,8 +150,8 @@ override func bind() {
 			cell.postImageView.loadImage(from: postImage)
 
 			cell.titleNPriceLabel.text = "\(element.title) / \(element.content1)"
-			cell.likeLabel.text = "사요 \(element.likes.count)개"
-			cell.dislikeLabel.text = "마요 \(element.likes2.count)개"
+			cell.likeLabel.text = "사세요 \(element.likes.count)개"
+			cell.dislikeLabel.text = "마세요 \(element.likes2.count)개"
 			cell.timeLabel.text = element.createdAt.formattedDate()
 
 			if myLike {
@@ -178,7 +174,7 @@ override func bind() {
 			}
 
 			cell.likeButton.rx.tap
-				.map { cell.likeButton.tag }
+				.map { row}
 //				.do { _ in cell.animateButton(cell.likeButton) }
 				.bind(to: likeButtonTapped)
 				.disposed(by: cell.disposeBag)
@@ -186,7 +182,7 @@ override func bind() {
 
 
 			cell.dislikeButton.rx.tap
-				.map { cell.dislikeButton.tag }
+				.map { row }
 //				.do { _ in cell.animateButton(cell.dislikeButton) }
 				.bind(to: disLikeButtonTapped)
 				.disposed(by: cell.disposeBag)
@@ -197,7 +193,7 @@ override func bind() {
 				.drive(with: self) { owner, _ in
 					let vc = CommentViewController()
 					vc.viewModel.postID = element.post_id
-					vc.viewModel.commentsData.accept(element.comments)
+
 					let nav = UINavigationController(rootViewController: vc)
 					owner.present(nav, animated: true)
 				}

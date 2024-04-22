@@ -22,7 +22,13 @@ struct NetworkManager {
 		return requestBody
 	}
 
-	static func performRequest<T: Decodable>(route: Router, decodingType: T.Type) -> Single<T> {
+	static func performRequest<T: Decodable>(route: Router, decodingType: T.Type?) -> Single<T> {
+
+		if decodingType == nil {
+
+		}
+
+
 		return Single<T>.create { single in
 			do {
 				let urlRequest = try route.asURLRequest()
@@ -77,6 +83,41 @@ struct NetworkManager {
 					performRequest(route: route, decodingType: T.self).map { _ in
 						Void()
 					}
+				}
+			}
+		})
+	}
+
+	static func performRequestWithVoid(route: Router) -> Single<Void> {
+		return Single<Void>.create { single in
+			do {
+				let urlRequest = try route.asURLRequest()
+
+				AF.request(urlRequest)
+					.validate(statusCode: 200..<300)
+					.response { response in
+						switch response.result {
+						case .success:
+							print("Request succeeded with status code: \(String(describing: response.response?.statusCode))")
+							single(.success(()))
+						case .failure(let error):
+							print("Request failed with error: \(error.localizedDescription) and status code: \(String(describing: response.response?.statusCode))")
+							single(.failure(error))
+						}
+					}
+			} catch {
+				single(.failure(error))
+			}
+
+			return Disposables.create()
+		}
+		.retry(when: { errors in
+			errors.flatMap { error -> Single<Void> in
+				guard let afError = error as? AFError, afError.responseCode == 419 else {
+					throw error
+				}
+				return refreshToken().flatMap { _ in
+					deleteMessage(route: route).map { Void() }
 				}
 			}
 		})

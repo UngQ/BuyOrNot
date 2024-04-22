@@ -50,9 +50,7 @@ class PostViewModel: ViewModelType {
 					 return .never()
 				 }
 
-				 return
-
-					NetworkManager.performRequest(route: .lookPosts(query: PostQueryItems(next: self.nextCursor, limit: "5", hashTag: nil)), decodingType: PostsModel.self)
+				 return NetworkManager.performRequest(route: .lookPosts(query: PostQueryItems(next: self.nextCursor, limit: "5", hashTag: nil)), decodingType: PostsModel.self)
 						.catch { error in
 							print(error.asAFError?.responseCode)
 							return Single.never()
@@ -73,7 +71,7 @@ class PostViewModel: ViewModelType {
 						owner.postsData.accept(newData)
 
 					}
-					
+
 				}
 				.disposed(by: disposeBag)
 		} else {
@@ -111,7 +109,7 @@ class PostViewModel: ViewModelType {
 				}
 
 
-				var like = post.likes.contains(myId)
+				let like = post.likes.contains(myId)
 
 				if post.likes2.contains(myId) {
 					message.accept("반대 투표는 투표취소 후 가능합니다.")
@@ -166,7 +164,7 @@ class PostViewModel: ViewModelType {
 
 
 
-				var like = post.likes2.contains(myId)
+				let like = post.likes2.contains(myId)
 
 
 				if post.likes.contains(myId) {

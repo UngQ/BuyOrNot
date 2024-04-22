@@ -7,9 +7,11 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
 class CommentTableViewCell: UITableViewCell {
 
+	var disposeBag = DisposeBag()
 
 	let profileImageView: UIImageView = {
 		let imageView = UIImageView()
@@ -22,13 +24,13 @@ class CommentTableViewCell: UITableViewCell {
 
 	let nicknameLabel: UILabel = {
 		let label = UILabel()
-		label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+		label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
 		return label
 	}()
 
 	let dateLabel: UILabel = {
 		let label = UILabel()
-		label.font = UIFont.systemFont(ofSize: 14)
+		label.font = UIFont.systemFont(ofSize: 12)
 		label.textColor = .gray
 		return label
 	}()
@@ -36,20 +38,21 @@ class CommentTableViewCell: UITableViewCell {
 	let commentLabel: UILabel = {
 		let label = UILabel()
 		label.font = UIFont.systemFont(ofSize: 14)
-		label.numberOfLines = 0 // Allows for multiline text
+		label.numberOfLines = 0
 		return label
 	}()
 
 	let editButton: UIButton = {
 		let button = UIButton(type: .system)
-		button.setTitle("Edit", for: .normal)
+		button.setImage(UIImage(systemName: "pencil"), for: .normal)
+		button.tintColor = .systemBlue
 		return button
 	}()
 
 	let deleteButton: UIButton = {
 		let button = UIButton(type: .system)
-		button.setTitle("Delete", for: .normal)
-		button.setTitleColor(.red, for: .normal)
+		button.setImage(UIImage(systemName: "trash"), for: .normal)
+		button.tintColor = .systemRed
 		return button
 	}()
 
@@ -71,7 +74,7 @@ class CommentTableViewCell: UITableViewCell {
 	private func setupConstraints() {
 		profileImageView.snp.makeConstraints { make in
 			make.top.left.equalToSuperview().inset(10)
-			make.size.equalTo(40)
+			make.size.equalTo(30)
 		}
 
 		nicknameLabel.snp.makeConstraints { make in
@@ -80,26 +83,33 @@ class CommentTableViewCell: UITableViewCell {
 		}
 
 		dateLabel.snp.makeConstraints { make in
-			make.top.equalTo(nicknameLabel.snp.bottom).offset(2)
-			make.left.equalTo(profileImageView.snp.right).offset(10)
-		}
-
-		commentLabel.snp.makeConstraints { make in
-			make.top.equalTo(profileImageView.snp.bottom).offset(10)
-			make.left.right.equalToSuperview().inset(10)
-		}
-
-		editButton.snp.makeConstraints { make in
-			make.top.equalTo(commentLabel.snp.bottom).offset(10)
-			make.right.equalTo(deleteButton.snp.left).offset(-10)
-			make.bottom.equalToSuperview().inset(10)
+			make.bottom.equalTo(nicknameLabel.snp.bottom)
+			make.left.equalTo(nicknameLabel.snp.right).offset(10)
 		}
 
 		deleteButton.snp.makeConstraints { make in
-			make.top.equalTo(commentLabel.snp.bottom).offset(10)
-			make.right.equalToSuperview().inset(10)
-			make.bottom.equalToSuperview().inset(10)
+			make.top.equalToSuperview().inset(10)
+			  make.trailing.equalToSuperview().inset(10)
+			  make.height.equalTo(20)
+			  make.width.equalTo(deleteButton.snp.height)
 		}
+
+		editButton.snp.makeConstraints { make in
+			make.top.equalToSuperview().inset(10)
+			  make.trailing.equalTo(deleteButton.snp.leading).offset(-10)
+			  make.height.equalTo(deleteButton.snp.height)
+			  make.width.equalTo(editButton.snp.height)
+		}
+
+
+
+		commentLabel.snp.makeConstraints { make in
+			make.top.equalTo(nicknameLabel.snp.bottom).offset(10)
+			make.leading.equalTo(profileImageView.snp.trailing).offset(10)
+			make.trailing.equalToSuperview().offset(-10)
+			make.bottom.equalToSuperview().offset(-10)
+		}
+
 	}
 
 //	func configure(with comment: Comment) {

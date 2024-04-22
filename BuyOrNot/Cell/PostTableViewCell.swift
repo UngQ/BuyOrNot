@@ -151,8 +151,6 @@ class PostTableViewCell: UITableViewCell {
 			let width = gesture.view?.bounds.width ?? 0
 			let targetButton = touchPoint.x < width / 2 ? likeButton : dislikeButton
 
-
-			// Execute the appropriate tap action
 			if touchPoint.x < width / 2 {
 				leftTap()
 			} else {

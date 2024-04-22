@@ -75,7 +75,7 @@ class NicknameViewController: BaseViewController {
 			make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
 		}
 
-		descriptionLabel.text = "3~16자, 공백, 자음, 모음 불가"
+		descriptionLabel.text = "3~10자, 공백, 자음, 모음 불가"
 		descriptionLabel.font = .boldSystemFont(ofSize: 14)
 		descriptionLabel.textColor = .systemRed
 

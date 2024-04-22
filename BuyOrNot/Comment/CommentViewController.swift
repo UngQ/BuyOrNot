@@ -21,6 +21,18 @@ class CommentViewController: BaseViewController {
 
 	let commentTextField = UITextField()
 	let sendButton = PointButton(title: "↑")
+	let emptyLabel = {
+		let view = UILabel()
+		view.text = "아직 작성된 댓글이 없습니다."
+		view.font = .boldSystemFont(ofSize: 24)
+		view.textAlignment = .center
+		return view
+	}()
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		self.viewModel.viewWillAppearTrigger.accept(())
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -33,12 +45,15 @@ class CommentViewController: BaseViewController {
 	}
 
 	override func bind() {
+		let editButtonTapped = PublishSubject<Int>()
+		let deleteButtonTapped = PublishSubject<Int>()
 
-		var isValidation = false
 
 		let input = CommentViewModel.Input(commentText: commentTextField.rx.text.orEmpty,
-										   sendButtonTap: sendButton.rx.tap)
-		
+										   sendButtonTap: sendButton.rx.tap,
+										   editButtonTap: editButtonTapped.asObservable(),
+										   deleteButtonTap: deleteButtonTapped.asObservable())
+
 
 		let output = viewModel.transform(input: input)
 
@@ -58,14 +73,34 @@ class CommentViewController: BaseViewController {
 			}
 			.disposed(by: disposeBag)
 
+		output.data
+			.drive(with: self) { owner, comments in
+				if comments == [] {
+					owner.emptyLabel.isHidden = false
+				} else {
+					owner.emptyLabel.isHidden = true
+				}
+			}
+			.disposed(by: disposeBag)
 
 		output.data
 			.drive(commentTableView.rx.items(cellIdentifier: CommentTableViewCell.id, cellType: CommentTableViewCell.self)) { row, element, cell in
 				cell.selectionStyle = .none
+				
+
+
 
 				cell.nicknameLabel.text = element.creator.nick
 				cell.commentLabel.text = element.content
-
+				cell.dateLabel.text = element.createdAt.formattedDate()
+				cell.editButton.rx.tap
+					.map { row }
+					.bind(to: editButtonTapped)
+					.disposed(by: cell.disposeBag)
+				cell.deleteButton.rx.tap
+					.map { row }
+					.bind(to: deleteButtonTapped)
+					.disposed(by: cell.disposeBag)
 
 				let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
 				if myId == element.creator.user_id {
@@ -79,6 +114,12 @@ class CommentViewController: BaseViewController {
 			}
 			.disposed(by: disposeBag)
 
+		output.deletedMessage
+			.drive(with: self) { owner, message in
+				owner.view.makeToast(message, position: .center)
+			}
+			.disposed(by: disposeBag)
+
 
 	}
 
@@ -86,6 +127,7 @@ class CommentViewController: BaseViewController {
 		view.addSubview(commentTableView)
 		view.addSubview(commentTextField)
 		view.addSubview(sendButton)
+		view.addSubview(emptyLabel)
 
 		commentTextField.borderStyle = .roundedRect
 		commentTextField.placeholder = "댓글을 입력해보세요."
@@ -103,7 +145,9 @@ class CommentViewController: BaseViewController {
 
 
 	func setupConstraints() {
-
+		emptyLabel.snp.makeConstraints { make in
+			make.centerY.centerX.equalToSuperview()
+		}
 
 		commentTableView.snp.makeConstraints { make in
 			make.top.equalTo(view.safeAreaLayoutGuide)

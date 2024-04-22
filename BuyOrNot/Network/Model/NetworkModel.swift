@@ -7,6 +7,8 @@
 
 import Foundation
 
+struct EmptyResponse: Decodable {}
+
 struct LoginModel: Decodable {
 	let user_id: String
 	let email: String
@@ -48,12 +50,17 @@ struct PostModel: Decodable {
 	let comments: [CommentModel]
 }
 
-struct CommentModel: Decodable {
+struct CommentModel: Decodable, Equatable {
 	let comment_id: String
 	let content: String
 	let createdAt: String
 	let creator: CreatorModel
+
+	static func == (lhs: CommentModel, rhs: CommentModel) -> Bool {
+		 return lhs.comment_id == rhs.comment_id
+	 }
 }
+
 
 struct CreatorModel: Decodable {
 	let user_id: String

@@ -14,24 +14,42 @@ class CommentViewModel: ViewModelType {
 	var disposeBag: DisposeBag = DisposeBag()
 
 	var postID = ""
-	var comments: [CommentModel] = []
 	let commentsData = BehaviorRelay<[CommentModel]>(value: [])
-
+	let viewWillAppearTrigger = PublishRelay<Void>()
 
 	struct Input {
 		let commentText: ControlProperty<String>
 		let sendButtonTap: ControlEvent<Void>
+		let editButtonTap: Observable<Int>
+		let deleteButtonTap: Observable<Int>
 	}
 
 
 	struct Output {
 		let data: Driver<[CommentModel]>
 		let isValidation: Driver<Bool>
-		
+		let deletedMessage: Driver<String>
+
+
 	}
 
 	func transform(input: Input) -> Output {
 		let isValidation = PublishRelay<Bool>()
+		let message = BehaviorRelay(value: "")
+
+
+		viewWillAppearTrigger
+			.flatMap {
+				NetworkManager.performRequest(route: .lookPost(id: self.postID), decodingType: PostModel.self)
+					.catch { error in
+						print(error.asAFError?.responseCode)
+						return Single.never()
+					}
+			}
+			.subscribe(with: self) { owner, result in
+				owner.commentsData.accept(result.comments)
+			}
+			.disposed(by: disposeBag)
 
 		input.commentText
 			.map { !$0.isEmpty }  // 텍스트가 비어있지 않으면 true, 비어있으면 false 반환
@@ -51,9 +69,29 @@ class CommentViewModel: ViewModelType {
 			}
 			.disposed(by: disposeBag)
 
+		input.deleteButtonTap
+			.withLatestFrom(commentsData) { index, comments -> CommentModel? in
+				print(index)
+				guard index < comments.count else { return nil }
+				return comments[index]
+			}
+			.flatMap { post -> Single<Void> in
+
+				guard let post = post else {
+					return Single.never()
+				}
+
+
+				return NetworkManager.performRequest(route: .deleteComment(id: self.postID, commentId: post.comment_id), decodingType: EmptyResponse.self)
+			}.subscribe(with: self) { owner, value in
+				print(value)
+				message.accept("댓글을 삭제하였습니다.")
+			}
+			.disposed(by: disposeBag)
 
 
 		return Output(data: commentsData.asDriver(),
-					  isValidation: isValidation.asDriver(onErrorJustReturn: false))
+					  isValidation: isValidation.asDriver(onErrorJustReturn: false),
+					  deletedMessage: message.asDriver())
 	}
 }
