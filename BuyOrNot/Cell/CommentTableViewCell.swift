@@ -56,6 +56,21 @@ class CommentTableViewCell: UITableViewCell {
 		return button
 	}()
 
+	let modifyTextField = {
+		let view = UITextView()
+		view.font = .systemFont(ofSize: 14)
+		view.textContainer.lineFragmentPadding = .zero
+		view.textContainerInset = .zero
+		view.textColor = .systemBlue
+		return view
+	}()
+
+	override func prepareForReuse() {
+		super.prepareForReuse()
+
+		disposeBag = DisposeBag()
+	}
+
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		contentView.addSubview(profileImageView)
@@ -64,6 +79,7 @@ class CommentTableViewCell: UITableViewCell {
 		contentView.addSubview(commentLabel)
 		contentView.addSubview(editButton)
 		contentView.addSubview(deleteButton)
+		contentView.addSubview(modifyTextField)
 		setupConstraints()
 	}
 
@@ -109,6 +125,12 @@ class CommentTableViewCell: UITableViewCell {
 			make.trailing.equalToSuperview().offset(-10)
 			make.bottom.equalToSuperview().offset(-10)
 		}
+
+		modifyTextField.snp.makeConstraints { make in
+			make.edges.equalTo(commentLabel)
+		}
+
+		modifyTextField.isHidden = true
 
 	}
 

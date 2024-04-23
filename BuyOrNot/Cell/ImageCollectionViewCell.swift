@@ -19,6 +19,12 @@ class ImageCollectionViewCell: UICollectionViewCell {
 		return imageView
 	}()
 
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		
+		disposeBag = DisposeBag()
+	}
+
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		contentView.addSubview(imageView)

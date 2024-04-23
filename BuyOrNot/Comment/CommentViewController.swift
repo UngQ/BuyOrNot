@@ -49,6 +49,7 @@ class CommentViewController: BaseViewController {
 		let deleteButtonTapped = PublishSubject<Int>()
 
 
+
 		let input = CommentViewModel.Input(commentText: commentTextField.rx.text.orEmpty,
 										   sendButtonTap: sendButton.rx.tap,
 										   editButtonTap: editButtonTapped.asObservable(),
@@ -89,7 +90,7 @@ class CommentViewController: BaseViewController {
 				
 
 
-
+				
 				cell.nicknameLabel.text = element.creator.nick
 				cell.commentLabel.text = element.content
 				cell.dateLabel.text = element.createdAt.formattedDate()
@@ -101,6 +102,14 @@ class CommentViewController: BaseViewController {
 					.map { row }
 					.bind(to: deleteButtonTapped)
 					.disposed(by: cell.disposeBag)
+
+				cell.editButton.rx.tap
+					.asDriver()
+					.drive(with: self) { owner, _ in
+						owner.navigationController?.pushViewController(EditCommentViewController(), animated: true)
+					}
+					.disposed(by: cell.disposeBag)
+
 
 				let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
 				if myId == element.creator.user_id {
@@ -169,4 +178,8 @@ class CommentViewController: BaseViewController {
 		}
 	}
 
+
+
 }
+
+

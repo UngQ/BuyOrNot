@@ -15,7 +15,7 @@ class ContentPostViewController: BaseViewController {
 	lazy var viewModel = ContentPostViewModel()
 
 	private lazy var imageCollectionView: UICollectionView = {
-		let layout = UICollectionViewFlowLayout.createThreeColumnFlowLayout(in: self.view)
+		let layout = UICollectionViewFlowLayout.createCompositionLayout(in: self.view)
 		let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
 		collectionView.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: ImageCollectionViewCell.id)
 		collectionView.refreshControl = refreshControl

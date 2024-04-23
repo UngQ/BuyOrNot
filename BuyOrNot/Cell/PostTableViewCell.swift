@@ -36,23 +36,23 @@ class PostTableViewCell: UITableViewCell {
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
-		likeButton.transform = CGAffineTransform.identity
-		  dislikeButton.transform = CGAffineTransform.identity
-		likeButton.alpha = 1
-		 dislikeButton.alpha = 1
-		likeButton.removeTarget(nil, action: nil, for: .allEvents)
-		   dislikeButton.removeTarget(nil, action: nil, for: .allEvents)
-
+//		likeButton.transform = CGAffineTransform.identity
+//		  dislikeButton.transform = CGAffineTransform.identity
+//		likeButton.alpha = 1
+//		 dislikeButton.alpha = 1
+//		likeButton.removeTarget(nil, action: nil, for: .allEvents)
+//		   dislikeButton.removeTarget(nil, action: nil, for: .allEvents)
+//
 		profileImageView.image = UIImage(systemName: "person.circle.fill")
-		usernameLabel.text = ""
-		likeLabel.text = ""
-		dislikeLabel.text = ""
-		timeLabel.text = ""
-
-
-		likeDislikeProgressView.setProgress(0, animated: false)
-			likeDislikeProgressView.trackTintColor = .systemGray4
-			likeDislikeProgressView.progressTintColor = .systemBlue
+//		usernameLabel.text = ""
+//		likeLabel.text = ""
+//		dislikeLabel.text = ""
+//		timeLabel.text = ""
+//
+//
+//		likeDislikeProgressView.setProgress(0, animated: false)
+//			likeDislikeProgressView.trackTintColor = .systemGray4
+//			likeDislikeProgressView.progressTintColor = .systemBlue
 
 		disposeBag = DisposeBag()
 
@@ -177,7 +177,6 @@ class PostTableViewCell: UITableViewCell {
 			  make.width.height.equalTo(25)
 		  }
 
-
 		usernameLabel.snp.makeConstraints { make in
 			make.top.equalToSuperview().offset(10)
 			make.leading.equalTo(profileImageView.snp.trailing).offset(10)
@@ -188,8 +187,6 @@ class PostTableViewCell: UITableViewCell {
 			make.horizontalEdges.equalToSuperview()
 			make.height.equalTo(postImageView.snp.width)
 		}
-
-
 
 		likeButton.snp.makeConstraints { make in
 
@@ -208,15 +205,11 @@ class PostTableViewCell: UITableViewCell {
 			make.centerY.equalTo(likeButton)
 			make.trailing.equalTo(likeButton.snp.leading).offset(-10)
 		}
-		likeLabel.text = "caption"
 
 		dislikeLabel.snp.makeConstraints { make in
 			make.centerY.equalTo(dislikeButton)
 			make.leading.equalTo(dislikeButton.snp.trailing).offset(10)
 		}
-
-		dislikeLabel.text = "adff"
-
 
 		commentButton.snp.makeConstraints { make in
 			make.top.equalTo(postImageView.snp.bottom).offset(10)
@@ -236,18 +229,11 @@ class PostTableViewCell: UITableViewCell {
 			make.bottom.equalToSuperview().offset(-10).priority(750)
 		}
 
-		titleNPriceLabel.text = "likes"
-
-
 		timeLabel.snp.makeConstraints { make in
 			make.top.equalTo(usernameLabel.snp.bottom)
 			make.leading.equalTo(profileImageView.snp.trailing).offset(10)
-//			make.top.equalTo(titleNPriceLabel.snp.bottom).offset(4)
-//			make.trailing.equalToSuperview().offset(-10)
-//			make.bottom.equalToSuperview().offset(-10).priority(750)
-		}
-		timeLabel.text = "time"
 
+		}
 
 	}
 

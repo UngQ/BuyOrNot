@@ -48,7 +48,7 @@ class PostViewController: BaseViewController {
 		if TotalOrDetail {
 			self.navigationItem.title = "최근 게시물"
 
-			let menuButton = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: self, action: nil)
+			let menuButton = UIBarButtonItem(image: UIImage(systemName: "checklist.unchecked"), style: .plain, target: self, action: nil)
 		 self.navigationItem.leftBarButtonItem = menuButton
 
 		 // Define the menu actions
@@ -166,6 +166,7 @@ override func bind() {
 				cell.dislikeButton.setImage(UIImage(systemName: "hand.thumbsdown"), for: .normal)
 			}
 
+
 			cell.leftTap = {
 				likeButtonTapped.onNext(row)
 			}
@@ -174,7 +175,7 @@ override func bind() {
 			}
 
 			cell.likeButton.rx.tap
-				.map { row}
+				.map { row }
 //				.do { _ in cell.animateButton(cell.likeButton) }
 				.bind(to: likeButtonTapped)
 				.disposed(by: cell.disposeBag)
@@ -223,9 +224,6 @@ override func bind() {
 
 	override func configureLayout() {
 		view.addSubview(tableView)
-//		tableView.estimatedRowHeight = 200
-//		tableView.rowHeight = UITableView.automaticDimension
-
 
 		tableView.snp.makeConstraints { make in
 			make.top.equalTo(view.safeAreaLayoutGuide)
@@ -235,11 +233,5 @@ override func bind() {
 		tableView.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.id)
 		tableView.refreshControl = refreshControl
 		refreshControl.addTarget(self, action: #selector(reloadData), for: .valueChanged)
-
-
 	}
-
-
-
-
 }

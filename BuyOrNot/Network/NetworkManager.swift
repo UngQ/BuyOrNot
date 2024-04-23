@@ -24,11 +24,6 @@ struct NetworkManager {
 
 	static func performRequest<T: Decodable>(route: Router, decodingType: T.Type?) -> Single<T> {
 
-		if decodingType == nil {
-
-		}
-
-
 		return Single<T>.create { single in
 			do {
 				let urlRequest = try route.asURLRequest()
@@ -88,7 +83,7 @@ struct NetworkManager {
 		})
 	}
 
-	static func performRequestWithVoid(route: Router) -> Single<Void> {
+	static func performRequestVoidType(route: Router) -> Single<Void> {
 		return Single<Void>.create { single in
 			do {
 				let urlRequest = try route.asURLRequest()
@@ -117,7 +112,7 @@ struct NetworkManager {
 					throw error
 				}
 				return refreshToken().flatMap { _ in
-					deleteMessage(route: route).map { Void() }
+					performRequestVoidType(route: route).map { Void() }
 				}
 			}
 		})

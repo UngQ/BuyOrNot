@@ -15,6 +15,7 @@ class CommentViewModel: ViewModelType {
 
 	var postID = ""
 	let commentsData = BehaviorRelay<[CommentModel]>(value: [])
+	let modifyComment = PublishSubject<String>()
 	let viewWillAppearTrigger = PublishRelay<Void>()
 
 	struct Input {
@@ -22,6 +23,7 @@ class CommentViewModel: ViewModelType {
 		let sendButtonTap: ControlEvent<Void>
 		let editButtonTap: Observable<Int>
 		let deleteButtonTap: Observable<Int>
+
 	}
 
 
@@ -81,11 +83,11 @@ class CommentViewModel: ViewModelType {
 					return Single.never()
 				}
 
-
-				return NetworkManager.performRequest(route: .deleteComment(id: self.postID, commentId: post.comment_id), decodingType: EmptyResponse.self)
+				return NetworkManager.performRequestVoidType(route: .deleteComment(id: self.postID, commentId: post.comment_id))
 			}.subscribe(with: self) { owner, value in
 				print(value)
 				message.accept("댓글을 삭제하였습니다.")
+				owner.viewWillAppearTrigger.accept(())
 			}
 			.disposed(by: disposeBag)
 
