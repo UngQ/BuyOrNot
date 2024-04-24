@@ -109,8 +109,6 @@ class ContentPostViewController: BaseViewController {
 		}
 
 
-		imageCollectionView.backgroundColor = .brown
-
 		refreshControl.addTarget(self, action: #selector(reloadData), for: .valueChanged)
 
 	}

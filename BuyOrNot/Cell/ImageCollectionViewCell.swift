@@ -21,7 +21,9 @@ class ImageCollectionViewCell: UICollectionViewCell {
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
-		
+		imageView.contentMode = .scaleAspectFill
+		imageView.image = nil
+
 		disposeBag = DisposeBag()
 	}
 
@@ -29,6 +31,10 @@ class ImageCollectionViewCell: UICollectionViewCell {
 		super.init(frame: frame)
 		contentView.addSubview(imageView)
 		imageView.frame = contentView.bounds
+
+		imageView.snp.makeConstraints { make in
+			  make.edges.equalToSuperview()
+		  }
 	}
 
 	required init?(coder: NSCoder) {

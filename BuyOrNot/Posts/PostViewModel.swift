@@ -34,6 +34,7 @@ class PostViewModel: ViewModelType {
 		let data: Driver<[PostModel]>
 		let cautionMessage: Driver<String>
 
+
 	}
 
 	func transform(input: Input) -> Output {
@@ -95,7 +96,6 @@ class PostViewModel: ViewModelType {
 			.withLatestFrom(postsData) { index, posts -> PostModel? in
 				print(index)
 				guard index < posts.count else { return nil }
-				print(posts[index])
 				return posts[index]
 			}
 			.flatMap { post -> Single<LikeQueryAndModel> in
@@ -117,7 +117,7 @@ class PostViewModel: ViewModelType {
 				}
 
 
-				print(post.post_id)
+				print("\(post.post_id)하이하하이하하이하하이하하이하")
 
 				var newPosts = self.postsData.value
 				if let idx = newPosts.firstIndex(where: { $0.post_id == post.post_id }) {

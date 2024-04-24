@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import RxSwift
+import Lottie
 
 class PostTableViewCell: UITableViewCell {
 
@@ -32,7 +33,39 @@ class PostTableViewCell: UITableViewCell {
 	var editPost = {}
 	var deletePost = {}
 
+	var like = false
+	var dislike = false
+
 	let likeDislikeProgressView = UIProgressView(progressViewStyle: .default)
+
+	lazy var likeLottieView : LottieAnimationView = {
+
+		let animationView = LottieAnimationView(name: "likeAnimation")
+		animationView.frame = CGRect(x: 0, y: 0,
+									 width: 500, height: 500)
+		animationView.center =  contentView.center
+		animationView.contentMode = .scaleToFill
+		animationView.isHidden = true
+		animationView.loopMode = .playOnce
+		animationView.animationSpeed = 2
+
+		return animationView
+	}()
+
+
+	lazy var dislikeLottieView : LottieAnimationView = {
+
+		let animationView = LottieAnimationView(name: "dislikeAnimation")
+		animationView.frame = CGRect(x: 0, y: 0,
+									 width: 500, height: 500)
+		animationView.center = self.center
+		animationView.contentMode = .scaleToFill
+		animationView.isHidden = true
+		animationView.loopMode = .playOnce
+		animationView.animationSpeed = 2
+
+		return animationView
+	}()
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
@@ -53,6 +86,13 @@ class PostTableViewCell: UITableViewCell {
 //		likeDislikeProgressView.setProgress(0, animated: false)
 //			likeDislikeProgressView.trackTintColor = .systemGray4
 //			likeDislikeProgressView.progressTintColor = .systemBlue
+
+		likeLottieView.isHidden = true
+		likeLottieView.stop()
+		dislikeLottieView.isHidden = true
+		dislikeLottieView.stop()
+		like = false
+		  dislike = false
 
 		disposeBag = DisposeBag()
 
@@ -77,6 +117,9 @@ class PostTableViewCell: UITableViewCell {
 
 		contentView.addSubview(dislikeLabel)
 
+		contentView.addSubview(likeLottieView)
+
+
 		setupViews()
 		setupConstraints()
 		configureMenu()
@@ -86,6 +129,19 @@ class PostTableViewCell: UITableViewCell {
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
+
+	func playLikeAnimation() {
+		print("머야")
+		  // 둘 다 false일 때만 애니메이션 실행
+		  if !like && !dislike {
+			  // 예를 들어 like 애니메이션을 실행
+			  print("왜안돼")
+			  likeLottieView.isHidden = false
+			  likeLottieView.play(completion: { [weak self] finished in
+				  self?.likeLottieView.isHidden = true
+			  })
+		  }
+	  }
 
 	private func setupViews() {
 

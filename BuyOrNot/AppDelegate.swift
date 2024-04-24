@@ -49,8 +49,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			if let rootVC = self.rootViewController {
 				let alert = UIAlertController(title: "로그인 정보 만료", message: "다시 로그인 해주세요", preferredStyle: .alert)
 				alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { _ in
-					self.changeRootViewToLogin()
 
+
+					UIViewController.changeRootView(to: SignInViewController(), isNav: true)
+//					changeRootView(SignInViewController(), isNav: true)
 
 				}))
 				rootVC.present(alert, animated: true)
@@ -59,20 +61,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 	}
 
-	private func changeRootViewToLogin() {
-		let loginViewController = SignInViewController()
-		changeRootView(loginViewController)
-	}
 
-	private func changeRootView(_ viewController: UIViewController, isNav: Bool = false) {
-		guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-			  let sceneDelegate = windowScene.delegate as? SceneDelegate else {
-			return
-		}
-		let vc = isNav ? UINavigationController(rootViewController: viewController) : viewController
-		sceneDelegate.window?.rootViewController = vc
-		sceneDelegate.window?.makeKeyAndVisible()
-	}
 
 
 }

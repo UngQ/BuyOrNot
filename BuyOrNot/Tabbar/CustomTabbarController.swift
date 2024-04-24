@@ -74,7 +74,7 @@ class CustomTabBarController: UITabBarController {
 	//	}
 
 	func showActionSheet() {
-		let actionSheet = UIAlertController(title: .none, message: .none, preferredStyle: .actionSheet)
+		let actionSheet = UIAlertController(title: "카테고리를 선택해주세요.", message: .none, preferredStyle: .actionSheet)
 
 
 		let topAction = UIAlertAction(title: Category.top.title, style: .default, handler: { _ in

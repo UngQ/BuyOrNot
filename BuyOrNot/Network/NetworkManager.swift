@@ -5,6 +5,7 @@
 //  Created by ungQ on 4/14/24.
 //
 
+
 import Foundation
 import Alamofire
 import RxSwift
@@ -267,12 +268,12 @@ struct NetworkManager {
 					case .failure(let error):
 						print("흠")
 						print(response.response?.statusCode)
-						if let code = response.response?.statusCode, code == 418 {
-							print("리프레시 토큰 만료")
-							NotificationCenter.default.post(name: .authenticationFailed, object: nil)
-						} else {
-							NotificationCenter.default.post(name: .authenticationFailed, object: nil)
-						}
+						// refreshToken이 실패할 경우엔 무조건 로그인 창으로
+						NotificationCenter.default.post(name: .authenticationFailed, object: nil)
+						//						if let code = response.response?.statusCode, code == 418 {
+						//							print("리프레시 토큰 만료")
+						//							NotificationCenter.default.post(name: .authenticationFailed, object: nil)
+						//						}
 						single(.failure(error))
 					}
 				}

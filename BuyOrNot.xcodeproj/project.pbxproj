@@ -23,6 +23,11 @@
 		A558A0182BD63CF6000C1B9D /* CommentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A558A0172BD63CF6000C1B9D /* CommentTableViewCell.swift */; };
 		A558A01A2BD66333000C1B9D /* CommentQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A558A0192BD66333000C1B9D /* CommentQuery.swift */; };
 		A558A01D2BD6D5E0000C1B9D /* EditCommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A558A01C2BD6D5DF000C1B9D /* EditCommentViewController.swift */; };
+		A558A0392BD8E0F1000C1B9D /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = A558A0382BD8E0F1000C1B9D /* Lottie */; };
+		A558A0432BD8E957000C1B9D /* loadingImage.json in Resources */ = {isa = PBXBuildFile; fileRef = A558A0422BD8E957000C1B9D /* loadingImage.json */; };
+		A558A0452BD8EB78000C1B9D /* likeAnimation.json in Resources */ = {isa = PBXBuildFile; fileRef = A558A0442BD8EB77000C1B9D /* likeAnimation.json */; };
+		A558A0472BD8F22B000C1B9D /* dislikeAnimation.json in Resources */ = {isa = PBXBuildFile; fileRef = A558A0462BD8F22A000C1B9D /* dislikeAnimation.json */; };
+		A558A0492BD94D0B000C1B9D /* PostCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A558A0482BD94D0B000C1B9D /* PostCellViewModel.swift */; };
 		A559908F2BCBFED00096B98A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A559908E2BCBFED00096B98A /* AppDelegate.swift */; };
 		A55990912BCBFED00096B98A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990902BCBFED00096B98A /* SceneDelegate.swift */; };
 		A55990932BCBFED00096B98A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990922BCBFED00096B98A /* ViewController.swift */; };
@@ -93,6 +98,10 @@
 		A558A0172BD63CF6000C1B9D /* CommentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTableViewCell.swift; sourceTree = "<group>"; };
 		A558A0192BD66333000C1B9D /* CommentQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentQuery.swift; sourceTree = "<group>"; };
 		A558A01C2BD6D5DF000C1B9D /* EditCommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCommentViewController.swift; sourceTree = "<group>"; };
+		A558A0422BD8E957000C1B9D /* loadingImage.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loadingImage.json; sourceTree = "<group>"; };
+		A558A0442BD8EB77000C1B9D /* likeAnimation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = likeAnimation.json; sourceTree = "<group>"; };
+		A558A0462BD8F22A000C1B9D /* dislikeAnimation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = dislikeAnimation.json; sourceTree = "<group>"; };
+		A558A0482BD94D0B000C1B9D /* PostCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCellViewModel.swift; sourceTree = "<group>"; };
 		A559908B2BCBFED00096B98A /* BuyOrNot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BuyOrNot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A559908E2BCBFED00096B98A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A55990902BCBFED00096B98A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -147,6 +156,7 @@
 			files = (
 				A5B4966A2BCECE330079A3B1 /* IQKeyboardManagerSwift in Frameworks */,
 				A5B496772BD045560079A3B1 /* Tabman in Frameworks */,
+				A558A0392BD8E0F1000C1B9D /* Lottie in Frameworks */,
 				A55990B82BCC012F0096B98A /* Toast in Frameworks */,
 				A55990B02BCC01150096B98A /* RxCocoa in Frameworks */,
 				A55990AD2BCC00C90096B98A /* Kingfisher in Frameworks */,
@@ -163,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				A5589FAE2BD1F8CC000C1B9D /* PostTableViewCell.swift */,
+				A558A0482BD94D0B000C1B9D /* PostCellViewModel.swift */,
 				A5589FEA2BD35C3A000C1B9D /* ImageCollectionViewCell.swift */,
 				A558A0172BD63CF6000C1B9D /* CommentTableViewCell.swift */,
 			);
@@ -200,6 +211,9 @@
 			isa = PBXGroup;
 			children = (
 				A559908D2BCBFED00096B98A /* BuyOrNot */,
+				A558A0422BD8E957000C1B9D /* loadingImage.json */,
+				A558A0442BD8EB77000C1B9D /* likeAnimation.json */,
+				A558A0462BD8F22A000C1B9D /* dislikeAnimation.json */,
 				A559908C2BCBFED00096B98A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -419,6 +433,7 @@
 				A55990B72BCC012F0096B98A /* Toast */,
 				A5B496692BCECE330079A3B1 /* IQKeyboardManagerSwift */,
 				A5B496762BD045560079A3B1 /* Tabman */,
+				A558A0382BD8E0F1000C1B9D /* Lottie */,
 			);
 			productName = BuyOrNot;
 			productReference = A559908B2BCBFED00096B98A /* BuyOrNot.app */;
@@ -456,6 +471,7 @@
 				A55990B62BCC012F0096B98A /* XCRemoteSwiftPackageReference "Toast-Swift" */,
 				A5B496682BCECE330079A3B1 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				A5B496752BD045560079A3B1 /* XCRemoteSwiftPackageReference "Tabman" */,
+				A558A0372BD8E0F1000C1B9D /* XCRemoteSwiftPackageReference "lottie-spm" */,
 			);
 			productRefGroup = A559908C2BCBFED00096B98A /* Products */;
 			projectDirPath = "";
@@ -471,9 +487,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A558A0432BD8E957000C1B9D /* loadingImage.json in Resources */,
 				A55990F12BCC1FE30096B98A /* .gitignore in Resources */,
 				A55990982BCBFED20096B98A /* Assets.xcassets in Resources */,
+				A558A0452BD8EB78000C1B9D /* likeAnimation.json in Resources */,
 				A559909B2BCBFED20096B98A /* Base in Resources */,
+				A558A0472BD8F22B000C1B9D /* dislikeAnimation.json in Resources */,
 				A55990962BCBFED00096B98A /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -497,6 +516,7 @@
 				A55990C62BCC1A950096B98A /* UIViewController+Ex.swift in Sources */,
 				A55990E42BCC1C530096B98A /* ValidationEmailQuery.swift in Sources */,
 				A5589FFC2BD520D1000C1B9D /* UICollectionViewFlowLayout+Ex.swift in Sources */,
+				A558A0492BD94D0B000C1B9D /* PostCellViewModel.swift in Sources */,
 				A55990A52BCC00760096B98A /* SignInViewController.swift in Sources */,
 				A5589FE92BD2907A000C1B9D /* LikeQuery.swift in Sources */,
 				A55990D52BCC1BB60096B98A /* NicknameViewController.swift in Sources */,
@@ -774,6 +794,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A558A0372BD8E0F1000C1B9D /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.4.3;
+			};
+		};
 		A55990A82BCC00C10096B98A /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
@@ -833,6 +861,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A558A0382BD8E0F1000C1B9D /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A558A0372BD8E0F1000C1B9D /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
+		};
 		A55990A92BCC00C10096B98A /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A55990A82BCC00C10096B98A /* XCRemoteSwiftPackageReference "Alamofire" */;

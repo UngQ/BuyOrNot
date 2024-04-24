@@ -25,6 +25,7 @@ final class SignInViewController: BaseViewController {
 
 		view.backgroundColor = Color.white
 
+		setNavigationTitleImage()
 		configureLayout()
 		configure()
 	}
@@ -46,7 +47,7 @@ final class SignInViewController: BaseViewController {
 
 		output.loginSuccessTrigger
 			.drive(with: self) { owner, _ in
-				owner.changeRootView(to: CustomTabBarController(), isNav: true)
+				SignInViewController.changeRootView(to: CustomTabBarController(), isNav: true)
 			}
 			.disposed(by: disposeBag)
 

@@ -55,7 +55,7 @@ class UploadPostViewController: BaseViewController {
 		output.isPostCompleted
 			.drive(with: self) { owner, result in
 				if result {
-					owner.changeRootView(to: CustomTabBarController(), isNav: true)
+					UploadPostViewController.changeRootView(to: CustomTabBarController(), isNav: true)
 //					owner.navigationController?.pushViewController(PostViewController(), animated: true)
 //					owner.navigationController?.popViewController(animated: true)
 				}
