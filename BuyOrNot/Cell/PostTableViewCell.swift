@@ -14,8 +14,6 @@ class PostTableViewCell: UITableViewCell {
 
 	var disposeBag = DisposeBag()
 
-	let menuButton = UIButton(type: .system)
-
 	let profileImageView = UIImageView()
 	let usernameLabel = UILabel()
 	let postImageView = UIImageView()
@@ -28,43 +26,16 @@ class PostTableViewCell: UITableViewCell {
 	let dislikeLabel = UILabel()
 	let timeLabel = UILabel()
 
-	var leftTap = {}
-	var rightTap = {}
-	var editPost = {}
-	var deletePost = {}
-
 	var like = false
 	var dislike = false
 
 	let likeDislikeProgressView = UIProgressView(progressViewStyle: .default)
 
-	lazy var likeLottieView : LottieAnimationView = {
-
-		let animationView = LottieAnimationView(name: "likeAnimation")
-		animationView.frame = CGRect(x: 0, y: 0,
-									 width: 500, height: 500)
-		animationView.center =  contentView.center
-		animationView.contentMode = .scaleToFill
-		animationView.isHidden = true
-		animationView.loopMode = .playOnce
-		animationView.animationSpeed = 2
-
-		return animationView
-	}()
-
-
-	lazy var dislikeLottieView : LottieAnimationView = {
-
-		let animationView = LottieAnimationView(name: "dislikeAnimation")
-		animationView.frame = CGRect(x: 0, y: 0,
-									 width: 500, height: 500)
-		animationView.center = self.center
-		animationView.contentMode = .scaleToFill
-		animationView.isHidden = true
-		animationView.loopMode = .playOnce
-		animationView.animationSpeed = 2
-
-		return animationView
+	let deleteButton: UIButton = {
+		let button = UIButton(type: .system)
+		button.setImage(UIImage(systemName: "trash"), for: .normal)
+		button.tintColor = .systemRed
+		return button
 	}()
 
 	override func prepareForReuse() {
@@ -83,16 +54,14 @@ class PostTableViewCell: UITableViewCell {
 //		timeLabel.text = ""
 //
 //
-//		likeDislikeProgressView.setProgress(0, animated: false)
+		likeDislikeProgressView.isHidden = true
+		likeLabel.isHidden = true
+		dislikeLabel.isHidden = true
+//		likeLabel.alpha = 1
+//		dislikeLabel.alpha = 1
 //			likeDislikeProgressView.trackTintColor = .systemGray4
 //			likeDislikeProgressView.progressTintColor = .systemBlue
 
-		likeLottieView.isHidden = true
-		likeLottieView.stop()
-		dislikeLottieView.isHidden = true
-		dislikeLottieView.stop()
-		like = false
-		  dislike = false
 
 		disposeBag = DisposeBag()
 
@@ -100,8 +69,6 @@ class PostTableViewCell: UITableViewCell {
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
-		contentView.addSubview(menuButton)
-
 
 		contentView.addSubview(profileImageView)
 		contentView.addSubview(usernameLabel)
@@ -116,13 +83,15 @@ class PostTableViewCell: UITableViewCell {
 		contentView.addSubview(likeDislikeProgressView)
 
 		contentView.addSubview(dislikeLabel)
-
-		contentView.addSubview(likeLottieView)
-
+		contentView.addSubview(deleteButton)
 
 		setupViews()
 		setupConstraints()
-		configureMenu()
+//		configureMenu()
+
+		likeDislikeProgressView.isHidden = true
+		likeLabel.isHidden = true
+		dislikeLabel.isHidden = true
 
 	}
 
@@ -130,22 +99,8 @@ class PostTableViewCell: UITableViewCell {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	func playLikeAnimation() {
-		print("머야")
-		  // 둘 다 false일 때만 애니메이션 실행
-		  if !like && !dislike {
-			  // 예를 들어 like 애니메이션을 실행
-			  print("왜안돼")
-			  likeLottieView.isHidden = false
-			  likeLottieView.play(completion: { [weak self] finished in
-				  self?.likeLottieView.isHidden = true
-			  })
-		  }
-	  }
 
 	private func setupViews() {
-
-		menuButton.setImage(UIImage(systemName: "ellipsis.circle"), for: .normal)
 
 		profileImageView.contentMode = .scaleAspectFill
 		profileImageView.layer.cornerRadius = 15
@@ -179,44 +134,20 @@ class PostTableViewCell: UITableViewCell {
 		likeDislikeProgressView.layer.cornerRadius = 12
 		likeDislikeProgressView.layer.masksToBounds = true
 
-		postImageView.isUserInteractionEnabled = true
-		let imageTapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTap))
-		imageTapGesture.numberOfTapsRequired = 2
-		postImageView.addGestureRecognizer(imageTapGesture)
-
-
-
 	}
-	private func configureMenu() {
-		let editAction = UIAction(title: "Edit", image: UIImage(systemName: "pencil")) { [weak self] _ in
-			self?.editPost()
-		}
-
-		let deleteAction = UIAction(title: "Delete", image: UIImage(systemName: "trash")) { [weak self] _ in
-			self?.deletePost()
-		}
-
-		let menu = UIMenu(title: "", children: [editAction, deleteAction])
-		menuButton.menu = menu
-		menuButton.showsMenuAsPrimaryAction = true  // Ensure the menu is displayed when the button is tapped
-	}
-
-
-	@objc private func imageTap(gesture: UITapGestureRecognizer) {
-		let touchPoint = gesture.location(in: gesture.view)
-			let width = gesture.view?.bounds.width ?? 0
-			let targetButton = touchPoint.x < width / 2 ? likeButton : dislikeButton
-
-			if touchPoint.x < width / 2 {
-				leftTap()
-			} else {
-				rightTap()
-			}
-
-
-//			self.animateButton(targetButton)
-
-	}
+//	private func configureMenu() {
+//		let editAction = UIAction(title: "Edit", image: UIImage(systemName: "pencil")) { [weak self] _ in
+//			self?.editPost()
+//		}
+//
+//		let deleteAction = UIAction(title: "Delete", image: UIImage(systemName: "trash")) { [weak self] _ in
+//			self?.deletePost()
+//		}
+//
+//		let menu = UIMenu(title: "", children: [editAction, deleteAction])
+//		menuButton.menu = menu
+//		menuButton.showsMenuAsPrimaryAction = true  // Ensure the menu is displayed when the button is tapped
+//	}
 
 
 	private func setupConstraints() {
@@ -227,11 +158,6 @@ class PostTableViewCell: UITableViewCell {
 			make.width.height.equalTo(30)
 		}
 
-		menuButton.snp.makeConstraints { make in
-			make.bottom.equalTo(postImageView.snp.top).offset(-10)
-			  make.right.equalToSuperview().offset(-10)
-			  make.width.height.equalTo(25)
-		  }
 
 		usernameLabel.snp.makeConstraints { make in
 			make.top.equalToSuperview().offset(10)
@@ -291,6 +217,12 @@ class PostTableViewCell: UITableViewCell {
 
 		}
 
+		deleteButton.snp.makeConstraints { make in
+			make.bottom.equalTo(postImageView.snp.top).offset(-10)
+			  make.trailing.equalToSuperview().inset(10)
+			  make.height.equalTo(25)
+			  make.width.equalTo(deleteButton.snp.height)
+		}
 	}
 
 //	func animateButton(_ button: UIButton) {

@@ -27,11 +27,12 @@ class ContentPostViewController: BaseViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		reloadData()
 
 	}
 
 	@objc func reloadData() {
+		self.loadingLottieView.isHidden = false
+		self.loadingLottieView.play()
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
 			self.viewModel.isLoading = false
 			self.viewModel.nextCursor = nil
@@ -43,6 +44,7 @@ class ContentPostViewController: BaseViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		reloadData()
 
 		navigationItem.title = viewModel.title
 
@@ -54,7 +56,7 @@ class ContentPostViewController: BaseViewController {
 
 		let output = viewModel.transform(input: input)
 
-		output.data.drive(imageCollectionView.rx.items(cellIdentifier: ImageCollectionViewCell.id, cellType: ImageCollectionViewCell.self)) {
+		output.data.drive(imageCollectionView.rx.items(cellIdentifier: ImageCollectionViewCell.id, cellType: ImageCollectionViewCell.self)) { [weak self]
 			row, element, cell in
 
 
@@ -62,6 +64,11 @@ class ContentPostViewController: BaseViewController {
 			cell.imageView.loadImage(from: postImage)
 
 
+			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+
+				self?.loadingLottieView.isHidden = true
+				self?.loadingLottieView.stop()
+			}
 		}
 
 
@@ -87,6 +94,8 @@ class ContentPostViewController: BaseViewController {
 			.skip(1)
 			.subscribe(with: self) { owner, position in
 		 print("HHHHH")
+				owner.loadingLottieView.isHidden = false
+				owner.loadingLottieView.play()
 				owner.viewModel.isLoading = true
 				owner.viewModel.viewWillAppearTrigger.accept(())
 			}
@@ -103,14 +112,14 @@ class ContentPostViewController: BaseViewController {
 
 	override func configureLayout() {
 		view.addSubview(imageCollectionView)
+		view.addSubview(loadingLottieView)
 
 		imageCollectionView.snp.makeConstraints { make in
 			make.edges.equalTo(view.safeAreaLayoutGuide)
 		}
 
-
 		refreshControl.addTarget(self, action: #selector(reloadData), for: .valueChanged)
-
+		refreshControl.alpha = 0
 	}
 
 

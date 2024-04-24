@@ -60,7 +60,9 @@ final class SignInViewController: BaseViewController {
 	}
 	
 	func configure() {
-		signUpButton.setTitle("회원이 아니십니까?", for: .normal)
+		signUpButton.setTitle("회원 가입", for: .normal)
+
+		signUpButton.setAttributedTitle(NSAttributedString(string: "회원가입", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)]), for: .normal)
 		signUpButton.setTitleColor(Color.black, for: .normal)
 	}
 
@@ -72,7 +74,7 @@ final class SignInViewController: BaseViewController {
 
 		emailTextField.snp.makeConstraints { make in
 			make.height.equalTo(50)
-			make.top.equalTo(view.safeAreaLayoutGuide).offset(200)
+			make.top.equalTo(view.safeAreaLayoutGuide).offset(30)
 			make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
 		}
 
@@ -89,9 +91,10 @@ final class SignInViewController: BaseViewController {
 		}
 
 		signUpButton.snp.makeConstraints { make in
-			make.height.equalTo(50)
-			make.top.equalTo(signInButton.snp.bottom).offset(30)
-			make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
+			make.height.equalTo(40)
+			make.width.equalTo(80)
+			make.top.equalTo(signInButton.snp.bottom).offset(4)
+			make.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
 		}
 
 		emailTextField.keyboardType = .emailAddress

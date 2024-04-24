@@ -58,7 +58,7 @@ class CustomTabBarController: UITabBarController {
 		middleBtn.layer.cornerRadius = 35
 		middleBtn.backgroundColor = .clear
 		middleBtn.setBackgroundImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
-		middleBtn.tintColor = .systemGreen
+		middleBtn.tintColor = .systemBlue
 
 
 		//		middleBtn.addTarget(self, action: #selector(middleButtonAction), for: .touchUpInside)
@@ -74,7 +74,7 @@ class CustomTabBarController: UITabBarController {
 	//	}
 
 	func showActionSheet() {
-		let actionSheet = UIAlertController(title: "카테고리를 선택해주세요.", message: .none, preferredStyle: .actionSheet)
+		let actionSheet = UIAlertController(title: "작성하실 카테고리를 선택해주세요.", message: .none, preferredStyle: .actionSheet)
 
 
 		let topAction = UIAlertAction(title: Category.top.title, style: .default, handler: { _ in
@@ -106,7 +106,7 @@ class CustomTabBarController: UITabBarController {
 
 	func imagePicker() {
 
-		let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+		let alert = UIAlertController(title: "이미지 선택", message: nil, preferredStyle: .actionSheet)
 		let gallery = UIAlertAction(title: "갤러리", style: .default) { action in
 			let vc = UIImagePickerController()
 			vc.allowsEditing = true

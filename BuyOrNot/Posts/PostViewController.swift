@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 import Kingfisher
 import Lottie
-
+import RxGesture
 
 
 class PostViewController: BaseViewController {
@@ -23,57 +23,16 @@ class PostViewController: BaseViewController {
 	let tableView = UITableView()
 	private let refreshControl = UIRefreshControl()
 
-	lazy var loadingLottieView : LottieAnimationView = {
 
-		let animationView = LottieAnimationView(name: "loadingImage")
-		animationView.frame = CGRect(x: 0, y: 0,
-									 width: 100, height: 100)
-		animationView.center = self.view.center
-		animationView.contentMode = .scaleAspectFill
-		animationView.isHidden = true
-		animationView.loopMode = .loop
-		animationView.animationSpeed = 2
-
-		return animationView
-	}()
-
-	lazy var likeLottieView : LottieAnimationView = {
-
-		let animationView = LottieAnimationView(name: "likeAnimation")
-		animationView.frame = CGRect(x: 0, y: 0,
-									 width: 500, height: 500)
-		animationView.center = self.view.center
-		animationView.contentMode = .scaleToFill
-		animationView.isHidden = true
-		animationView.loopMode = .playOnce
-		animationView.animationSpeed = 2
-
-		return animationView
-	}()
-
-
-	lazy var dislikeLottieView : LottieAnimationView = {
-
-		let animationView = LottieAnimationView(name: "dislikeAnimation")
-		animationView.frame = CGRect(x: 0, y: 0,
-									 width: 500, height: 500)
-		animationView.center = self.view.center
-		animationView.contentMode = .scaleToFill
-		animationView.isHidden = true
-		animationView.loopMode = .playOnce
-		animationView.animationSpeed = 2
-
-		return animationView
-	}()
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		reloadData()
+
 	}
 
 	@objc func reloadData() {
-		self.refreshControl.endRefreshing()
+
 		self.loadingLottieView.isHidden = false
 		self.loadingLottieView.play()
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -81,7 +40,7 @@ class PostViewController: BaseViewController {
 			self.viewModel.isLoading = false
 			self.viewModel.nextCursor = nil
 			self.viewModel.viewWillAppearTrigger.accept(())
-
+			self.refreshControl.endRefreshing()
 
 			}
 
@@ -94,7 +53,7 @@ class PostViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+		reloadData()
 
 
 		if TotalOrDetail {
@@ -189,14 +148,31 @@ override func bind() {
 			guard let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) else {
 				return
 			}
+
+			if myId == element.creator.user_id {
+				cell.deleteButton.isHidden = false
+			} else {
+				cell.deleteButton.isHidden = true
+			}
+
 			cell.like = element.likes.contains(myId)
 			cell.dislike = element.likes2.contains(myId)
 
 			print(cell.like, cell.dislike)
 
-			self.configureVisibility(of: cell, show: cell.like || cell.dislike)
-
-
+			//			cell.likeDislikeProgressView.alpha = 0.0
+			//			cell.likeLabel.alpha = 0.0
+			//			cell.dislikeLabel.alpha = 0.0
+			//			cell.likeDislikeProgressView.isHidden = false
+			//			cell.likeLabel.isHidden = false
+			//			cell.dislikeLabel.isHidden = false
+			//
+			//			// 애니메이션으로 뷰를 서서히 나타나게 합니다.
+			//			UIView.animate(withDuration: 0.3) {
+			//				cell.likeDislikeProgressView.alpha = 1.0
+			//				cell.likeLabel.alpha = 1.0
+			//				cell.dislikeLabel.alpha = 1.0
+			//			}
 
 			//셀 프로필 이미지
 			if let endPoint = element.creator.profileImage {
@@ -218,7 +194,9 @@ override func bind() {
 				cell.likeDislikeProgressView.setProgress(0, animated: false)
 
 			} else {
-				
+				cell.likeDislikeProgressView.isHidden = false
+				cell.likeLabel.isHidden = false
+				cell.dislikeLabel.isHidden = false
 				cell.likeDislikeProgressView.trackTintColor = .systemRed
 				cell.likeDislikeProgressView.setProgress(likeRatio, animated: false)
 			}
@@ -247,14 +225,14 @@ override func bind() {
 				cell.dislikeButton.setImage(UIImage(systemName: "hand.thumbsdown"), for: .normal)
 			}
 
-//
+
 //			cell.leftTap = {
 //				likeButtonTapped.onNext(row)
 //			}
 //			cell.rightTap = {
 //				disLikeButtonTapped.onNext(row)
 //			}
-//
+
 			cell.likeButton.rx.tap
 				.map { row }
 				.bind(to: likeButtonTapped)
@@ -266,24 +244,38 @@ override func bind() {
 				.bind(to: disLikeButtonTapped)
 				.disposed(by: cell.disposeBag)
 
+			cell.postImageView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
+				gestureRecognizer.numberOfTapsRequired = 2 })
+			.when(.recognized)
+			.subscribe(onNext: { [weak self] gesture in
+				guard let strongSelf = self else { return }
+				let touchPoint = gesture.location(in: gesture.view)
+				if let width = gesture.view?.bounds.width {
+					if touchPoint.x < width / 2 {
+						likeButtonTapped.onNext(row)
+						self?.playAppropriateAnimation(for: "like", likeCondition: cell.like, dislikeCondition: cell.dislike)
+					} else {
+						disLikeButtonTapped.onNext(row)
+						self?.playAppropriateAnimation(for: "dislike", likeCondition: cell.like, dislikeCondition: cell.dislike)
+					}
+				}
+			})
+			.disposed(by: cell.disposeBag)
 
-			likeButtonTapped
-				.subscribe(onNext: { index in
 
-						cell.playLikeAnimation()
 
-					})
+			cell.likeButton.rx.tap
+				.subscribe(onNext: { [weak self]  index in
+
+					self?.playAppropriateAnimation(for: "like", likeCondition: cell.like, dislikeCondition: cell.dislike)
+				})
 				 .disposed(by: cell.disposeBag)
 
-			disLikeButtonTapped
-				.subscribe(onNext: { index in
-					if !cell.like && !cell.dislike {
-						self.dislikeLottieView.isHidden = false
-						self.dislikeLottieView.play(completion: { completed in
-							print("다시 트루")
-							self.dislikeLottieView.isHidden = true
-						})
-					}})
+			cell.dislikeButton.rx.tap
+				.subscribe(onNext: { [weak self] index in
+					print(cell.like, cell.dislike)
+					self?.playAppropriateAnimation(for: "dislike", likeCondition: cell.like, dislikeCondition: cell.dislike)
+					})
 				 .disposed(by: cell.disposeBag)
 
 			cell.commentButton.rx.tap
@@ -328,34 +320,41 @@ override func bind() {
 	}
 
 	func configureVisibility(of cell: PostTableViewCell, show: Bool) {
-		if show {
-			// 보이기 전에 뷰를 투명하게 만듭니다.
-			cell.likeDislikeProgressView.alpha = 0.0
-			cell.likeLabel.alpha = 0.0
-			cell.dislikeLabel.alpha = 0.0
-			cell.likeDislikeProgressView.isHidden = false
-			cell.likeLabel.isHidden = false
-			cell.dislikeLabel.isHidden = false
+//		if show {
+//			// 보이기 전에 뷰를 투명하게 만듭니다.
+//			cell.likeDislikeProgressView.alpha = 0.0
+//			cell.likeLabel.alpha = 0.0
+//			cell.dislikeLabel.alpha = 0.0
+//			cell.likeDislikeProgressView.isHidden = false
+//			cell.likeLabel.isHidden = false
+//			cell.dislikeLabel.isHidden = false
+//
+//			// 애니메이션으로 뷰를 서서히 나타나게 합니다.
+//			UIView.animate(withDuration: 0.3) {
+//				cell.likeDislikeProgressView.alpha = 1.0
+//				cell.likeLabel.alpha = 1.0
+//				cell.dislikeLabel.alpha = 1.0
+//			}
+//		} 
+	}
 
-			// 애니메이션으로 뷰를 서서히 나타나게 합니다.
-			UIView.animate(withDuration: 0.3) {
-				cell.likeDislikeProgressView.alpha = 1.0
-				cell.likeLabel.alpha = 1.0
-				cell.dislikeLabel.alpha = 1.0
+	func playAppropriateAnimation(for type: String, likeCondition: Bool, dislikeCondition: Bool) {
+		guard !likeCondition && !dislikeCondition else { return }
+		switch type {
+		case "like":
+			likeLottieView.isHidden = false
+			likeLottieView.play { [weak self] completed in
+				print("Animation completed")
+				self?.likeLottieView.isHidden = true
 			}
-		} else {
-			// 숨기기 전에 뷰가 보이도록 합니다.
-			UIView.animate(withDuration: 0.3, animations: {
-				cell.likeDislikeProgressView.alpha = 0.0
-				cell.likeLabel.alpha = 0.0
-				cell.dislikeLabel.alpha = 0.0
-			}) { completed in
-				if completed {
-					cell.likeDislikeProgressView.isHidden = true
-					cell.likeLabel.isHidden = true
-					cell.dislikeLabel.isHidden = true
-				}
+		case "dislike":
+			dislikeLottieView.isHidden = false
+			dislikeLottieView.play { [weak self] completed in
+				print("Animation completed")
+				self?.dislikeLottieView.isHidden = true
 			}
+		default:
+			break
 		}
 	}
 

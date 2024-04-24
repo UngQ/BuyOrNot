@@ -106,6 +106,7 @@ class CommentViewController: BaseViewController {
 				cell.editButton.rx.tap
 					.asDriver()
 					.drive(with: self) { owner, _ in
+						print("여러번대나")
 						owner.navigationController?.pushViewController(EditCommentViewController(), animated: true)
 					}
 					.disposed(by: cell.disposeBag)
