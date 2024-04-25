@@ -39,7 +39,8 @@ class PostViewModel: ViewModelType {
 
 	func transform(input: Input) -> Output {
 
-		let message = BehaviorRelay(value: "")
+		let message = PublishRelay<String>()
+
 
 		if totalOrDetail {
 			viewWillAppearTrigger
@@ -120,13 +121,14 @@ class PostViewModel: ViewModelType {
 				print("\(post.post_id)하이하하이하하이하하이하하이하")
 
 				var newPosts = self.postsData.value
+				
 				if let idx = newPosts.firstIndex(where: { $0.post_id == post.post_id }) {
 					if like {
 						newPosts[idx].likes.removeAll(where: { $0 == UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? "" })
 					} else {
 						newPosts[idx].likes.append(UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? "")
 					}
-					self.postsData.accept(newPosts)  // Update the local data source
+					self.postsData.accept(newPosts)
 				}
 
 				let result = NetworkManager.performRequest(route: .likePost(id: post.post_id, query:  LikeQueryAndModel(like_status: !like), like: "like"), decodingType: LikeQueryAndModel.self)
@@ -175,6 +177,7 @@ class PostViewModel: ViewModelType {
 				print(post.post_id)
 
 				var newPosts = self.postsData.value
+
 				if let idx = newPosts.firstIndex(where: { $0.post_id == post.post_id }) {
 					if like {
 						newPosts[idx].likes2.removeAll(where: { $0 == UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? "" })
@@ -201,7 +204,7 @@ class PostViewModel: ViewModelType {
 
 
 		return Output(data: postsData.asDriver(),
-					  cautionMessage: message.asDriver())
+					  cautionMessage: message.asDriver(onErrorJustReturn: ""))
 
 	}
 

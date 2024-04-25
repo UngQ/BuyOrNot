@@ -9,7 +9,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 import Kingfisher
-import Lottie
 import RxGesture
 
 
@@ -189,16 +188,27 @@ override func bind() {
 			let likeRatio = Float(element.likes.count) / Float(totalVotes)
 
 
-			if element.likes.count == 0 && element.likes2.count == 0 {
-				cell.likeDislikeProgressView.trackTintColor = .lightGray
-				cell.likeDislikeProgressView.setProgress(0, animated: false)
-
-			} else {
+			if element.likes.contains(myId) || element.likes2.contains(myId) {
 				cell.likeDislikeProgressView.isHidden = false
 				cell.likeLabel.isHidden = false
 				cell.dislikeLabel.isHidden = false
 				cell.likeDislikeProgressView.trackTintColor = .systemRed
 				cell.likeDislikeProgressView.setProgress(likeRatio, animated: false)
+				cell.likeDislikeProgressView.snp.remakeConstraints { make in
+					make.top.equalTo(cell.postImageView.snp.bottom).offset(5)
+					make.left.right.equalToSuperview().inset(10)
+					make.height.equalTo(32)
+				}
+
+
+
+
+			} else {
+				cell.likeDislikeProgressView.snp.remakeConstraints { make in
+					make.top.equalTo(cell.postImageView.snp.bottom).offset(5)
+					make.left.right.equalToSuperview().inset(10)
+					make.height.equalTo(0)
+				}
 			}
 
 
@@ -300,17 +310,19 @@ override func bind() {
 
 		.disposed(by: disposeBag)
 
-	tableView.rx.reachedBottom
-		.skip(1)
-		.subscribe(with: self) { owner, position in
-	 print("HHHHH")
-			owner.loadingLottieView.isHidden = false
-			owner.loadingLottieView.play()
-			owner.viewModel.isLoading = true
-			owner.viewModel.viewWillAppearTrigger.accept(())
-		}
-		.disposed(by: disposeBag)
-
+	if TotalOrDetail {
+		tableView.rx.reachedBottom
+			.skip(1)
+			.subscribe(with: self) { owner, position in
+				print("HHHHH")
+				owner.loadingLottieView.isHidden = false
+				owner.loadingLottieView.play()
+				owner.viewModel.isLoading = true
+				owner.viewModel.viewWillAppearTrigger.accept(())
+			}
+			.disposed(by: disposeBag)
+	}
+	
 	output.cautionMessage
 		.drive(with: self) { owner, message in
 			owner.view.makeToast(message, position: .center)
@@ -373,6 +385,7 @@ override func bind() {
 
 		tableView.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.id)
 		tableView.refreshControl = refreshControl
+		
 		refreshControl.addTarget(self, action: #selector(reloadData), for: .valueChanged)
 		refreshControl.alpha = 0
 

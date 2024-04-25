@@ -33,7 +33,7 @@ class ContentPostViewModel: ViewModelType {
 	}
 
 	func transform(input: Input) -> Output {
-		let message = BehaviorRelay(value: "")
+		let message = PublishRelay<String>()
 
 		viewWillAppearTrigger
 			.flatMap { [weak self] _ -> Single<PostsModel> in
@@ -69,7 +69,7 @@ class ContentPostViewModel: ViewModelType {
 			.disposed(by: disposeBag)
 
 		return Output(data: postsData.asDriver(),
-					  cautionMessage: message.asDriver())
+					  cautionMessage: message.asDriver(onErrorJustReturn: ""))
 	}
 }
 

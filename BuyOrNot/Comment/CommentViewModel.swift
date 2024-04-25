@@ -37,7 +37,7 @@ class CommentViewModel: ViewModelType {
 
 	func transform(input: Input) -> Output {
 		let isValidation = PublishRelay<Bool>()
-		let message = BehaviorRelay(value: "")
+		let message = PublishRelay<String>()
 
 
 		viewWillAppearTrigger
@@ -94,6 +94,6 @@ class CommentViewModel: ViewModelType {
 
 		return Output(data: commentsData.asDriver(),
 					  isValidation: isValidation.asDriver(onErrorJustReturn: false),
-					  deletedMessage: message.asDriver())
+					  deletedMessage: message.asDriver(onErrorJustReturn: ""))
 	}
 }

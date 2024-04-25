@@ -55,6 +55,7 @@ class PostTableViewCell: UITableViewCell {
 //
 //
 		likeDislikeProgressView.isHidden = true
+
 		likeLabel.isHidden = true
 		dislikeLabel.isHidden = true
 //		likeLabel.alpha = 1
@@ -87,7 +88,6 @@ class PostTableViewCell: UITableViewCell {
 
 		setupViews()
 		setupConstraints()
-//		configureMenu()
 
 		likeDislikeProgressView.isHidden = true
 		likeLabel.isHidden = true
@@ -135,20 +135,6 @@ class PostTableViewCell: UITableViewCell {
 		likeDislikeProgressView.layer.masksToBounds = true
 
 	}
-//	private func configureMenu() {
-//		let editAction = UIAction(title: "Edit", image: UIImage(systemName: "pencil")) { [weak self] _ in
-//			self?.editPost()
-//		}
-//
-//		let deleteAction = UIAction(title: "Delete", image: UIImage(systemName: "trash")) { [weak self] _ in
-//			self?.deletePost()
-//		}
-//
-//		let menu = UIMenu(title: "", children: [editAction, deleteAction])
-//		menuButton.menu = menu
-//		menuButton.showsMenuAsPrimaryAction = true  // Ensure the menu is displayed when the button is tapped
-//	}
-
 
 	private func setupConstraints() {
 
@@ -172,13 +158,13 @@ class PostTableViewCell: UITableViewCell {
 
 		likeButton.snp.makeConstraints { make in
 
-			make.top.equalTo(postImageView.snp.bottom).offset(10)
+			make.top.equalTo(likeDislikeProgressView.snp.bottom).offset(10)
 			make.centerX.equalToSuperview().offset(-20)
 			make.size.equalTo(25)
 		}
 
 		dislikeButton.snp.makeConstraints { make in
-			make.top.equalTo(postImageView.snp.bottom).offset(10)
+			make.top.equalTo(likeDislikeProgressView.snp.bottom).offset(10)
 			make.centerX.equalToSuperview().offset(20)
 			make.size.equalTo(25)
 		}
@@ -200,9 +186,9 @@ class PostTableViewCell: UITableViewCell {
 		}
 
 		likeDislikeProgressView.snp.makeConstraints { make in
-			make.bottom.equalTo(postImageView.snp.bottom).offset(-5)
+			make.top.equalTo(postImageView.snp.bottom).offset(5)
 			make.left.right.equalToSuperview().inset(10)
-			make.height.equalTo(32)
+			make.height.equalTo(0)
 		}
 
 		titleNPriceLabel.snp.makeConstraints { make in
@@ -225,22 +211,4 @@ class PostTableViewCell: UITableViewCell {
 		}
 	}
 
-//	func animateButton(_ button: UIButton) {
-//		DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-//			UIView.animate(withDuration: 0.2, animations: {
-//				// Scale up the button image
-//				button.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
-//				button.alpha = 0.5  // Slightly fade the button to see the effect
-//			}) { _ in
-//				UIView.animate(withDuration: 0.1, animations: {
-//					// Return to normal size but keep invisible
-//					button.transform = CGAffineTransform.identity
-//					button.alpha = 0
-//				}) { _ in
-//					// Ensure visibility is restored after animation
-//					button.alpha = 1
-//				}
-//			}
-//		}
-//	}
 }

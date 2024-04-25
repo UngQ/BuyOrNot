@@ -16,7 +16,7 @@ class BaseViewController: UIViewController {
 
 	lazy var loadingLottieView : LottieAnimationView = {
 
-		let animationView = LottieAnimationView(name: "loadingImage")
+		let animationView = LottieAnimationView(name: "loadingAnimation")
 		animationView.frame = CGRect(x: 0, y: 0,
 									 width: 100, height: 100)
 		animationView.center = self.view.center
@@ -24,6 +24,7 @@ class BaseViewController: UIViewController {
 		animationView.isHidden = true
 		animationView.loopMode = .loop
 		animationView.animationSpeed = 2
+	
 
 		return animationView
 	}()
