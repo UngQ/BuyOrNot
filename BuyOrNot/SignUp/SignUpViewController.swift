@@ -20,9 +20,10 @@ class SignUpViewController: BaseViewController {
 		let button = UIButton()
 		button.setTitle("중복 확인", for: .normal)
 		button.setTitleColor(Color.black, for: .normal)
-		button.layer.borderWidth = 1
-		button.layer.borderColor = Color.black.cgColor
+//		button.layer.borderWidth = 1
+//		button.layer.borderColor = Color.black.cgColor
 		button.layer.cornerRadius = 10
+		button.setTitleColor(.white, for: .normal)
 		return button
 	}()
 	let nextButton = PointButton(title: "다음")
@@ -34,25 +35,31 @@ class SignUpViewController: BaseViewController {
 
 		view.backgroundColor = Color.white
 
+		setNavigationTitleImage()
+		navigationController?.isNavigationBarHidden = false
 	}
 
 	override func bind() {
 
-		var isValidation = false
 
 		let input = SignUpViewModel.Input(emailTextField: emailTextField.rx.text.orEmpty,
 										  validationButtonTap: validationButton.rx.tap)
 
 		let output = viewModel.transform(input: input)
 
+		output.isvalidationButtonEnable
+			.drive(with: self) { owner, valid in
+				owner.validationButton.isEnabled = valid
+				owner.validationButton.backgroundColor = valid ? .systemBlue : .lightGray
+			}
+			.disposed(by: disposeBag)
+
 		nextButton.rx.tap
 			.bind(with: self) { owner, _ in
-				if isValidation {
+
 					UserDefaults.standard.setValue(owner.emailTextField.text, forKey: UserDefaultsKey.email.key)
 					owner.navigationController?.pushViewController(PasswordViewController(), animated: true)
-				} else {
-					self.view.makeToast("중복 확인 진행해주세요.", position: .center)
-				}
+
 			}
 			.disposed(by: disposeBag)
 
@@ -63,11 +70,13 @@ class SignUpViewController: BaseViewController {
 			.disposed(by: disposeBag)
 
 		output.isValidation
-			.drive(with: self) { owner, validation in
-				isValidation = validation
-				owner.nextButton.backgroundColor = validation ? .systemBlue : .lightGray
+			.drive(with: self) { owner, valid in
+				owner.nextButton.backgroundColor = valid ? .systemBlue : .lightGray
+				owner.nextButton.isEnabled = valid
 			}
 			.disposed(by: disposeBag)
+
+
 
 	}
 
@@ -97,8 +106,8 @@ class SignUpViewController: BaseViewController {
 			make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
 		}
 
-		validationButton.backgroundColor = .systemBlue
-		validationButton.setTitleColor(.white, for: .normal)
+
+
 	}
 
 }

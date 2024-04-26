@@ -8,6 +8,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import KeychainSwift
 
 final class SignInViewModel: ViewModelType {
 
@@ -35,24 +36,23 @@ final class SignInViewModel: ViewModelType {
 			input.emailText,
 			input.passwordText
 		)
-			.map { email, password in
-				print(email, password)
-				return LoginQuery(email: email, password: password)
-			}
 
-//		loginObservable
-//			.bind(with: self) { owner, login in
-//				if login.email.contains("@") && login.password.count > 3 {
-//					loginValid.accept(true)
-//				} else {
-//					loginValid.accept(false)
-//				}
-//			}
-//			.disposed(by: disposeBag)
+
+		loginObservable
+			.map { !$0.isEmpty && !$1.isEmpty }
+			.subscribe(with: self) { owner, valid in
+				loginValid.accept(valid)
+			}
+			.disposed(by: disposeBag)
+
+
 
 		input.loginButtonTapped
 			.debounce(.seconds(1), scheduler: MainScheduler.instance)
-			.withLatestFrom(loginObservable)
+			.withLatestFrom(loginObservable.map { email, password in
+				print(email, password)
+				return LoginQuery(email: email, password: password)
+			})
 			.flatMap { loginQuery in
 				print("\(loginQuery)) 이곳인가")
 				return NetworkManager.createLogin(query: loginQuery)
@@ -78,6 +78,28 @@ final class SignInViewModel: ViewModelType {
 		)
 	}
 
+	func handleAutoLogin(_ email: String, password: String, enable: Bool) {
+		let keychain = KeychainSwift()
+		if enable {
+			keychain.set(email, forKey: "userEmail")
+			keychain.set(password, forKey: "userPassword")
+			UserDefaults.standard.set(true, forKey: "autoLoginEnabled")
+		} else {
+			keychain.delete("userEmail")
+			keychain.delete("userPassword")
+			UserDefaults.standard.set(false, forKey: "autoLoginEnabled")
+		}
+	}
+	
+	func checkAutoLogin() -> (email: String?, password: String?) {
+		let keychain = KeychainSwift()
+		if UserDefaults.standard.bool(forKey: "autoLoginEnabled") {
+			let email = keychain.get("userEmail")
+			let password = keychain.get("userPassword")
+			return (email, password)
+		}
+		return (nil, nil)
+	}
 
 }
 

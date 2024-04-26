@@ -25,7 +25,7 @@ class NicknameViewModel: ViewModelType {
 	}
 
 	func transform(input: Input) -> Output {
-		let isValidation = BehaviorRelay(value: false)
+		let isValidation = PublishRelay<Bool>()
 		let isCompleteJoin = PublishRelay<Bool>()
 
 
@@ -66,7 +66,7 @@ class NicknameViewModel: ViewModelType {
 
 
 
-		return Output(isValidation: isValidation.asDriver(),
+		return Output(isValidation: isValidation.asDriver(onErrorJustReturn: false),
 					  isCompleteJoin: isCompleteJoin.asDriver(onErrorJustReturn: false))
 	}
 

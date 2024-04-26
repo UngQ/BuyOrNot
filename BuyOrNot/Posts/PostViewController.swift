@@ -39,7 +39,6 @@ class PostViewController: BaseViewController {
 			self.viewModel.isLoading = false
 			self.viewModel.nextCursor = nil
 			self.viewModel.viewWillAppearTrigger.accept(())
-			self.refreshControl.endRefreshing()
 
 			}
 
@@ -58,7 +57,7 @@ class PostViewController: BaseViewController {
 		if TotalOrDetail {
 
 			setNavigationTitleImage()
-
+			
 			setupInteractiveTitleAsLeftBarButtonItem()
 
 		} else {
@@ -68,10 +67,10 @@ class PostViewController: BaseViewController {
 	}
 
 
+
 	func setupInteractiveTitleAsLeftBarButtonItem() {
 		let titleButton = UIButton(type: .system)
 		titleButton.setTitle("최근 게시물 ▼", for: .normal)
-		titleButton.addTarget(self, action: #selector(titleButtonTapped), for: .touchUpInside)
 
 		let categories = [Category.top,
 						  Category.bottom,
@@ -88,9 +87,6 @@ class PostViewController: BaseViewController {
 		navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleButton)
 	}
 
-	@objc func titleButtonTapped() {
-		// 메뉴 보여줄 필요 없음, 자동으로 보여짐
-	}
 
 	func handleCategorySelection(_ category: Category) {
 		print("Selected category: \(category)")
@@ -100,32 +96,7 @@ class PostViewController: BaseViewController {
 
 		navigationController?.pushViewController(vc, animated: true)
 	}
-//	func createMenuActions() -> [UIMenuElement] {
-//		let categories = [Category.top,
-//						  Category.bottom,
-//						  Category.shoes,
-//						  Category.acc]
-//
-//		return categories.map { category in
-//			UIAction(title: category.title, image: nil, handler: { action in
-//
-//				self.handleCategorySelection(category)
-//			})
-//		}
-//	}
 
-//	func handleCategorySelection(_ category: Category) {
-//		print("Selected category: \(category)")
-//		let vc = ContentPostViewController()
-//		vc.viewModel.title = category.title
-//		vc.viewModel.hashTag = category.rawValue
-//		
-//		navigationController?.pushViewController(vc, animated: true)
-//
-//	}
-
-
-	
 
 override func bind() {
 	let likeButtonTapped = PublishSubject<Int>()
@@ -159,20 +130,6 @@ override func bind() {
 
 			print(cell.like, cell.dislike)
 
-			//			cell.likeDislikeProgressView.alpha = 0.0
-			//			cell.likeLabel.alpha = 0.0
-			//			cell.dislikeLabel.alpha = 0.0
-			//			cell.likeDislikeProgressView.isHidden = false
-			//			cell.likeLabel.isHidden = false
-			//			cell.dislikeLabel.isHidden = false
-			//
-			//			// 애니메이션으로 뷰를 서서히 나타나게 합니다.
-			//			UIView.animate(withDuration: 0.3) {
-			//				cell.likeDislikeProgressView.alpha = 1.0
-			//				cell.likeLabel.alpha = 1.0
-			//				cell.dislikeLabel.alpha = 1.0
-			//			}
-
 			//셀 프로필 이미지
 			if let endPoint = element.creator.profileImage {
 				let profileImage = "\(APIKey.baseURL.rawValue)/v1/\(endPoint)"
@@ -184,7 +141,7 @@ override func bind() {
 			cell.usernameLabel.text = element.creator.nick
 
 			//좋아요/싫어요 진행바
-			let totalVotes = max(element.likes.count + element.likes2.count, 1) // Avoid division by zero
+			let totalVotes = max(element.likes.count + element.likes2.count, 1)
 			let likeRatio = Float(element.likes.count) / Float(totalVotes)
 
 
@@ -234,14 +191,6 @@ override func bind() {
 			} else {
 				cell.dislikeButton.setImage(UIImage(systemName: "hand.thumbsdown"), for: .normal)
 			}
-
-
-//			cell.leftTap = {
-//				likeButtonTapped.onNext(row)
-//			}
-//			cell.rightTap = {
-//				disLikeButtonTapped.onNext(row)
-//			}
 
 			cell.likeButton.rx.tap
 				.map { row }
@@ -301,6 +250,7 @@ override func bind() {
 
 
 			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+				self.refreshControl.endRefreshing()
 
 				self.loadingLottieView.isHidden = true
 				self.loadingLottieView.stop()
@@ -329,26 +279,10 @@ override func bind() {
 		}
 		.disposed(by: disposeBag)
 
+
+
 	}
 
-	func configureVisibility(of cell: PostTableViewCell, show: Bool) {
-//		if show {
-//			// 보이기 전에 뷰를 투명하게 만듭니다.
-//			cell.likeDislikeProgressView.alpha = 0.0
-//			cell.likeLabel.alpha = 0.0
-//			cell.dislikeLabel.alpha = 0.0
-//			cell.likeDislikeProgressView.isHidden = false
-//			cell.likeLabel.isHidden = false
-//			cell.dislikeLabel.isHidden = false
-//
-//			// 애니메이션으로 뷰를 서서히 나타나게 합니다.
-//			UIView.animate(withDuration: 0.3) {
-//				cell.likeDislikeProgressView.alpha = 1.0
-//				cell.likeLabel.alpha = 1.0
-//				cell.dislikeLabel.alpha = 1.0
-//			}
-//		} 
-	}
 
 	func playAppropriateAnimation(for type: String, likeCondition: Bool, dislikeCondition: Bool) {
 		guard !likeCondition && !dislikeCondition else { return }

@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		window?.tintColor = UIColor.black
 
 
-		let rootViewController = UINavigationController(rootViewController: CustomTabBarController()) 
+		let rootViewController = UINavigationController(rootViewController: SignInViewController()) 
 
 
 		window?.rootViewController = rootViewController

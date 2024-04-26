@@ -20,6 +20,7 @@ class SignUpViewModel: ViewModelType {
 
 	struct Output {
 		let validationMessage: Driver<String>
+		let isvalidationButtonEnable: Driver<Bool>
 		let isValidation: Driver<Bool>
 
 	}
@@ -27,7 +28,16 @@ class SignUpViewModel: ViewModelType {
 
 	func transform(input: Input) -> Output {
 		let validationMessage = PublishRelay<String>()
-		let isValidation = PublishRelay<Bool>()
+		let isvalidationButtonEnable = BehaviorRelay(value: false)
+		let isValidation = BehaviorRelay(value: false)
+
+
+		input.emailTextField
+			.map { !$0.isEmpty }
+			.subscribe(with: self) { owner, valid in
+				isvalidationButtonEnable.accept(valid)
+			}
+			.disposed(by: disposeBag)
 
 		input.emailTextField.subscribe { value in
 			isValidation.accept(false)
@@ -63,6 +73,7 @@ class SignUpViewModel: ViewModelType {
 
 
 		return Output(validationMessage: validationMessage.asDriver(onErrorJustReturn: ""),
+					  isvalidationButtonEnable: isvalidationButtonEnable.asDriver(),
 					  isValidation: isValidation.asDriver(onErrorJustReturn: false))
 	}
 

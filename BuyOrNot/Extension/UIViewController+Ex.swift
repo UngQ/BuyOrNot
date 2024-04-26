@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 extension UIViewController {
 	static func changeRootView(to viewController: UIViewController, isNav: Bool = false) {
 		guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
@@ -33,9 +34,11 @@ extension UIViewController {
 			make.height.equalTo(44)
 		}
 
-		  self.navigationItem.titleView = titleView
+		self.navigationItem.titleView = titleView
+		self.navigationController?.navigationBar.backgroundColor = .white
 
-		  titleView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width / 2, height: 44)
+
+		titleView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width / 2, height: 44)
 
 
 	}

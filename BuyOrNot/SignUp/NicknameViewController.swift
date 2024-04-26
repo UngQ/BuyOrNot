@@ -20,7 +20,7 @@ class NicknameViewController: BaseViewController {
 		super.viewDidLoad()
 
 		configureLayout()
-
+		setNavigationTitleImage()
 	}
 
 	override func bind() {
@@ -33,6 +33,8 @@ class NicknameViewController: BaseViewController {
 
 		output.isValidation
 			.drive(with: self) { owner, valid in
+				owner.descriptionLabel.isHidden = valid
+				owner.nicknameTextField.layer.borderColor = valid ? UIColor.systemBlue.cgColor : UIColor.systemRed.cgColor
 				owner.nextButton.isEnabled = valid
 				owner.nextButton.backgroundColor = valid ? .systemBlue : .lightGray
 			}
@@ -42,7 +44,7 @@ class NicknameViewController: BaseViewController {
 			.drive(with: self) { owner, complete in
 				print("Completed")
 				
-				NicknameViewController.changeRootView(to: CustomTabBarController(), isNav: true)
+				UIViewController.changeRootView(to: CustomTabBarController(), isNav: true)
 				
 			}
 			.disposed(by: disposeBag)
@@ -80,6 +82,7 @@ class NicknameViewController: BaseViewController {
 		descriptionLabel.textColor = .systemRed
 
 
+		nextButton.isEnabled = false
 	}
 
 }

@@ -21,7 +21,7 @@ class PasswordViewController: BaseViewController {
 		super.viewDidLoad()
 
 		configureLayout()
-
+		setNavigationTitleImage()
 	}
 
 	override func bind() {
@@ -36,7 +36,7 @@ class PasswordViewController: BaseViewController {
 				owner.passwordTextField.layer.borderColor = valid ? UIColor.systemBlue.cgColor : UIColor.systemRed.cgColor
 				owner.descriptionLabel.isHidden = valid
 				owner.confirmPasswordTextField.isEnabled = valid
-				owner.nextButton.isEnabled = false
+
 
 			}
 			.disposed(by: disposeBag)
@@ -117,6 +117,8 @@ class PasswordViewController: BaseViewController {
 		confirmDescriptionLabel.font = .boldSystemFont(ofSize: 14)
 		confirmDescriptionLabel.textColor = .systemRed
 		confirmDescriptionLabel.isHidden = true
+
+		nextButton.isEnabled = false
 	}
 
 }

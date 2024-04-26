@@ -28,7 +28,7 @@ class UploadPostViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-
+		setNavigationTitleImage()
     }
 
 	override func bind() {
@@ -55,9 +55,8 @@ class UploadPostViewController: BaseViewController {
 		output.isPostCompleted
 			.drive(with: self) { owner, result in
 				if result {
-					UploadPostViewController.changeRootView(to: CustomTabBarController(), isNav: true)
-//					owner.navigationController?.pushViewController(PostViewController(), animated: true)
-//					owner.navigationController?.popViewController(animated: true)
+					UIViewController.changeRootView(to: CustomTabBarController(), isNav: true)
+
 				}
 			}
 			.disposed(by: disposeBag)

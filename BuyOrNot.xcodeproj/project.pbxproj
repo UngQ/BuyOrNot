@@ -28,6 +28,7 @@
 		A558A0452BD8EB78000C1B9D /* likeAnimation.json in Resources */ = {isa = PBXBuildFile; fileRef = A558A0442BD8EB77000C1B9D /* likeAnimation.json */; };
 		A558A0472BD8F22B000C1B9D /* dislikeAnimation.json in Resources */ = {isa = PBXBuildFile; fileRef = A558A0462BD8F22A000C1B9D /* dislikeAnimation.json */; };
 		A558A04C2BD95EF9000C1B9D /* RxGesture in Frameworks */ = {isa = PBXBuildFile; productRef = A558A04B2BD95EF9000C1B9D /* RxGesture */; };
+		A558A0562BDBAC15000C1B9D /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A558A0552BDBAC15000C1B9D /* KeychainSwift */; };
 		A559908F2BCBFED00096B98A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A559908E2BCBFED00096B98A /* AppDelegate.swift */; };
 		A55990912BCBFED00096B98A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990902BCBFED00096B98A /* SceneDelegate.swift */; };
 		A55990932BCBFED00096B98A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990922BCBFED00096B98A /* ViewController.swift */; };
@@ -159,6 +160,7 @@
 				A558A0392BD8E0F1000C1B9D /* Lottie in Frameworks */,
 				A55990B82BCC012F0096B98A /* Toast in Frameworks */,
 				A55990B02BCC01150096B98A /* RxCocoa in Frameworks */,
+				A558A0562BDBAC15000C1B9D /* KeychainSwift in Frameworks */,
 				A55990AD2BCC00C90096B98A /* Kingfisher in Frameworks */,
 				A55990B22BCC01150096B98A /* RxSwift in Frameworks */,
 				A55990AA2BCC00C10096B98A /* Alamofire in Frameworks */,
@@ -434,6 +436,7 @@
 				A5B496762BD045560079A3B1 /* Tabman */,
 				A558A0382BD8E0F1000C1B9D /* Lottie */,
 				A558A04B2BD95EF9000C1B9D /* RxGesture */,
+				A558A0552BDBAC15000C1B9D /* KeychainSwift */,
 			);
 			productName = BuyOrNot;
 			productReference = A559908B2BCBFED00096B98A /* BuyOrNot.app */;
@@ -473,6 +476,7 @@
 				A5B496752BD045560079A3B1 /* XCRemoteSwiftPackageReference "Tabman" */,
 				A558A0372BD8E0F1000C1B9D /* XCRemoteSwiftPackageReference "lottie-spm" */,
 				A558A04A2BD95EF9000C1B9D /* XCRemoteSwiftPackageReference "RxGesture" */,
+				A558A0542BDBAC15000C1B9D /* XCRemoteSwiftPackageReference "keychain-swift" */,
 			);
 			productRefGroup = A559908C2BCBFED00096B98A /* Products */;
 			projectDirPath = "";
@@ -810,6 +814,14 @@
 				minimumVersion = 4.0.4;
 			};
 		};
+		A558A0542BDBAC15000C1B9D /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 24.0.0;
+			};
+		};
 		A55990A82BCC00C10096B98A /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
@@ -878,6 +890,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A558A04A2BD95EF9000C1B9D /* XCRemoteSwiftPackageReference "RxGesture" */;
 			productName = RxGesture;
+		};
+		A558A0552BDBAC15000C1B9D /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A558A0542BDBAC15000C1B9D /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
 		};
 		A55990A92BCC00C10096B98A /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;

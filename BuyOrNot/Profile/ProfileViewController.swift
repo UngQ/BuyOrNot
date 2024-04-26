@@ -35,9 +35,41 @@ class ProfileViewController: BaseViewController {
 		 super.viewDidLoad()
 		 self.view.backgroundColor = .white
 		 setupProfileViews()
-//		 setupCollectionView()
-		 
+
+		 setupUserNavigationItem()
 	 }
+
+
+	private func setupUserNavigationItem() {
+
+		let logoutButton = UIButton()
+
+		logoutButton.layer.backgroundColor = UIColor(white: 0, alpha: 0.2).cgColor
+		logoutButton.layer.cornerRadius = 15
+		logoutButton.setImage(UIImage(systemName: "door.left.hand.open"), for: .normal)
+		logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
+		logoutButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+		logoutButton.tintColor = .systemRed
+		navigationItem.rightBarButtonItem = UIBarButtonItem(customView: logoutButton)
+	}
+
+	@objc private func logoutButtonTapped() {
+
+		let alertController = UIAlertController(title: nil, message: "로그아웃 하시겠습니까?", preferredStyle: .alert)
+		let logoutAction = UIAlertAction(title: "로그아웃", style: .destructive) { _ in
+
+			let vc = SignInViewController()
+			vc.viewModel.handleAutoLogin("", password: "", enable: false)
+
+			UIViewController.changeRootView(to: SignInViewController(), isNav: true)
+
+		}
+		let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+		alertController.addAction(logoutAction)
+		alertController.addAction(cancelAction)
+		present(alertController, animated: true)
+	}
+
 
 	override func bind() {
 		let input = ProfileViewModel.Input()
@@ -65,7 +97,7 @@ class ProfileViewController: BaseViewController {
 		 view.addSubview(imageCollectionView)
 
 		 profileImageView.snp.makeConstraints { make in
-			 make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
+			 make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(4)
 			 make.centerX.equalTo(view)
 			 make.width.height.equalTo(100)
 		 }

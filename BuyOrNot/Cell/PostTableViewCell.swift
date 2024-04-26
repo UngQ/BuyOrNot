@@ -180,7 +180,7 @@ class PostTableViewCell: UITableViewCell {
 		}
 
 		commentButton.snp.makeConstraints { make in
-			make.top.equalTo(postImageView.snp.bottom).offset(10)
+			make.top.equalTo(likeDislikeProgressView.snp.bottom).offset(10)
 			make.right.equalToSuperview().offset(-10)
 			make.size.equalTo(25)
 		}

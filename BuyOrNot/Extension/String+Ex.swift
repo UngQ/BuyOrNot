@@ -17,15 +17,26 @@ extension String {
 			return "Invalid date"
 		}
 
-		if Calendar.current.isDateInToday(date) {
-			let relativeFormatter = DateComponentsFormatter()
-			relativeFormatter.allowedUnits = [.hour, .minute]
-			relativeFormatter.unitsStyle = .full
-			relativeFormatter.maximumUnitCount = 1
-			relativeFormatter.calendar?.locale = Locale(identifier: "ko_KR")
+		let calendar = Calendar.current
 
-			if let relativeString = relativeFormatter.string(from: date, to: Date()) {
-				return relativeString + " 전"
+		// Check if the date is within today.
+		if calendar.isDateInToday(date) {
+			let now = Date()
+			let components = calendar.dateComponents([.hour, .minute], from: date, to: now)
+
+			// Check if the date is 'right now'.
+			if components.minute == 0 {
+				return "방금"
+			} else {
+				let relativeFormatter = DateComponentsFormatter()
+				relativeFormatter.allowedUnits = [.hour, .minute]
+				relativeFormatter.unitsStyle = .full
+				relativeFormatter.maximumUnitCount = 1
+				relativeFormatter.calendar?.locale = Locale(identifier: "ko_KR")
+
+				if let relativeString = relativeFormatter.string(from: date, to: now) {
+					return relativeString + " 전"
+				}
 			}
 		}
 

@@ -37,7 +37,7 @@ class ContentPostViewController: BaseViewController {
 			self.viewModel.isLoading = false
 			self.viewModel.nextCursor = nil
 			self.viewModel.viewWillAppearTrigger.accept(())
-			self.refreshControl.endRefreshing()
+
 		}
 
 	}
@@ -64,8 +64,8 @@ class ContentPostViewController: BaseViewController {
 			cell.imageView.loadImage(from: postImage)
 
 
-			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-
+			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in 
+				self?.refreshControl.endRefreshing()
 				self?.loadingLottieView.isHidden = true
 				self?.loadingLottieView.stop()
 			}

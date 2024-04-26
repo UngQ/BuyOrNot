@@ -28,6 +28,7 @@ class EditCommentViewController: UIViewController {
 
 		let menuButton = UIBarButtonItem(title: "저장", style: .plain, target: self, action: nil)
 		self.navigationItem.rightBarButtonItem = menuButton
+		
 
 	}
 

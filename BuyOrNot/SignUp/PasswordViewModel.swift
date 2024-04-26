@@ -26,7 +26,7 @@ class PasswordViewModel: ViewModelType {
 
 	func transform(input: Input) -> Output {
 
-		let initValid = BehaviorRelay(value: false)
+		let initValid = PublishRelay<Bool>()
 		let finalValid = PublishRelay<Bool>()
 		let combineText = Observable.combineLatest(input.passwordText,
 											input.confirmPasswordText)
@@ -41,7 +41,7 @@ class PasswordViewModel: ViewModelType {
 
 		combineText.map {
 			print($0, $1)
-			return self.isValidPassword($0) && $0 == $1 }
+			return $0 == $1 }
 			.bind(to: finalValid)
 			.disposed(by: disposeBag)
 
