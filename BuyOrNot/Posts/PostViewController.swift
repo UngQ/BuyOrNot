@@ -91,8 +91,10 @@ class PostViewController: BaseViewController {
 	func handleCategorySelection(_ category: Category) {
 		print("Selected category: \(category)")
 		let vc = ContentPostViewController()
+		vc.collectionViewLayout = UICollectionViewFlowLayout.createCompositionLayout(in: self.view)
 		vc.viewModel.title = category.title
 		vc.viewModel.hashTag = category.rawValue
+		vc.viewModel.content = .categoryPosts
 
 		navigationController?.pushViewController(vc, animated: true)
 	}
@@ -222,6 +224,29 @@ override func bind() {
 			.disposed(by: cell.disposeBag)
 
 
+			cell.profileImageView.rx.tapGesture()
+				.when(.recognized)
+				.bind(with: self) { owner, gesture in
+					let vc = ProfileViewController()
+					vc.viewModel.myOrOther = false
+					vc.viewModel.othersId = element.creator.user_id
+					vc.tabmanVC.myOrOthers = false
+					vc.tabmanVC.myPostsVC.viewModel.myId = element.creator.user_id
+					owner.navigationController?.pushViewController(vc, animated: true)
+				}
+				.disposed(by: cell.disposeBag)
+
+			cell.usernameLabel.rx.tapGesture()
+				.when(.recognized)
+				.bind(with: self) { owner, gesture in
+					let vc = ProfileViewController()
+					vc.viewModel.myOrOther = false
+					vc.viewModel.othersId = element.creator.user_id
+					vc.tabmanVC.myOrOthers = false
+					vc.tabmanVC.myPostsVC.viewModel.myId = element.creator.user_id
+					owner.navigationController?.pushViewController(vc, animated: true)
+				}
+				.disposed(by: cell.disposeBag)
 
 			cell.likeButton.rx.tap
 				.subscribe(onNext: { [weak self]  index in

@@ -42,8 +42,22 @@ class CustomTabBarController: UITabBarController {
 		firstVC.tabBarItem.image = UIImage(systemName: "house.fill")
 
 
-		thirdVC.tabBarItem.title = ""
-		thirdVC.tabBarItem.image = UIImage(systemName: "gearshape.fill")
+		let endPoint = UserDefaults.standard.string(forKey: UserDefaultsKey.profileImage.key) ?? ""
+		let profileImage = "\(APIKey.baseURL.rawValue)/v1/\(endPoint)"
+		ImageLoader.loadImage(from: profileImage) { image in
+
+			guard let image = image else { return }
+			let circularProfileImage = self.circularImage(from: image, scaledToSize: CGSize(width: 30, height: 30))
+			self.thirdVC.tabBarItem = UITabBarItem(title: UserDefaults.standard.string(forKey: UserDefaultsKey.nick.key), image: circularProfileImage.withRenderingMode(.alwaysOriginal), selectedImage: nil)
+
+		}
+
+//		let profileImage = UIImage(named: "profilePhoto")! // Replace with your image fetching logic
+//		let circularProfileImage = circularImage(from: profileImage, scaledToSize: CGSize(width: 30, height: 30))
+//		thirdVC.tabBarItem = UITabBarItem(title: "Profile", image: circularProfileImage.withRenderingMode(.alwaysOriginal), selectedImage: nil)
+
+
+//		thirdVC.tabBarItem.image = UIImage(systemName: "gearshape.fill")
 
 		viewControllers = [firstVC, UIViewController(), thirdVC]
 
@@ -51,8 +65,16 @@ class CustomTabBarController: UITabBarController {
 
 
 	}
+	func circularImage(from originalImage: UIImage, scaledToSize newSize: CGSize) -> UIImage {
+		let rect = CGRect(origin: .zero, size: newSize)
+		UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+		UIBezierPath(roundedRect: rect, cornerRadius: newSize.width/2).addClip()
+		originalImage.draw(in: rect)
+		let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
+		UIGraphicsEndImageContext()
+		return resizedImage ?? originalImage
+	}
 
-	
 	func setupMiddleButton() {
 		let middleBtn = UIButton(frame: CGRect(x: (self.tabBar.bounds.width / 2) - 35, y: -20, width: 70, height: 70))
 		middleBtn.layer.cornerRadius = 35

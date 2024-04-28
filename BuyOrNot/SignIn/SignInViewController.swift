@@ -61,20 +61,22 @@ final class SignInViewController: BaseViewController {
 
 		output.loginSuccessTrigger
 			.drive(with: self) { owner, _ in
+				print("대는겨ㅇㅇㅇ??")
+				owner.successLoginLottieView.isHidden = false
+				owner.successLoginLottieView.play { completed in
 
-				owner.loadingLottieView.isHidden = false
-				owner.loadingLottieView.play()
+
+					if owner.autoLoginSwitch.isOn {
+						print("대는겨??")
+						let email = owner.emailTextField.text ?? ""
+						let password = owner.passwordTextField.text ?? ""
+						owner.viewModel.handleAutoLogin(email, password: password, enable: true)
+
+					}
 
 
-				if owner.autoLoginSwitch.isOn {
-						 let email = owner.emailTextField.text ?? ""
-						 let password = owner.passwordTextField.text ?? ""
-						 owner.viewModel.handleAutoLogin(email, password: password, enable: true)
-					 }
+						UIViewController.changeRootView(to: CustomTabBarController(), isNav: true)
 
-				DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-
-					UIViewController.changeRootView(to: CustomTabBarController(), isNav: true)
 				}
 			}
 			.disposed(by: disposeBag)
@@ -106,7 +108,8 @@ final class SignInViewController: BaseViewController {
 	}
 
 	override func configureLayout() {
-		view.addSubview(loadingLottieView)
+
+
 		view.addSubview(scrollView)
 		scrollView.addSubview(contentView)
 		contentView.addSubview(titleImageView)
@@ -116,6 +119,12 @@ final class SignInViewController: BaseViewController {
 		contentView.addSubview(signUpButton)
 		contentView.addSubview(autoLoginSwitch)
 		contentView.addSubview(autoLoginLabel)
+		view.addSubview(successLoginLottieView)
+
+		successLoginLottieView.snp.makeConstraints { make in
+			make.center.equalToSuperview()
+			make.size.equalTo(100)
+		}
 
 		scrollView.snp.makeConstraints { make in
 			make.edges.equalTo(view.safeAreaLayoutGuide)
@@ -184,8 +193,8 @@ final class SignInViewController: BaseViewController {
 			passwordTextField.text = password
 			DispatchQueue.main.async {
 				
-				self.loadingLottieView.isHidden = false
-				self.loadingLottieView.play()
+				self.successLoginLottieView.isHidden = false
+				self.successLoginLottieView.play()
 
 				self.emailTextField.becomeFirstResponder()
 				if let endPosition = self.emailTextField.position(from: self.emailTextField.endOfDocument, offset: 0) {

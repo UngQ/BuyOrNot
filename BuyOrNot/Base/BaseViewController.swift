@@ -14,6 +14,22 @@ class BaseViewController: UIViewController {
 
 	let disposeBag = DisposeBag()
 
+
+	lazy var successLoginLottieView : LottieAnimationView = {
+
+		let animationView = LottieAnimationView(name: "successLoginAnimation")
+		animationView.frame = CGRect(x: 0, y: 0,
+									 width: 100, height: 100)
+		animationView.center = self.view.center
+		animationView.contentMode = .scaleAspectFill
+		animationView.isHidden = true
+		animationView.loopMode = .playOnce
+		animationView.animationSpeed = 2
+
+
+		return animationView
+	}()
+
 	lazy var loadingLottieView : LottieAnimationView = {
 
 		let animationView = LottieAnimationView(name: "loadingAnimation")

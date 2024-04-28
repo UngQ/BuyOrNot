@@ -13,44 +13,123 @@ class ProfileViewController: BaseViewController {
 
 	let viewModel = ProfileViewModel()
 
-	// Profile UI Components
+	private var containerView = UIView()
+	let tabmanVC = TabmanInProfileViewController()
+
+
 	let profileImageView = UIImageView()
-	let nameLabel = UILabel()
+
+	let postsLabel = UILabel()
 	let followersLabel = UILabel()
 	let followingLabel = UILabel()
-	private lazy var imageCollectionView: UICollectionView = {
-		let layout = UICollectionViewFlowLayout.createThreeColumnFlowLayout(in: self.view)
-		let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-		collectionView.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: ImageCollectionViewCell.id)
-		return collectionView
-	}()
+
+	let postsButton = UIButton()
+	let followersButton = UIButton()
+	let followingButton = UIButton()
+
+	lazy var postsStackView = UIStackView(arrangedSubviews: [postsLabel, postsButton])
+	lazy var followersStackView = UIStackView(arrangedSubviews: [followersLabel, followersButton])
+	lazy var followingStackView = UIStackView(arrangedSubviews: [followingLabel, followingButton])
+	lazy var horizontalStackView = UIStackView(arrangedSubviews: [postsStackView, followersStackView, followingStackView])
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		viewModel.viewWillAppearTrigger.accept(())
+
+		print("Hey!")
+
 	}
 
 	 override func viewDidLoad() {
 		 super.viewDidLoad()
 		 self.view.backgroundColor = .white
 		 setupProfileViews()
+		 configureButtons()
 
+//		 setNavigationTitleImage()
 		 setupUserNavigationItem()
+		 tabmanVC.myPostsVC.contentPostVCDelegate = self
+		 tabmanVC.likePostsVC.contentPostVCDelegate = self
+		 tabmanVC.dislikePostsVC.contentPostVCDelegate = self
+
+		 viewModel.viewWillAppearTrigger.accept(())
 	 }
 
+	private func configureButtons() {
+
+		postsLabel.text = "게시물"
+		postsLabel.textAlignment = .center
+		postsLabel.font = .systemFont(ofSize: 16)
+		postsLabel.textColor = .darkGray
+		followersLabel.text = "팔로워"
+		followersLabel.textAlignment = .center
+		followersLabel.font = .systemFont(ofSize: 16)
+		followersLabel.textColor = .darkGray
+		followingLabel.text = "팔로잉"
+		followingLabel.textAlignment = .center
+		followingLabel.font = .systemFont(ofSize: 16)
+		followingLabel.textColor = .darkGray
+		postsButton.titleLabel?.textAlignment = .center
+		postsButton.titleLabel?.font = .boldSystemFont(ofSize: 16)
+		followersButton.titleLabel?.textAlignment = .center
+		followersButton.titleLabel?.font = .boldSystemFont(ofSize: 16)
+		followingButton.titleLabel?.textAlignment = .center
+		followingButton.titleLabel?.font = .boldSystemFont(ofSize: 16)
+
+
+		postsButton.setTitleColor(.textPoint, for: .normal) // Customize color as needed
+		postsButton.addTarget(self, action: #selector(followersButtonTapped), for: .touchUpInside)
+
+
+
+		 followersButton.setTitleColor(.textPoint, for: .normal) // Customize color as needed
+		 followersButton.addTarget(self, action: #selector(followersButtonTapped), for: .touchUpInside)
+
+
+		 followingButton.setTitleColor(.textPoint, for: .normal) // Customize color as needed
+		 followingButton.addTarget(self, action: #selector(followingButtonTapped), for: .touchUpInside)
+	 }
+
+	@objc private func followersButtonTapped() {
+		// Navigate to followers list screen
+		let followersVC = ProfileViewController()
+		navigationController?.pushViewController(followersVC, animated: true)
+	}
+
+	@objc private func followingButtonTapped() {
+		// Navigate to following list screen
+		let followingVC = ProfileViewController()
+		navigationController?.pushViewController(followingVC, animated: true)
+	}
 
 	private func setupUserNavigationItem() {
 
-		let logoutButton = UIButton()
+		if viewModel.myOrOther {
+			let logoutButton = UIButton()
 
-		logoutButton.layer.backgroundColor = UIColor(white: 0, alpha: 0.2).cgColor
-		logoutButton.layer.cornerRadius = 15
-		logoutButton.setImage(UIImage(systemName: "door.left.hand.open"), for: .normal)
-		logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
-		logoutButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-		logoutButton.tintColor = .systemRed
-		navigationItem.rightBarButtonItem = UIBarButtonItem(customView: logoutButton)
+			logoutButton.layer.backgroundColor = UIColor(white: 0, alpha: 0.2).cgColor
+			logoutButton.layer.cornerRadius = 15
+			logoutButton.setImage(UIImage(systemName: "door.left.hand.open"), for: .normal)
+			logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
+			logoutButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+			logoutButton.tintColor = .systemRed
+			navigationItem.rightBarButtonItem = UIBarButtonItem(customView: logoutButton)
+		} else {
+			let followButton = UIButton()
+
+			followButton.layer.backgroundColor = UIColor(white: 0, alpha: 0.2).cgColor
+			followButton.layer.cornerRadius = 15
+			followButton.setImage(UIImage(systemName: "person.crop.circle.fill.badge.plus"), for: .normal)
+			followButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
+			followButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+			followButton.tintColor = .systemRed
+			navigationItem.rightBarButtonItem = UIBarButtonItem(customView: followButton)
+		}
+	}
+
+	@objc private func followButtonTapped() {
+
+
 	}
 
 	@objc private func logoutButtonTapped() {
@@ -77,60 +156,130 @@ class ProfileViewController: BaseViewController {
 		let output = viewModel.transform(input: input)
 		
 		output.data
-			.drive(
-				imageCollectionView.rx.items(cellIdentifier: ImageCollectionViewCell.id, cellType: ImageCollectionViewCell.self)) {
-					row, element, cell in
+			.drive(with: self) { owner, profileData in
 
-					let postImage = "\(APIKey.baseURL.rawValue)/v1/\(element.files[0])"
-					cell.imageView.loadImage(from: postImage)
+				
 
+				let profileImage = "\(APIKey.baseURL.rawValue)/v1/\(profileData.profileImage ?? "")"
+				owner.profileImageView.loadImage(from: profileImage)
 
-				}
-				.disposed(by: disposeBag)
+				owner.postsButton.setTitle("\(profileData.posts.count)", for: .normal)
+				owner.followersButton.setTitle("\(profileData.followers.count)", for: .normal)
+				owner.followingButton.setTitle("\(profileData.following.count)", for: .normal)
+
+				owner.navigationItem.title = "\(profileData.nick)"
+
+			}
+			.disposed(by: disposeBag)
+
+		output.followingData
+			.drive(with: self) { owner, followData in
+				followData.
+			}
+
 	}
 
 	 private func setupProfileViews() {
+
+		 [postsStackView, followersStackView, followingStackView].forEach { stackView in
+			 stackView.axis = .vertical
+			 stackView.spacing = 0
+			 stackView.distribution = .fillEqually
+		 }
+
+		 horizontalStackView.axis = .horizontal
+		 horizontalStackView.distribution = .fillEqually
+		 horizontalStackView.spacing = 20
+		 horizontalStackView.alignment = .center
+
 		 view.addSubview(profileImageView)
-		 view.addSubview(nameLabel)
-		 view.addSubview(followersLabel)
-		 view.addSubview(followingLabel)
-		 view.addSubview(imageCollectionView)
+		 view.addSubview(horizontalStackView)
+		 view.addSubview(containerView)
+		 containerView.addSubview(tabmanVC.view)
+
+
 
 		 profileImageView.snp.makeConstraints { make in
-			 make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(4)
-			 make.centerX.equalTo(view)
+			 make.top.equalTo(view.safeAreaLayoutGuide).offset(4)
+			 make.leading.equalTo(view.safeAreaLayoutGuide).offset(12)
 			 make.width.height.equalTo(100)
 		 }
+
+		 horizontalStackView.snp.makeConstraints { make in
+			 make.centerY.equalTo(profileImageView)
+			 make.leading.equalTo(profileImageView.snp.trailing).offset(4)
+			 make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-4)
+		  }
+
+
+		 containerView.snp.makeConstraints { make in
+			 make.top.equalTo(profileImageView.snp.bottom).offset(10)
+			 make.left.right.bottom.equalTo(view.safeAreaLayoutGuide)
+		 }
+
+
+		 tabmanVC.view.snp.makeConstraints { make in
+			 make.edges.equalToSuperview()
+		 }
+
 		 profileImageView.layer.cornerRadius = 50
 		 profileImageView.clipsToBounds = true
-		 profileImageView.backgroundColor = .gray  // Placeholder color
 
-		 nameLabel.text = "User Name"
-		 nameLabel.snp.makeConstraints { make in
-			 make.top.equalTo(profileImageView.snp.bottom).offset(10)
-			 make.centerX.equalTo(view)
-		 }
 
-		 followersLabel.text = "Followers: 120"
-		 followersLabel.snp.makeConstraints { make in
-			 make.top.equalTo(nameLabel.snp.bottom).offset(10)
-			 make.centerX.equalTo(view).offset(-50)
-		 }
-
-		 followingLabel.text = "Following: 150"
-		 followingLabel.snp.makeConstraints { make in
-			 make.top.equalTo(nameLabel.snp.bottom).offset(10)
-			 make.centerX.equalTo(view).offset(50)
-		 }
-
-		 imageCollectionView.snp.makeConstraints { make in
-			 make.top.equalTo(followersLabel.snp.bottom).offset(10)
-			 make.horizontalEdges.equalToSuperview()
-			 make.bottom.equalTo(view.safeAreaLayoutGuide)
-
-		 }
-		 imageCollectionView.backgroundColor = .brown
 	 }
 
 
+}
+
+
+extension ProfileViewController: ContentPostViewControllerDelegate {
+	func didScrollTableView(_ direction: ScrollDirection) {
+		switch direction {
+		case .down:
+
+				UIView.animate(withDuration: 0.3) {
+					self.horizontalStackView.isHidden = false
+					self.navigationController?.isNavigationBarHidden = false
+					self.containerView.snp.remakeConstraints { make in
+						make.top.equalTo(self.profileImageView.snp.bottom).offset(10)
+						make.horizontalEdges.equalToSuperview()
+						make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+					}
+
+					self.view.layoutIfNeeded()
+				}
+
+		case .up:
+			UIView.animate(withDuration: 0.3) {
+				self.horizontalStackView.isHidden = true
+				self.navigationController?.isNavigationBarHidden = true
+				self.containerView.snp.remakeConstraints { make in
+					   make.edges.equalTo(self.view.safeAreaLayoutGuide)
+				   }
+				self.view.layoutIfNeeded()
+
+
+			}
+		}
+	}
+	
+	func didSelectItem(index: Int) {
+		self.navigationController?.isNavigationBarHidden = false
+		let vc = PostViewController()
+		vc.TotalOrDetail = false
+		if self.tabmanVC.currentIndex == 0 {
+			vc.viewModel.id = self.tabmanVC.myPostsVC.viewModel.postsData.value[index].post_id
+		} else if self.tabmanVC.currentIndex == 1 {
+			print("HI~~")
+			vc.viewModel.id = self.tabmanVC.likePostsVC.viewModel.postsData.value[index].post_id
+		} else if self.tabmanVC.currentIndex == 2 {
+			print("HIHIHI")
+
+			vc.viewModel.id = self.tabmanVC.dislikePostsVC.viewModel.postsData.value[index].post_id
+		}
+		vc.viewModel.totalOrDetail = false
+		self.navigationController?.pushViewController(vc, animated: true)
+	}
+	
+	
 }

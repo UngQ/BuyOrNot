@@ -35,7 +35,7 @@ struct JoinModel: Decodable {
 struct ImageModel: Decodable {
 	let files: [String]
 }
-struct PostModel: Decodable {
+struct PostModel: Decodable, Equatable {
 	let post_id: String
 	let product_id: String
 	let title: String
@@ -48,6 +48,10 @@ struct PostModel: Decodable {
 	var likes2: [String]
 	let hashTags: [String]
 	let comments: [CommentModel]
+
+	static func == (lhs: PostModel, rhs: PostModel) -> Bool {
+		return lhs.post_id == rhs.post_id
+	 }
 }
 
 struct CommentModel: Decodable, Equatable {
@@ -68,7 +72,20 @@ struct CreatorModel: Decodable {
 	let profileImage: String?
 }
 
-struct PostsModel: Decodable {
+struct PostsModel: Decodable, Equatable {
 	let data: [PostModel]
 	let next_cursor: String
+
+	static func == (lhs: PostsModel, rhs: PostsModel) -> Bool {
+		return lhs.data == rhs.data
+	 }
+}
+
+struct ProfileModel: Decodable {
+	let user_id: String
+	let nick: String
+	let profileImage: String?
+	let followers: [CreatorModel]
+	let following: [CreatorModel]
+	let posts: [String]
 }

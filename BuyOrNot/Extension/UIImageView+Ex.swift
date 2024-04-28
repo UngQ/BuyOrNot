@@ -9,13 +9,10 @@ import UIKit
 import Kingfisher
 
 extension UIImageView {
-	/// Loads an image from a URL string, with a default placeholder for errors.
-	/// - Parameters:
-	///   - urlString: The URL string of the image to be loaded.
-	///   - placeholder: A UIImage to be used as a fallback when the image cannot be loaded.
+
 	func loadImage(from urlString: String, placeholder: UIImage? = UIImage(systemName: "exclamationmark.triangle")) {
 		guard let url = URL(string: urlString) else {
-			
+
 			self.image = placeholder
 			return
 		}
@@ -35,5 +32,26 @@ extension UIImageView {
 				}
 			}
 		)
+	}
+}
+
+struct ImageLoader {
+	static func loadImage(from urlString: String, placeholder: UIImage? = UIImage(systemName: "person.circle.fill"), completion: @escaping (UIImage?) -> Void) {
+		guard let url = URL(string: urlString) else {
+			completion(placeholder)
+			return
+		}
+		KingfisherManager.shared.retrieveImage(with: url, options: [.requestModifier(NetworkManager.imageDownloadRequest)]) { result in
+			DispatchQueue.main.async {
+				switch result {
+				case .success(let value):
+
+					completion(value.image)
+				case .failure(let error):
+					print("Error downloading image: \(error)")
+					completion(placeholder)
+				}
+			}
+		}
 	}
 }

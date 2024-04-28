@@ -63,6 +63,12 @@ final class SignInViewModel: ViewModelType {
 					 }
 			.subscribe(with: self, onNext: { owner, loginModel in
 				print("통신성공")
+				if let profileImage = loginModel.profileImage {
+					UserDefaults.standard.set(profileImage, forKey: UserDefaultsKey.profileImage.key)
+				} else {
+					UserDefaults.standard.set("", forKey: UserDefaultsKey.profileImage.key)
+				}
+				UserDefaults.standard.set(loginModel.nick, forKey: UserDefaultsKey.nick.key)
 				UserDefaults.standard.set(loginModel.user_id, forKey: UserDefaultsKey.userId.key)
 				UserDefaults.standard.set(loginModel.accessToken, forKey: UserDefaultsKey.accessToken.key)
 				UserDefaults.standard.set(loginModel.refreshToken, forKey: UserDefaultsKey.refreshToken.key)

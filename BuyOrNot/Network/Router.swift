@@ -29,6 +29,13 @@ enum Router {
 	case likePost(id: String, query: Encodable, like: String)
 
 	case userPost(query: PostQueryItems, id: String)
+
+	case myProfile
+	case myLikes(query: PostQueryItems)
+	case myDislikes(query: PostQueryItems)
+
+	case othersProfile(id: String)
+
 }
 
 extension Router: TargetType {
@@ -43,7 +50,11 @@ extension Router: TargetType {
 				.lookPosts,
 				.lookPost,
 				.hashTag,
-				.userPost:
+				.userPost,
+				.myProfile,
+				.myLikes,
+				.myDislikes,
+				.othersProfile:
 			return .get
 
 		case .login,
@@ -76,7 +87,7 @@ extension Router: TargetType {
 		case .uploadImage:
 			return "/v1/posts/files"
 		case .uploadPost,
-				.lookPosts:
+			 .lookPosts:
 			return "/v1/posts"
 		case .uploadComment(let id, _):
 			return "/v1/posts/\(id)/comments"
@@ -91,7 +102,16 @@ extension Router: TargetType {
 		case .deleteComment(let id, let commentId):
 			return "/v1/posts/\(id)/comments/\(commentId)"
 		case .updateComment(let id, let commentId, _):
-			return "v1/posts/\(id)/comments/\(commentId)"
+			return "/v1/posts/\(id)/comments/\(commentId)"
+		case .myProfile:
+			return "/v1/users/me/profile"
+		case .myLikes:
+			return "/v1/posts/likes/me"
+		case .myDislikes:
+			return "/v1/posts/likes-2/me"
+		case .othersProfile(let id):
+			return "/v1/users/\(id)/profile"
+
 
 		}
 	}
@@ -130,7 +150,12 @@ extension Router: TargetType {
 				.lookPost,
 			.hashTag,
 			.userPost,
-			.deleteComment:
+			.deleteComment,
+			.myProfile,
+			.myLikes,
+			.myDislikes,
+			.othersProfile
+			:
 			return [
 				HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
 				HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
@@ -145,7 +170,10 @@ extension Router: TargetType {
 	var queryItems: [URLQueryItem]? {
 		switch self {
 		case .lookPosts(let query),
-				.userPost(let query, _):
+				.userPost(let query, _),
+				.myLikes(let query),
+				.myDislikes(let query)
+				:
 				return [
 					URLQueryItem(name: "next", value: query.next),
 					URLQueryItem(name: "limit", value: query.limit),
@@ -173,7 +201,12 @@ extension Router: TargetType {
 				.hashTag,
 				.lookPost,
 				.userPost,
-				.deleteComment:
+				.deleteComment,
+				.myProfile,
+				.myLikes,
+				.myDislikes,
+				.othersProfile
+				:
 			return nil
 		case .login(let query),
 			.validationEmail(let query),
