@@ -85,7 +85,13 @@ struct ProfileModel: Decodable {
 	let user_id: String
 	let nick: String
 	let profileImage: String?
-	let followers: [CreatorModel]
+	var followers: [CreatorModel]
 	let following: [CreatorModel]
 	let posts: [String]
+}
+
+struct FollowModel: Decodable {
+	let nick: String
+	let opponent_nick: String
+	let following_status: Bool
 }

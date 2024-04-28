@@ -35,7 +35,9 @@ enum Router {
 	case myDislikes(query: PostQueryItems)
 
 	case othersProfile(id: String)
-
+	
+	case plusFollow(id: String)
+	case deleteFollow(id: String)
 }
 
 extension Router: TargetType {
@@ -63,13 +65,16 @@ extension Router: TargetType {
 			 .uploadImage,
 			 .uploadPost,
 			 .uploadComment,
-			 .likePost:
+			 .likePost,
+			 .plusFollow:
 			return .post
 
 		case .updateComment:
 			return .put
 
-		case .deleteComment:
+		case .deleteComment,
+				.deleteFollow:
+
 			return .delete
 		}
 	}
@@ -111,6 +116,9 @@ extension Router: TargetType {
 			return "/v1/posts/likes-2/me"
 		case .othersProfile(let id):
 			return "/v1/users/\(id)/profile"
+		case .plusFollow(let id),
+				.deleteFollow(let id):
+			return "/v1/follow/\(id)"
 
 
 		}
@@ -154,7 +162,9 @@ extension Router: TargetType {
 			.myProfile,
 			.myLikes,
 			.myDislikes,
-			.othersProfile
+			.othersProfile,
+			.plusFollow,
+			.deleteFollow
 			:
 			return [
 				HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
@@ -205,7 +215,9 @@ extension Router: TargetType {
 				.myProfile,
 				.myLikes,
 				.myDislikes,
-				.othersProfile
+				.othersProfile,
+				.plusFollow,
+				.deleteFollow
 				:
 			return nil
 		case .login(let query),

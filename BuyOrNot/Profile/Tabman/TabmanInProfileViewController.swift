@@ -71,7 +71,7 @@ class TabmanInProfileViewController: TabmanViewController {
 
 			button.tintColor = .systemGray
 			button.selectedTintColor = .textPoint
-			button.font = .systemFont(ofSize: 12)
+			button.font = .systemFont(ofSize: 6)
 //			button.selectedFont = .boldSystemFont(ofSize: 12)
 		  }
 //		bar.indicator.weight = .light

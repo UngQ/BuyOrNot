@@ -158,10 +158,6 @@ override func bind() {
 					make.left.right.equalToSuperview().inset(10)
 					make.height.equalTo(32)
 				}
-
-
-
-
 			} else {
 				cell.likeDislikeProgressView.snp.remakeConstraints { make in
 					make.top.equalTo(cell.postImageView.snp.bottom).offset(5)
@@ -224,15 +220,22 @@ override func bind() {
 			.disposed(by: cell.disposeBag)
 
 
+
 			cell.profileImageView.rx.tapGesture()
 				.when(.recognized)
 				.bind(with: self) { owner, gesture in
 					let vc = ProfileViewController()
-					vc.viewModel.myOrOther = false
-					vc.viewModel.othersId = element.creator.user_id
-					vc.tabmanVC.myOrOthers = false
-					vc.tabmanVC.myPostsVC.viewModel.myId = element.creator.user_id
-					owner.navigationController?.pushViewController(vc, animated: true)
+
+					if element.creator.user_id == myId {
+						
+						owner.navigationController?.pushViewController(vc, animated: true)
+					} else {
+						vc.viewModel.myOrOther = false
+						vc.viewModel.othersId = element.creator.user_id
+						vc.tabmanVC.myOrOthers = false
+						vc.tabmanVC.myPostsVC.viewModel.myId = element.creator.user_id
+						owner.navigationController?.pushViewController(vc, animated: true)
+					}
 				}
 				.disposed(by: cell.disposeBag)
 
@@ -240,11 +243,16 @@ override func bind() {
 				.when(.recognized)
 				.bind(with: self) { owner, gesture in
 					let vc = ProfileViewController()
-					vc.viewModel.myOrOther = false
-					vc.viewModel.othersId = element.creator.user_id
-					vc.tabmanVC.myOrOthers = false
-					vc.tabmanVC.myPostsVC.viewModel.myId = element.creator.user_id
-					owner.navigationController?.pushViewController(vc, animated: true)
+
+					if element.creator.user_id == myId {
+						owner.navigationController?.pushViewController(vc, animated: true)
+					} else {
+						vc.viewModel.myOrOther = false
+						vc.viewModel.othersId = element.creator.user_id
+						vc.tabmanVC.myOrOthers = false
+						vc.tabmanVC.myPostsVC.viewModel.myId = element.creator.user_id
+						owner.navigationController?.pushViewController(vc, animated: true)
+					}
 				}
 				.disposed(by: cell.disposeBag)
 

@@ -16,6 +16,7 @@ class ProfileViewController: BaseViewController {
 	private var containerView = UIView()
 	let tabmanVC = TabmanInProfileViewController()
 
+	let navigationRightButton = UIButton()
 
 	let profileImageView = UIImageView()
 
@@ -45,9 +46,8 @@ class ProfileViewController: BaseViewController {
 		 self.view.backgroundColor = .white
 		 setupProfileViews()
 		 configureButtons()
-
-//		 setNavigationTitleImage()
 		 setupUserNavigationItem()
+		 
 		 tabmanVC.myPostsVC.contentPostVCDelegate = self
 		 tabmanVC.likePostsVC.contentPostVCDelegate = self
 		 tabmanVC.dislikePostsVC.contentPostVCDelegate = self
@@ -104,61 +104,34 @@ class ProfileViewController: BaseViewController {
 
 	private func setupUserNavigationItem() {
 
-		if viewModel.myOrOther {
-			let logoutButton = UIButton()
-
-			logoutButton.layer.backgroundColor = UIColor(white: 0, alpha: 0.2).cgColor
-			logoutButton.layer.cornerRadius = 15
-			logoutButton.setImage(UIImage(systemName: "door.left.hand.open"), for: .normal)
-			logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
-			logoutButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-			logoutButton.tintColor = .systemRed
-			navigationItem.rightBarButtonItem = UIBarButtonItem(customView: logoutButton)
-		} else {
-			let followButton = UIButton()
-
-			followButton.layer.backgroundColor = UIColor(white: 0, alpha: 0.2).cgColor
-			followButton.layer.cornerRadius = 15
-			followButton.setImage(UIImage(systemName: "person.crop.circle.fill.badge.plus"), for: .normal)
-			followButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
-			followButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-			followButton.tintColor = .systemRed
-			navigationItem.rightBarButtonItem = UIBarButtonItem(customView: followButton)
 		}
-	}
-
-	@objc private func followButtonTapped() {
-
-
-	}
-
-	@objc private func logoutButtonTapped() {
-
-		let alertController = UIAlertController(title: nil, message: "로그아웃 하시겠습니까?", preferredStyle: .alert)
-		let logoutAction = UIAlertAction(title: "로그아웃", style: .destructive) { _ in
-
-			let vc = SignInViewController()
-			vc.viewModel.handleAutoLogin("", password: "", enable: false)
-
-			UIViewController.changeRootView(to: SignInViewController(), isNav: true)
-
-		}
-		let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-		alertController.addAction(logoutAction)
-		alertController.addAction(cancelAction)
-		present(alertController, animated: true)
-	}
 
 
 	override func bind() {
-		let input = ProfileViewModel.Input()
+		let input = ProfileViewModel.Input(navigationRightButtonTapped: navigationRightButton.rx.tap)
 
 		let output = viewModel.transform(input: input)
-		
+
 		output.data
 			.drive(with: self) { owner, profileData in
 
-				
+				if owner.viewModel.myOrOther || profileData.user_id == owner.viewModel.myId {
+					owner.navigationRightButton.setImage(UIImage(systemName: "door.left.hand.open"), for: .normal)
+					owner.navigationRightButton.layer.backgroundColor = UIColor(white: 0, alpha: 0.2).cgColor
+				} else {
+
+					let followerIds = profileData.followers.map { $0.user_id }
+					let isFollower = followerIds.contains(owner.viewModel.myId)
+					if isFollower {
+						owner.navigationRightButton.setImage(UIImage(systemName: "person.crop.circle.fill.badge.minus"), for: .normal)
+						owner.navigationRightButton.backgroundColor = .systemRed
+					} else {
+						owner.navigationRightButton.setImage(UIImage(systemName: "person.crop.circle.fill.badge.plus"), for: .normal)
+						owner.navigationRightButton.backgroundColor = .systemBlue
+					}
+				}
+
+
 
 				let profileImage = "\(APIKey.baseURL.rawValue)/v1/\(profileData.profileImage ?? "")"
 				owner.profileImageView.loadImage(from: profileImage)
@@ -172,14 +145,35 @@ class ProfileViewController: BaseViewController {
 			}
 			.disposed(by: disposeBag)
 
-		output.followingData
-			.drive(with: self) { owner, followData in
-				followData.
+		output.navigationRightButtonTapped.drive(with: self) { owner, _ in
+			if owner.viewModel.myOrOther || owner.viewModel.profileData.value.user_id == owner.viewModel.myId {
+				let alertController = UIAlertController(title: nil, message: "로그아웃 하시겠습니까?", preferredStyle: .alert)
+				let logoutAction = UIAlertAction(title: "로그아웃", style: .destructive) { _ in
+
+					let vc = SignInViewController()
+					vc.viewModel.handleAutoLogin("", password: "", enable: false)
+
+					UIViewController.changeRootView(to: SignInViewController(), isNav: true)
+
+				}
+				let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+				alertController.addAction(logoutAction)
+				alertController.addAction(cancelAction)
+				owner.present(alertController, animated: true)
+			} else {
+				print("팔로우/언팔 뷰모델에서 작업")
 			}
+		}
+		.disposed(by: disposeBag)
+
 
 	}
 
 	 private func setupProfileViews() {
+		 navigationRightButton.layer.cornerRadius = 15
+		 navigationRightButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+		 navigationRightButton.tintColor = .white
+		 navigationItem.rightBarButtonItem = UIBarButtonItem(customView: navigationRightButton)
 
 		 [postsStackView, followersStackView, followingStackView].forEach { stackView in
 			 stackView.axis = .vertical
@@ -270,11 +264,8 @@ extension ProfileViewController: ContentPostViewControllerDelegate {
 		if self.tabmanVC.currentIndex == 0 {
 			vc.viewModel.id = self.tabmanVC.myPostsVC.viewModel.postsData.value[index].post_id
 		} else if self.tabmanVC.currentIndex == 1 {
-			print("HI~~")
 			vc.viewModel.id = self.tabmanVC.likePostsVC.viewModel.postsData.value[index].post_id
 		} else if self.tabmanVC.currentIndex == 2 {
-			print("HIHIHI")
-
 			vc.viewModel.id = self.tabmanVC.dislikePostsVC.viewModel.postsData.value[index].post_id
 		}
 		vc.viewModel.totalOrDetail = false
