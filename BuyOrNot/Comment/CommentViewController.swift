@@ -91,11 +91,15 @@ class CommentViewController: BaseViewController {
 				cell.selectionStyle = .none
 				
 
-
+				
 				
 				cell.nicknameLabel.text = element.creator.nick
 				cell.commentLabel.text = element.content
 				cell.dateLabel.text = element.createdAt.formattedDate()
+				if let endPoint = element.creator.profileImage {
+					let profileImage = "\(APIKey.baseURL.rawValue)/v1/\(endPoint)"
+					cell.profileImageView.loadImage(from: profileImage)
+				} 
 				cell.editButton.rx.tap
 					.map { row }
 					.bind(to: editButtonTapped)
@@ -123,6 +127,40 @@ class CommentViewController: BaseViewController {
 					cell.editButton.isHidden = true
 				}
 
+				cell.profileImageView.rx.tapGesture()
+					.when(.recognized)
+					.bind(with: self) { owner, gesture in
+						let vc = ProfileViewController()
+
+						if element.creator.user_id == myId {
+
+							owner.navigationController?.pushViewController(vc, animated: true)
+						} else {
+							vc.viewModel.myOrOther = false
+							vc.viewModel.othersId = element.creator.user_id
+							vc.tabmanVC.myOrOthers = false
+							vc.tabmanVC.myPostsVC.viewModel.myId = element.creator.user_id
+							owner.navigationController?.pushViewController(vc, animated: true)
+						}
+					}
+					.disposed(by: cell.disposeBag)
+
+				cell.nicknameLabel.rx.tapGesture()
+					.when(.recognized)
+					.bind(with: self) { owner, gesture in
+						let vc = ProfileViewController()
+
+						if element.creator.user_id == myId {
+							owner.navigationController?.pushViewController(vc, animated: true)
+						} else {
+							vc.viewModel.myOrOther = false
+							vc.viewModel.othersId = element.creator.user_id
+							vc.tabmanVC.myOrOthers = false
+							vc.tabmanVC.myPostsVC.viewModel.myId = element.creator.user_id
+							owner.navigationController?.pushViewController(vc, animated: true)
+						}
+					}
+					.disposed(by: cell.disposeBag)
 			}
 			.disposed(by: disposeBag)
 
@@ -132,6 +170,7 @@ class CommentViewController: BaseViewController {
 			}
 			.disposed(by: disposeBag)
 
+		
 
 	}
 

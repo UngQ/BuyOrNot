@@ -92,13 +92,15 @@ class ProfileViewController: BaseViewController {
 
 	@objc private func followersButtonTapped() {
 		// Navigate to followers list screen
-		let followersVC = ProfileViewController()
+		let followersVC = FollowViewController()
+		followersVC.viewModel = viewModel
 		navigationController?.pushViewController(followersVC, animated: true)
 	}
 
 	@objc private func followingButtonTapped() {
 		// Navigate to following list screen
-		let followingVC = ProfileViewController()
+		let followingVC = FollowViewController()
+		followingVC.viewModel = viewModel
 		navigationController?.pushViewController(followingVC, animated: true)
 	}
 
@@ -152,8 +154,7 @@ class ProfileViewController: BaseViewController {
 
 					let vc = SignInViewController()
 					vc.viewModel.handleAutoLogin("", password: "", enable: false)
-
-					UIViewController.changeRootView(to: SignInViewController(), isNav: true)
+					UIViewController.changeRootView(to: vc, isNav: true)
 
 				}
 				let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)

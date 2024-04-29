@@ -24,8 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		barAppearance.backIndicatorTransitionMaskImage = UIImage(systemName: "chevron.backward")
 		UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffset(horizontal: -200, vertical: 0), for: .default)
 
-
-
+	
 		NotificationCenter.default.addObserver(self, selector: #selector(handleAuthenticationFailure), name: .authenticationFailed, object: nil)
 
 		return true

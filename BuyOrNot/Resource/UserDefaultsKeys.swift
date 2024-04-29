@@ -15,6 +15,7 @@ enum UserDefaultsKey: String {
 	case refreshToken
 	case nick
 	case profileImage
+	case autoLogin
 
 
 	var key: String {

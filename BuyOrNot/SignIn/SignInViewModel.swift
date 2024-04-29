@@ -87,13 +87,19 @@ final class SignInViewModel: ViewModelType {
 	func handleAutoLogin(_ email: String, password: String, enable: Bool) {
 		let keychain = KeychainSwift()
 		if enable {
+			UserDefaults.standard.set(true, forKey: "autoLoginEnabled")
+
 			keychain.set(email, forKey: "userEmail")
 			keychain.set(password, forKey: "userPassword")
-			UserDefaults.standard.set(true, forKey: "autoLoginEnabled")
 		} else {
+			print("??여기안옴?")
+			UserDefaults.standard.set(false, forKey: "autoLoginEnabled")
+			
 			keychain.delete("userEmail")
 			keychain.delete("userPassword")
-			UserDefaults.standard.set(false, forKey: "autoLoginEnabled")
+//print(UserDefaults.standard.bool(forKey: "autoLoginEnabled"))
+
+			print("여기까지와야함")
 		}
 	}
 	

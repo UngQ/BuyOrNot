@@ -24,7 +24,7 @@ class ProfileViewModel: ViewModelType {
 
 	struct Input {
 
-		let navigationRightButtonTapped: ControlEvent<Void>
+		let navigationRightButtonTapped: ControlEvent<Void>?
 	}
 
 	struct Output {
@@ -73,7 +73,7 @@ class ProfileViewModel: ViewModelType {
 				}
 				.disposed(by: disposeBag)
 
-			input.navigationRightButtonTapped
+			input.navigationRightButtonTapped?
 				.flatMap {
 					var newProfileData = self.profileData.value
 					if let index = newProfileData.followers.firstIndex(where: { $0.user_id == self.myId }) {
@@ -109,7 +109,7 @@ class ProfileViewModel: ViewModelType {
 		}
 
 		return Output(data: profileData.asDriver(),
-					  navigationRightButtonTapped: input.navigationRightButtonTapped.asDriver())
+					  navigationRightButtonTapped: input.navigationRightButtonTapped?.asDriver() ?? Driver.never())
 	}
 
 }

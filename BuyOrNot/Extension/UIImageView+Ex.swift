@@ -10,7 +10,7 @@ import Kingfisher
 
 extension UIImageView {
 
-	func loadImage(from urlString: String, placeholder: UIImage? = UIImage(systemName: "exclamationmark.triangle")) {
+	func loadImage(from urlString: String, placeholder: UIImage? = UIImage(systemName: "person.circle.fill")) {
 		guard let url = URL(string: urlString) else {
 
 			self.image = placeholder
@@ -32,6 +32,7 @@ extension UIImageView {
 				}
 			}
 		)
+
 	}
 }
 

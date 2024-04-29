@@ -14,14 +14,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 
+		let autoLogin = UserDefaults.standard.bool(forKey: "autoLoginEnabled")
+
+print(autoLogin)
+
 		guard let scene = (scene as? UIWindowScene) else { return }
 		window = UIWindow(windowScene: scene)
-
 		window?.tintColor = UIColor.black
 
-
-		let rootViewController = UINavigationController(rootViewController: SignInViewController()) 
-
+		let rootViewController: UIViewController
+		if autoLogin {
+			rootViewController = UINavigationController(rootViewController: CustomTabBarController())
+		} else {
+			rootViewController = UINavigationController(rootViewController: SignInViewController())
+		}
 
 		window?.rootViewController = rootViewController
 		window?.makeKeyAndVisible()
