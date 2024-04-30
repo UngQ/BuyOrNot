@@ -11,6 +11,7 @@
 		A528C7472BDC91BA00F22167 /* successLoginAnimation.json in Resources */ = {isa = PBXBuildFile; fileRef = A528C7462BDC91BA00F22167 /* successLoginAnimation.json */; };
 		A528C74A2BDE127E00F22167 /* FollowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A528C7492BDE127E00F22167 /* FollowViewController.swift */; };
 		A528C74C2BDE128900F22167 /* FollowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A528C74B2BDE128900F22167 /* FollowViewModel.swift */; };
+		A528C7B52BDFF13800F22167 /* FollowTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A528C7B42BDFF13800F22167 /* FollowTableViewCell.swift */; };
 		A5589FAF2BD1F8CC000C1B9D /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5589FAE2BD1F8CC000C1B9D /* PostTableViewCell.swift */; };
 		A5589FE92BD2907A000C1B9D /* LikeQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5589FE82BD2907A000C1B9D /* LikeQuery.swift */; };
 		A5589FEB2BD35C3A000C1B9D /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5589FEA2BD35C3A000C1B9D /* ImageCollectionViewCell.swift */; };
@@ -91,6 +92,7 @@
 		A528C7462BDC91BA00F22167 /* successLoginAnimation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = successLoginAnimation.json; sourceTree = "<group>"; };
 		A528C7492BDE127E00F22167 /* FollowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowViewController.swift; sourceTree = "<group>"; };
 		A528C74B2BDE128900F22167 /* FollowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowViewModel.swift; sourceTree = "<group>"; };
+		A528C7B42BDFF13800F22167 /* FollowTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowTableViewCell.swift; sourceTree = "<group>"; };
 		A5589FAE2BD1F8CC000C1B9D /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 		A5589FE82BD2907A000C1B9D /* LikeQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeQuery.swift; sourceTree = "<group>"; };
 		A5589FEA2BD35C3A000C1B9D /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 				A5589FAE2BD1F8CC000C1B9D /* PostTableViewCell.swift */,
 				A5589FEA2BD35C3A000C1B9D /* ImageCollectionViewCell.swift */,
 				A558A0172BD63CF6000C1B9D /* CommentTableViewCell.swift */,
+				A528C7B42BDFF13800F22167 /* FollowTableViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -557,6 +560,7 @@
 				A528C7452BDC0A3E00F22167 /* TabmanInProfileViewController.swift in Sources */,
 				A55990FA2BCC4A190096B98A /* CustomTabbarController.swift in Sources */,
 				A558A0162BD637EE000C1B9D /* CommentViewModel.swift in Sources */,
+				A528C7B52BDFF13800F22167 /* FollowTableViewCell.swift in Sources */,
 				A5589FFE2BD574A8000C1B9D /* UIScrollView+Ex.swift in Sources */,
 				A55990E02BCC1C200096B98A /* HTTPHeader.swift in Sources */,
 				A5589FF52BD4DAA5000C1B9D /* String+Ex.swift in Sources */,

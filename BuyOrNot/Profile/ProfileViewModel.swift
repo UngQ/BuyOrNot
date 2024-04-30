@@ -25,6 +25,7 @@ class ProfileViewModel: ViewModelType {
 	struct Input {
 
 		let navigationRightButtonTapped: ControlEvent<Void>?
+		let deleteButtonTapped: Observable<Int>?
 	}
 
 	struct Output {
@@ -105,8 +106,34 @@ class ProfileViewModel: ViewModelType {
 					print("팔로우/언팔 완료")
 				}
 				.disposed(by: disposeBag)
-
 		}
+
+		input.deleteButtonTapped?
+			.withLatestFrom(profileData) { index, profileData -> (CreatorModel?, Int) in
+
+				print(index)
+				guard index < profileData.following.count else { return (nil, 0) }
+				return (profileData.following[index], index)
+			}
+
+			.flatMap { (follower, index) -> Single<FollowModel> in
+
+				guard let follower = follower else {
+				 return Single.never()
+			 }
+
+
+				var newData = self.profileData.value
+				newData.following.remove(at: index)
+
+				self.profileData.accept(newData)
+print(follower)
+				return NetworkManager.performRequest(route: .deleteFollow(id: follower.user_id), decodingType: FollowModel.self)
+			}
+			.subscribe(with: self, onNext: { owner, deletedFollow in
+				print("삭제 성공")
+			})
+			.disposed(by: disposeBag)
 
 		return Output(data: profileData.asDriver(),
 					  navigationRightButtonTapped: input.navigationRightButtonTapped?.asDriver() ?? Driver.never())

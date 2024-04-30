@@ -318,19 +318,23 @@ override func bind() {
 
 
 	func playAppropriateAnimation(for type: String, likeCondition: Bool, dislikeCondition: Bool) {
-		guard !likeCondition && !dislikeCondition else { return }
+//		guard !likeCondition && !dislikeCondition else { return }
 		switch type {
 		case "like":
+			if !likeCondition {
 			likeLottieView.isHidden = false
-			likeLottieView.play { [weak self] completed in
-				print("Animation completed")
-				self?.likeLottieView.isHidden = true
+				likeLottieView.play { [weak self] completed in
+					print("Animation completed")
+					self?.likeLottieView.isHidden = true
+				}
 			}
 		case "dislike":
+			if !dislikeCondition {
 			dislikeLottieView.isHidden = false
-			dislikeLottieView.play { [weak self] completed in
-				print("Animation completed")
-				self?.dislikeLottieView.isHidden = true
+				dislikeLottieView.play { [weak self] completed in
+					print("Animation completed")
+					self?.dislikeLottieView.isHidden = true
+				}
 			}
 		default:
 			break

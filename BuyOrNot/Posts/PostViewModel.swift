@@ -101,45 +101,41 @@ class PostViewModel: ViewModelType {
 			}
 			.flatMap { post -> Single<LikeQueryAndModel> in
 
-				guard let post = post else {
+
+				guard let post = post, let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) else {
 					return Single.never()
 				}
-
-				guard let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) else {
-					return Single.never()
-				}
-
-
-				let like = post.likes.contains(myId)
-
-				if post.likes2.contains(myId) {
-					message.accept("반대 투표는 투표취소 후 가능합니다.")
-					return Single.never()
-				}
-
-
-				print("\(post.post_id)하이하하이하하이하하이하하이하")
 
 				var newPosts = self.postsData.value
-				
+				let like = post.likes.contains(myId)
+				let dislike = post.likes2.contains(myId)
+
+
+
 				if let idx = newPosts.firstIndex(where: { $0.post_id == post.post_id }) {
-					if like {
-						newPosts[idx].likes.removeAll(where: { $0 == UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? "" })
-					} else {
-						newPosts[idx].likes.append(UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? "")
-					}
-					self.postsData.accept(newPosts)
-				}
+						  if dislike {
+							  newPosts[idx].likes2.removeAll(where: { $0 == myId })
+						  }
+						  if like {
+							  newPosts[idx].likes.removeAll(where: { $0 == myId })
+						  } else {
+							  newPosts[idx].likes.append(myId)
+						  }
+						  self.postsData.accept(newPosts)
+					  }
 
-				let result = NetworkManager.performRequest(route: .likePost(id: post.post_id, query:  LikeQueryAndModel(like_status: !like), like: "like"), decodingType: LikeQueryAndModel.self)
-					.catch { error in
-						print(error.asAFError?.errorDescription)
+				let likeRequest = NetworkManager.performRequest(route: .likePost(id: post.post_id, query: LikeQueryAndModel(like_status: !like), like: "like"), decodingType: LikeQueryAndModel.self)
 
-						return Single.never()
-					}
+				let dislikeRequest = dislike ? NetworkManager.performRequest(route: .likePost(id: post.post_id, query: LikeQueryAndModel(like_status: false), like: "like-2"), decodingType: LikeQueryAndModel.self) : .just(LikeQueryAndModel(like_status: false))
 
 
-				return result
+					  return Single.zip(likeRequest, dislikeRequest) { likeResult, _ in
+						  return likeResult
+					  }
+					  .catch { error in
+						  print("Error during network request: \(error.localizedDescription)")
+						  return .never()
+					  }
 			}.subscribe(with: self) { owner, value in
 				print(value.like_status)
 			}
@@ -156,46 +152,41 @@ class PostViewModel: ViewModelType {
 			}
 			.flatMap { post -> Single<LikeQueryAndModel> in
 
-				guard let post = post else {
+				guard let post = post, let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) else {
 					return Single.never()
 				}
-
-				guard let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) else {
-					return Single.never()
-				}
-
-
-
-				let like = post.likes2.contains(myId)
-
-
-				if post.likes.contains(myId) {
-					message.accept("반대 투표는 투표취소 후 가능합니다.")
-					return Single.never()
-				}
-
-				print(post.post_id)
 
 				var newPosts = self.postsData.value
+				let like = post.likes.contains(myId)
+				let dislike = post.likes2.contains(myId)
 
 				if let idx = newPosts.firstIndex(where: { $0.post_id == post.post_id }) {
 					if like {
-						newPosts[idx].likes2.removeAll(where: { $0 == UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? "" })
-					} else {
-						newPosts[idx].likes2.append(UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? "")
+						newPosts[idx].likes.removeAll(where: { $0 == myId })
 					}
-					self.postsData.accept(newPosts)  // Update the local data source
+
+					if dislike {
+						newPosts[idx].likes2.removeAll { $0 == myId }
+
+					} else {
+						newPosts[idx].likes2.append(myId)
+					}
+
+					self.postsData.accept(newPosts)
+
+
 				}
 
-				let result = NetworkManager.performRequest(route: .likePost(id: post.post_id, query:  LikeQueryAndModel(like_status: !like), like: "like-2"), decodingType: LikeQueryAndModel.self)
-					.catch { error in
-						print(error.asAFError?.errorDescription)
 
-						return Single.never()
-					}
+				let likeRequest = like ? NetworkManager.performRequest(route: .likePost(id: post.post_id, query: LikeQueryAndModel(like_status: false), like: "like"), decodingType: LikeQueryAndModel.self) : .just(LikeQueryAndModel(like_status: false))
+				let dislikeRequest = NetworkManager.performRequest(route: .likePost(id: post.post_id, query: LikeQueryAndModel(like_status: !dislike), like: "like-2"), decodingType: LikeQueryAndModel.self)
 
-
-				return result
+				return Single.zip(likeRequest, dislikeRequest) { _, dislikeResult in
+				return dislikeResult }
+				.catch { error in
+					print(error.localizedDescription)
+					return .never()
+				}
 			}.subscribe(with: self) { owner, value in
 				print(value.like_status)
 			}

@@ -93,6 +93,7 @@ class ProfileViewController: BaseViewController {
 	@objc private func followersButtonTapped() {
 		// Navigate to followers list screen
 		let followersVC = FollowViewController()
+		followersVC.followerOrFollowing = true
 		followersVC.viewModel = viewModel
 		navigationController?.pushViewController(followersVC, animated: true)
 	}
@@ -100,6 +101,7 @@ class ProfileViewController: BaseViewController {
 	@objc private func followingButtonTapped() {
 		// Navigate to following list screen
 		let followingVC = FollowViewController()
+		followingVC.followerOrFollowing = false
 		followingVC.viewModel = viewModel
 		navigationController?.pushViewController(followingVC, animated: true)
 	}
@@ -110,7 +112,8 @@ class ProfileViewController: BaseViewController {
 
 
 	override func bind() {
-		let input = ProfileViewModel.Input(navigationRightButtonTapped: navigationRightButton.rx.tap)
+		let input = ProfileViewModel.Input(navigationRightButtonTapped: navigationRightButton.rx.tap,
+										   deleteButtonTapped: nil)
 
 		let output = viewModel.transform(input: input)
 
