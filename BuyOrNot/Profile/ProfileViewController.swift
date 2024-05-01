@@ -36,6 +36,19 @@ class ProfileViewController: BaseViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
+		viewModel.viewWillAppearTrigger.accept(())
+
+		tabmanVC.myPostsVC.viewModel.isLoading = false
+		tabmanVC.myPostsVC.viewModel.nextCursor = nil
+		tabmanVC.myPostsVC.viewModel.viewWillAppearTrigger.accept(())
+
+		tabmanVC.likePostsVC.viewModel.isLoading = false
+		tabmanVC.likePostsVC.viewModel.nextCursor = nil
+		tabmanVC.likePostsVC.viewModel.viewWillAppearTrigger.accept(())
+
+		tabmanVC.dislikePostsVC.viewModel.isLoading = false
+		tabmanVC.dislikePostsVC.viewModel.nextCursor = nil
+		tabmanVC.dislikePostsVC.viewModel.viewWillAppearTrigger.accept(())
 
 		print("Hey!")
 
@@ -52,7 +65,7 @@ class ProfileViewController: BaseViewController {
 		 tabmanVC.likePostsVC.contentPostVCDelegate = self
 		 tabmanVC.dislikePostsVC.contentPostVCDelegate = self
 
-		 viewModel.viewWillAppearTrigger.accept(())
+
 	 }
 
 	private func configureButtons() {
@@ -78,7 +91,7 @@ class ProfileViewController: BaseViewController {
 
 
 		postsButton.setTitleColor(.textPoint, for: .normal) // Customize color as needed
-		postsButton.addTarget(self, action: #selector(followersButtonTapped), for: .touchUpInside)
+		postsButton.addTarget(self, action: #selector(postsButtonTapped), for: .touchUpInside)
 
 
 
@@ -89,6 +102,19 @@ class ProfileViewController: BaseViewController {
 		 followingButton.setTitleColor(.textPoint, for: .normal) // Customize color as needed
 		 followingButton.addTarget(self, action: #selector(followingButtonTapped), for: .touchUpInside)
 	 }
+
+	@objc private func postsButtonTapped() {
+		UIView.animate(withDuration: 0.3) {
+			self.horizontalStackView.isHidden = true
+			self.navigationController?.isNavigationBarHidden = true
+			self.containerView.snp.remakeConstraints { make in
+				make.edges.equalTo(self.view.safeAreaLayoutGuide)
+			}
+			
+			self.view.layoutIfNeeded()
+		}
+
+	}
 
 	@objc private func followersButtonTapped() {
 		// Navigate to followers list screen
@@ -113,7 +139,9 @@ class ProfileViewController: BaseViewController {
 
 	override func bind() {
 		let input = ProfileViewModel.Input(navigationRightButtonTapped: navigationRightButton.rx.tap,
-										   deleteButtonTapped: nil)
+										   deleteButtonTapped: nil
+										   ,unfollowButtonTapped: nil,
+										   followButtonTapped: nil)
 
 		let output = viewModel.transform(input: input)
 
@@ -264,7 +292,7 @@ extension ProfileViewController: ContentPostViewControllerDelegate {
 	func didSelectItem(index: Int) {
 		self.navigationController?.isNavigationBarHidden = false
 		let vc = PostViewController()
-		vc.TotalOrDetail = false
+		vc.viewModel.totalOrDetail = false
 		if self.tabmanVC.currentIndex == 0 {
 			vc.viewModel.id = self.tabmanVC.myPostsVC.viewModel.postsData.value[index].post_id
 		} else if self.tabmanVC.currentIndex == 1 {
@@ -272,7 +300,6 @@ extension ProfileViewController: ContentPostViewControllerDelegate {
 		} else if self.tabmanVC.currentIndex == 2 {
 			vc.viewModel.id = self.tabmanVC.dislikePostsVC.viewModel.postsData.value[index].post_id
 		}
-		vc.viewModel.totalOrDetail = false
 		self.navigationController?.pushViewController(vc, animated: true)
 	}
 	

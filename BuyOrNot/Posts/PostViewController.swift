@@ -14,8 +14,6 @@ import RxGesture
 
 class PostViewController: BaseViewController {
 
-	var TotalOrDetail = true
-
 	let viewModel = PostViewModel()
 
 	private var currentCategory = "전체"
@@ -54,7 +52,7 @@ class PostViewController: BaseViewController {
 		reloadData()
 
 
-		if TotalOrDetail {
+		if viewModel.totalOrDetail {
 
 			setNavigationTitleImage()
 			
@@ -101,12 +99,14 @@ class PostViewController: BaseViewController {
 
 
 override func bind() {
+	let deleteButtonTapped = PublishSubject<Int>()
+	let confirmDeleteTapped = PublishSubject<Int>()
 	let likeButtonTapped = PublishSubject<Int>()
 	let disLikeButtonTapped = PublishSubject<Int>()
 
-	let input = PostViewModel.Input(
-		likeButtonTap: likeButtonTapped.asObservable(),
-										 disLikeButtonTap: disLikeButtonTapped.asObservable())
+	let input = PostViewModel.Input(deleteButtonTap: confirmDeleteTapped.asObservable(),
+									likeButtonTap: likeButtonTapped.asObservable(),
+									disLikeButtonTap: disLikeButtonTapped.asObservable())
 
 	let output = viewModel.transform(input: input)
 
@@ -132,11 +132,22 @@ override func bind() {
 
 			print(cell.like, cell.dislike)
 
+
+			//삭제 버튼
+			cell.deleteButton.rx.tap
+				.subscribe(with: self, onNext: { owner, _ in
+					owner.showDeletionAlert(for: row, deleteSubject: confirmDeleteTapped)
+				})
+				.disposed(by: cell.disposeBag)
+
+
 			//셀 프로필 이미지
 			if let endPoint = element.creator.profileImage {
 				let profileImage = "\(APIKey.baseURL.rawValue)/v1/\(endPoint)"
 				cell.profileImageView.loadImage(from: profileImage)
 			} 
+
+
 
 
 			//셀 작성자 이름
@@ -205,7 +216,6 @@ override func bind() {
 				gestureRecognizer.numberOfTapsRequired = 2 })
 			.when(.recognized)
 			.subscribe(onNext: { [weak self] gesture in
-				guard let strongSelf = self else { return }
 				let touchPoint = gesture.location(in: gesture.view)
 				if let width = gesture.view?.bounds.width {
 					if touchPoint.x < width / 2 {
@@ -274,6 +284,7 @@ override func bind() {
 				.asDriver()
 				.drive(with: self) { owner, _ in
 					let vc = CommentViewController()
+					vc.commentVCDelegate = owner
 					vc.viewModel.postID = element.post_id
 
 					let nav = UINavigationController(rootViewController: vc)
@@ -293,7 +304,7 @@ override func bind() {
 
 		.disposed(by: disposeBag)
 
-	if TotalOrDetail {
+	if viewModel.totalOrDetail {
 		tableView.rx.reachedBottom
 			.skip(1)
 			.subscribe(with: self) { owner, position in
@@ -341,6 +352,21 @@ override func bind() {
 		}
 	}
 
+	private func showDeletionAlert(for row: Int, deleteSubject: PublishSubject<Int>) {
+		let alert = UIAlertController(title: "게시글 삭제", message: "게시글을 삭제하시겠습니까?", preferredStyle: .alert)
+		alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+		alert.addAction(UIAlertAction(title: "확인", style: .destructive, handler: { _ in
+			if self.viewModel.totalOrDetail {
+				deleteSubject.onNext(row)
+				self.reloadData()
+			} else {
+				deleteSubject.onNext(row)
+				self.navigationController?.popViewController(animated: true)
+			}
+		}))
+		present(alert, animated: true, completion: nil)
+	}
+
 	override func configureLayout() {
 		view.addSubview(tableView)
 		view.addSubview(loadingLottieView)
@@ -361,4 +387,27 @@ override func bind() {
 		refreshControl.alpha = 0
 
 	}
+}
+
+extension PostViewController: CommentViewControllerDelegate {
+	func pushOthersProfile(myOrOther: Bool, id: String) {
+		let vc = ProfileViewController()
+
+
+
+		if myOrOther {
+
+							self.navigationController?.pushViewController(vc, animated: true)
+
+		} else {
+
+							vc.viewModel.myOrOther = false
+							vc.viewModel.othersId = id
+							vc.tabmanVC.myOrOthers = false
+							vc.tabmanVC.myPostsVC.viewModel.myId = id
+							self.navigationController?.pushViewController(vc, animated: true)
+		}
+	}
+
+
 }

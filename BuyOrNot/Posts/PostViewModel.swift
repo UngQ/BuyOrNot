@@ -25,6 +25,7 @@ class PostViewModel: ViewModelType {
 
 
 	struct Input {
+		let deleteButtonTap: Observable<Int>
 		let likeButtonTap: Observable<Int>
 		let disLikeButtonTap: Observable<Int>
 	}
@@ -192,6 +193,19 @@ class PostViewModel: ViewModelType {
 			}
 			.disposed(by: disposeBag)
 
+		input.deleteButtonTap
+			.flatMap {
+				print(self.postsData.value[$0])
+				return NetworkManager.performRequestVoidType(route: .deletePost(id: self.postsData.value[$0].post_id))
+			}
+			.subscribe(with: self, onNext: { owner, _ in
+				print("포스트 삭제성공")
+				owner.isLoading = false
+				owner.nextCursor = nil
+				owner.postsData.accept([])
+
+			})
+			.disposed(by: disposeBag)
 
 
 		return Output(data: postsData.asDriver(),

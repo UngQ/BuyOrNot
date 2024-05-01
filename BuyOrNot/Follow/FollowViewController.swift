@@ -28,9 +28,13 @@ class FollowViewController: BaseViewController {
 
 	override func bind() {
 		let deleteButtonTapped = PublishSubject<Int>()
+		let followButtonTapped = PublishSubject<Int>()
+		let unfollowButtonTapped = PublishSubject<Int>()
 
 		let input = ProfileViewModel.Input(navigationRightButtonTapped: nil,
-										   deleteButtonTapped: deleteButtonTapped.asObservable())
+										   deleteButtonTapped: deleteButtonTapped.asObservable(),
+										   unfollowButtonTapped: unfollowButtonTapped.asObservable(),
+										   followButtonTapped: followButtonTapped.asObservable())
 
 		guard let viewModel = viewModel else { return }
 
@@ -43,32 +47,118 @@ class FollowViewController: BaseViewController {
 
 					guard let viewModel = self.viewModel else { return }
 
+
+					cell.profileImageView.rx.tapGesture()
+						.when(.recognized)
+						.bind(with: self) { owner, gesture in
+							let vc = ProfileViewController()
+
+							if element.user_id == viewModel.myId {
+
+								owner.navigationController?.pushViewController(vc, animated: true)
+							} else {
+								vc.viewModel.myOrOther = false
+								vc.viewModel.othersId = element.user_id
+								vc.tabmanVC.myOrOthers = false
+								vc.tabmanVC.myPostsVC.viewModel.myId = element.user_id
+								owner.navigationController?.pushViewController(vc, animated: true)
+							}
+						}
+						.disposed(by: cell.disposeBag)
+
+					cell.nicknameLabel.rx.tapGesture()
+						.when(.recognized)
+						.bind(with: self) { owner, gesture in
+							let vc = ProfileViewController()
+
+							if element.user_id == viewModel.myId {
+								owner.navigationController?.pushViewController(vc, animated: true)
+							} else {
+								vc.viewModel.myOrOther = false
+								vc.viewModel.othersId = element.user_id
+								vc.tabmanVC.myOrOthers = false
+								vc.tabmanVC.myPostsVC.viewModel.myId = element.user_id
+								owner.navigationController?.pushViewController(vc, animated: true)
+							}
+						}
+						.disposed(by: cell.disposeBag)
+
 					cell.nicknameLabel.text = element.nick
 					if let endPoint = element.profileImage {
 						let profileImage = "\(APIKey.baseURL.rawValue)/v1/\(endPoint)"
 						cell.profileImageView.loadImage(from: profileImage)
 					}
 
+					//내프로필 내 팔로워
 					if viewModel.myOrOther {
+						viewModel.followerOrFollowing = true
+						print("놀아와와와")
+						cell.followButton.backgroundColor = .red
 
-						cell.followButton.backgroundColor = .brown
 
-
-						cell.followButton.rx
-							.tap
-							.map { row }
-							.bind(to: deleteButtonTapped)
-							.disposed(by: cell.disposeBag)
-
-						cell.followButton.rx.tap.subscribe(with: self) { owner, _ in
-							print("눌리냐")
-						}
-						.disposed(by: cell.disposeBag)
+//						cell.followButton.rx
+//							.tap
+//							.map { row }
+//							.bind(to: deleteButtonTapped)
+//							.disposed(by: cell.disposeBag)
+//
+//						cell.followButton.rx.tap.subscribe(with: self) { owner, _ in
+//							print("눌리냐")
+//						}
+//						.disposed(by: cell.disposeBag)
 						//						cell.followButton.rx.tap
 
 						//							.map { row }
 						//							.bind(to: deleteButtonTapped)
 						//							.disposed(by: cell.disposeBag)
+						let isFollowing = viewModel.myFollowingData.contains { $0.user_id == element.user_id }
+
+						if isFollowing {
+							cell.followButton.setTitle("언팔하기", for: .normal)
+							cell.followButton.rx
+								.tap
+								.map { row }
+								.bind(to: unfollowButtonTapped)
+								.disposed(by: cell.disposeBag)
+						} else {
+							cell.followButton.setTitle("팔로우하기", for: .	normal)
+							cell.followButton.rx
+								.tap
+								.map { row }
+								.bind(to: followButtonTapped)
+								.disposed(by: cell.disposeBag)
+						}
+
+
+					} else {
+					// 다른사람 프로필 팔로워
+						viewModel.followerOrFollowing = true
+						//내 계정은 버튼 삭제
+						if element.user_id == viewModel.myId {
+							cell.followButton.isHidden = true
+						} else {
+							let isFollowing = viewModel.myFollowingData.contains { $0.user_id == element.user_id }
+
+							if isFollowing {
+								cell.followButton.setTitle("언팔하기", for: .normal)
+								cell.followButton.rx
+									.tap
+									.map { row }
+									.bind(to: unfollowButtonTapped)
+									.disposed(by: cell.disposeBag)
+							} else {
+								cell.followButton.setTitle("팔로우하기", for: .	normal)
+								cell.followButton.rx
+									.tap
+									.map { row }
+									.bind(to: followButtonTapped)
+									.disposed(by: cell.disposeBag)
+							}
+
+						}
+
+
+
 
 					}
 				}
@@ -77,8 +167,45 @@ class FollowViewController: BaseViewController {
 			//팔로잉 뷰
 			output.data.map { $0.following }
 				.drive(listTableView.rx.items(cellIdentifier: FollowTableViewCell.id, cellType: FollowTableViewCell.self)) { row, element, cell  in
+					cell.selectionStyle = .none
 
 					guard let viewModel = self.viewModel else { return }
+
+
+					cell.profileImageView.rx.tapGesture()
+						.when(.recognized)
+						.bind(with: self) { owner, gesture in
+							let vc = ProfileViewController()
+
+							if element.user_id == viewModel.myId {
+
+								owner.navigationController?.pushViewController(vc, animated: true)
+							} else {
+								vc.viewModel.myOrOther = false
+								vc.viewModel.othersId = element.user_id
+								vc.tabmanVC.myOrOthers = false
+								vc.tabmanVC.myPostsVC.viewModel.myId = element.user_id
+								owner.navigationController?.pushViewController(vc, animated: true)
+							}
+						}
+						.disposed(by: cell.disposeBag)
+
+					cell.nicknameLabel.rx.tapGesture()
+						.when(.recognized)
+						.bind(with: self) { owner, gesture in
+							let vc = ProfileViewController()
+
+							if element.user_id == viewModel.myId {
+								owner.navigationController?.pushViewController(vc, animated: true)
+							} else {
+								vc.viewModel.myOrOther = false
+								vc.viewModel.othersId = element.user_id
+								vc.tabmanVC.myOrOthers = false
+								vc.tabmanVC.myPostsVC.viewModel.myId = element.user_id
+								owner.navigationController?.pushViewController(vc, animated: true)
+							}
+						}
+						.disposed(by: cell.disposeBag)
 
 					cell.nicknameLabel.text = element.nick
 					if let endPoint = element.profileImage {
@@ -87,7 +214,7 @@ class FollowViewController: BaseViewController {
 					}
 
 					if viewModel.myOrOther {
-
+						viewModel.followerOrFollowing = true
 
 						cell.followButton.backgroundColor = .brown
 
@@ -98,12 +225,32 @@ class FollowViewController: BaseViewController {
 							.bind(to: deleteButtonTapped)
 							.disposed(by: cell.disposeBag)
 
-						cell.followButton.rx.tap.subscribe(with: self) { owner, _ in
-							print("눌리냐")
-						}
-						.disposed(by: cell.disposeBag)
 					} else {
-						cell.followButton.isHidden = true
+						// 다른사람 프로필 팔로잉
+						viewModel.followerOrFollowing = false
+						//내 프로필은 버튼 삭제
+						if element.user_id == viewModel.myId {
+							cell.followButton.isHidden = true
+						} else {
+							let isFollowing = viewModel.myFollowingData.contains { $0.user_id == element.user_id }
+
+							if isFollowing {
+								cell.followButton.setTitle("언팔하기", for: .normal)
+								cell.followButton.rx
+									.tap
+									.map { row }
+									.bind(to: unfollowButtonTapped)
+									.disposed(by: cell.disposeBag)
+							} else {
+								cell.followButton.setTitle("팔로우하기", for: .	normal)
+								cell.followButton.rx
+									.tap
+									.map { row }
+									.bind(to: followButtonTapped)
+									.disposed(by: cell.disposeBag)
+							}
+
+						}
 					}
 
 

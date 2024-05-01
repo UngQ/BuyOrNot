@@ -85,7 +85,6 @@ class ContentPostViewModel: ViewModelType {
 				.disposed(by: disposeBag)
 		case .myPosts:
 
-			print("여기로 오지용~~?~")
 			viewWillAppearTrigger
 				.flatMap { [weak self] _ -> Single<PostsModel> in
 					guard let self = self else { return .never()}
@@ -123,7 +122,6 @@ class ContentPostViewModel: ViewModelType {
 
 			let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
 
-			print("여기로 오지용~~?~")
 			viewWillAppearTrigger
 				.flatMap {
 					NetworkManager.performRequest(route: .myLikes(query: PostQueryItems(next: "", limit: "20", hashTag: nil)), decodingType: PostsModel.self)
@@ -133,7 +131,6 @@ class ContentPostViewModel: ViewModelType {
 						}
 				}
 				.subscribe(with: self) { owner, data in
-					print(data)
 
 					owner.postsData.accept(data.data)
 				}
@@ -142,7 +139,6 @@ class ContentPostViewModel: ViewModelType {
 		case .dislikePosts:
 			let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
 
-			print("여기로 오지용~~?~")
 			viewWillAppearTrigger
 				.flatMap {
 					NetworkManager.performRequest(route: .myDislikes(query: PostQueryItems(next: "", limit: "20", hashTag: nil)), decodingType: PostsModel.self)
@@ -152,7 +148,6 @@ class ContentPostViewModel: ViewModelType {
 						}
 				}
 				.subscribe(with: self) { owner, data in
-					print(data)
 
 					owner.postsData.accept(data.data)
 				}
@@ -161,7 +156,6 @@ class ContentPostViewModel: ViewModelType {
 		case nil:
 			let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
 
-			print("여기로 오지용~~?~")
 			viewWillAppearTrigger
 				.flatMap {
 					NetworkManager.performRequest(route: .userPost(query: PostQueryItems(next: "", limit: "20", hashTag: nil), id: myId), decodingType: PostsModel.self)

@@ -38,6 +38,8 @@ enum Router {
 	
 	case plusFollow(id: String)
 	case deleteFollow(id: String)
+
+	case deletePost(id: String)
 }
 
 extension Router: TargetType {
@@ -73,7 +75,8 @@ extension Router: TargetType {
 			return .put
 
 		case .deleteComment,
-				.deleteFollow:
+				.deleteFollow,
+				.deletePost:
 
 			return .delete
 		}
@@ -120,6 +123,9 @@ extension Router: TargetType {
 				.deleteFollow(let id):
 			return "/v1/follow/\(id)"
 
+		case .deletePost(let id):
+			return "/v1/posts/\(id)"
+
 
 		}
 	}
@@ -164,7 +170,8 @@ extension Router: TargetType {
 			.myDislikes,
 			.othersProfile,
 			.plusFollow,
-			.deleteFollow
+			.deleteFollow,
+			.deletePost
 			:
 			return [
 				HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
@@ -217,7 +224,8 @@ extension Router: TargetType {
 				.myDislikes,
 				.othersProfile,
 				.plusFollow,
-				.deleteFollow
+				.deleteFollow,
+				.deletePost
 				:
 			return nil
 		case .login(let query),

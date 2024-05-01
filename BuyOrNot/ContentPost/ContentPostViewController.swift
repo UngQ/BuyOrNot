@@ -128,7 +128,6 @@ class ContentPostViewController: BaseViewController {
 				} else {
 
 					let vc = PostViewController()
-					vc.TotalOrDetail = false
 					vc.viewModel.id = owner.viewModel.postsData.value[index.row].post_id
 					vc.viewModel.totalOrDetail = false
 					owner.navigationController?.pushViewController(vc, animated: true)

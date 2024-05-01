@@ -9,11 +9,16 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+protocol CommentViewControllerDelegate: AnyObject {
+	func pushOthersProfile(myOrOther: Bool, id: String)
+}
 
 
 class CommentViewController: BaseViewController {
 
 	let viewModel = CommentViewModel()
+	weak var commentVCDelegate: CommentViewControllerDelegate?
+
 
 	let commentTableView = {
 		let view = UITableView()
@@ -134,13 +139,19 @@ class CommentViewController: BaseViewController {
 
 						if element.creator.user_id == myId {
 
-							owner.navigationController?.pushViewController(vc, animated: true)
+							owner.commentVCDelegate?.pushOthersProfile(myOrOther: true, id: myId)
+							owner.dismiss(animated: true)
+//							owner.navigationController?.pushViewController(vc, animated: true)
+							
 						} else {
-							vc.viewModel.myOrOther = false
-							vc.viewModel.othersId = element.creator.user_id
-							vc.tabmanVC.myOrOthers = false
-							vc.tabmanVC.myPostsVC.viewModel.myId = element.creator.user_id
-							owner.navigationController?.pushViewController(vc, animated: true)
+
+							owner.commentVCDelegate?.pushOthersProfile(myOrOther: false, id: element.creator.user_id)
+							owner.dismiss(animated: true)
+//							vc.viewModel.myOrOther = false
+//							vc.viewModel.othersId = element.creator.user_id
+//							vc.tabmanVC.myOrOthers = false
+//							vc.tabmanVC.myPostsVC.viewModel.myId = element.creator.user_id
+//							owner.navigationController?.pushViewController(vc, animated: true)
 						}
 					}
 					.disposed(by: cell.disposeBag)
@@ -151,13 +162,11 @@ class CommentViewController: BaseViewController {
 						let vc = ProfileViewController()
 
 						if element.creator.user_id == myId {
-							owner.navigationController?.pushViewController(vc, animated: true)
+							owner.commentVCDelegate?.pushOthersProfile(myOrOther: true, id: myId)
+							owner.dismiss(animated: true)
 						} else {
-							vc.viewModel.myOrOther = false
-							vc.viewModel.othersId = element.creator.user_id
-							vc.tabmanVC.myOrOthers = false
-							vc.tabmanVC.myPostsVC.viewModel.myId = element.creator.user_id
-							owner.navigationController?.pushViewController(vc, animated: true)
+							owner.commentVCDelegate?.pushOthersProfile(myOrOther: false, id: element.creator.user_id)
+							owner.dismiss(animated: true)
 						}
 					}
 					.disposed(by: cell.disposeBag)

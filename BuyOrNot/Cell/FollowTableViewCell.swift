@@ -38,6 +38,12 @@ class FollowTableViewCell: UITableViewCell {
 		 return button
 	 }()
 
+	override func prepareForReuse() {
+		profileImageView.image = UIImage(systemName: "person.circle.fill")
+		followButton.isHidden = false
+		disposeBag = DisposeBag()
+	}
+
 	 override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		 super.init(style: style, reuseIdentifier: reuseIdentifier)
 		 setupViews()
