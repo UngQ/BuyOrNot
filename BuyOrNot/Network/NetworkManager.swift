@@ -46,6 +46,32 @@ struct NetworkManager {
 							single(.failure(error))
 						}
 					}
+				} else if case Router.editProfile(let query) = route {
+
+					guard let editData = query as? ProfileQuery else { return Disposables.create() }
+
+					AF.upload(multipartFormData: { multipartFormData in
+
+						if let data = editData.file {
+							print("업로드되나요")
+							multipartFormData.append(data, withName: "profile", fileName: "buyOrNot.jpg", mimeType: "image/jpg")
+						}
+						if let nick = editData.nick.data(using: .utf8) {
+							multipartFormData.append(nick, withName: "nick")
+						}
+					}, with: urlRequest)
+					.validate(statusCode: 200..<300)
+					.responseDecodable(of: T.self) { response in
+						switch response.result {
+						case .success(let result):
+							print("하ㅓ잉")
+							single(.success(result))
+						case .failure(let error):
+							print(error)
+							single(.failure(error))
+						}
+					}
+
 				} else {
 					AF.request(urlRequest)
 						.validate(statusCode: 200..<300)

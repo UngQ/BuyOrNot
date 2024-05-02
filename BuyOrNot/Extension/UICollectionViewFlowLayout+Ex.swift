@@ -44,6 +44,7 @@ extension UICollectionViewFlowLayout {
 //
 //		let layout = UICollectionViewCompositionalLayout(section: section)
 
+		//
 		let mainItem = NSCollectionLayoutItem(
 			layoutSize: NSCollectionLayoutSize(
 				widthDimension: .fractionalWidth(2/3),
@@ -107,8 +108,8 @@ extension UICollectionViewFlowLayout {
 		let nestedGroup = NSCollectionLayoutGroup.vertical(
 			layoutSize: NSCollectionLayoutSize(
 				widthDimension: .fractionalWidth(1.0),
-				heightDimension: .fractionalWidth(1.0) 
-			), subitems: [mainWithTrailingGroup, tripleGroup, reversedTrailingGroup]
+				heightDimension: .fractionalWidth(2)
+			), subitems: [mainWithTrailingGroup, tripleGroup, reversedTrailingGroup, tripleGroup]
 		)
 
 		let section = NSCollectionLayoutSection(group: nestedGroup)

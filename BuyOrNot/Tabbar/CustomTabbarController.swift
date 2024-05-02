@@ -36,36 +36,35 @@ class CustomTabBarController: UITabBarController {
 		super.viewDidLoad()
 		self.delegate = self
 		setupMiddleButton()
+		setMyProfileViewInTabbar()
 
 		firstVC.view.backgroundColor = .white
 		firstVC.tabBarItem.title = ""
 		firstVC.tabBarItem.image = UIImage(systemName: "house.fill")
 
-
-		let endPoint = UserDefaults.standard.string(forKey: UserDefaultsKey.profileImage.key) ?? ""
-		let profileImage = "\(APIKey.baseURL.rawValue)/v1/\(endPoint)"
-		ImageLoader.loadImage(from: profileImage) { image in
-
-			guard let image = image else { return }
-			let circularProfileImage = self.circularImage(from: image, scaledToSize: CGSize(width: 30, height: 30))
-			self.thirdVC.tabBarItem = UITabBarItem(title: UserDefaults.standard.string(forKey: UserDefaultsKey.nick.key), image: circularProfileImage.withRenderingMode(.alwaysOriginal), selectedImage: nil)
-
-		}
-
-//		let profileImage = UIImage(named: "profilePhoto")! // Replace with your image fetching logic
-//		let circularProfileImage = circularImage(from: profileImage, scaledToSize: CGSize(width: 30, height: 30))
-//		thirdVC.tabBarItem = UITabBarItem(title: "Profile", image: circularProfileImage.withRenderingMode(.alwaysOriginal), selectedImage: nil)
-
-
-//		thirdVC.tabBarItem.image = UIImage(systemName: "gearshape.fill")
-
 		viewControllers = [firstVC, UIViewController(), thirdVC]
-
-
-
-
 	}
-	func circularImage(from originalImage: UIImage, scaledToSize newSize: CGSize) -> UIImage {
+
+	private func setMyProfileViewInTabbar() {
+		NetworkManager.performRequest(route: .myProfile, decodingType: ProfileModel.self)
+			.asDriver(onErrorJustReturn: ProfileModel(user_id: "", nick: "", profileImage: nil, followers: [], following: [], posts: []))
+			.drive(with: self) { owner, myProfile in
+
+				let endPoint = myProfile.profileImage ?? ""
+				let profileImage = "\(APIKey.baseURL.rawValue)/v1/\(endPoint)"
+				ImageLoader.loadImage(from: profileImage) { image in
+
+					guard let image = image else { return }
+					let circularProfileImage = self.circularImage(from: image, scaledToSize: CGSize(width: 30, height: 30))
+					self.thirdVC.tabBarItem = UITabBarItem(title: myProfile.nick, image: circularProfileImage.withRenderingMode(.alwaysOriginal), selectedImage: nil)
+
+
+
+				}
+			}
+			.disposed(by: disposeBag)
+	}
+	private func circularImage(from originalImage: UIImage, scaledToSize newSize: CGSize) -> UIImage {
 		let rect = CGRect(origin: .zero, size: newSize)
 		UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
 		UIBezierPath(roundedRect: rect, cornerRadius: newSize.width/2).addClip()
@@ -75,29 +74,21 @@ class CustomTabBarController: UITabBarController {
 		return resizedImage ?? originalImage
 	}
 
-	func setupMiddleButton() {
+	private func setupMiddleButton() {
 		let middleBtn = UIButton(frame: CGRect(x: (self.tabBar.bounds.width / 2) - 35, y: -20, width: 70, height: 70))
 		middleBtn.layer.cornerRadius = 35
 		middleBtn.backgroundColor = .clear
 		middleBtn.setBackgroundImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
 		middleBtn.tintColor = .systemBlue
 
-
-		//		middleBtn.addTarget(self, action: #selector(middleButtonAction), for: .touchUpInside)
-
 		self.tabBar.addSubview(middleBtn)
 		self.tabBar.layer.masksToBounds = false
 		middleBtn.clipsToBounds = true
 	}
 
-	//	@objc func middleButtonAction(sender: UIButton) {
-	//		selectedIndex = 2 // 중앙 버튼이면 보통 중앙의 인덱스
-	//		showActionSheet()
-	//	}
 
-	func showActionSheet() {
+	private func showActionSheet() {
 		let actionSheet = UIAlertController(title: "작성하실 카테고리를 선택해주세요.", message: .none, preferredStyle: .actionSheet)
-
 
 		let topAction = UIAlertAction(title: Category.top.title, style: .default, handler: { _ in
 			self.imagePicker()
@@ -126,7 +117,7 @@ class CustomTabBarController: UITabBarController {
 		self.present(actionSheet, animated: true, completion: nil)
 	}
 
-	func imagePicker() {
+	private func imagePicker() {
 
 		let alert = UIAlertController(title: "이미지 선택", message: nil, preferredStyle: .actionSheet)
 		let gallery = UIAlertAction(title: "갤러리", style: .default) { action in
@@ -162,7 +153,7 @@ class CustomTabBarController: UITabBarController {
 		present(alert, animated: true)
 	}
 
-	func showAlertGoToSetting() {
+	private func showAlertGoToSetting() {
 		let alertController = UIAlertController(
 			title: "현재 카메라 사용에 대한 접근 권한이 없습니다.",
 			message: "설정 > [살까요?말까요?]탭에서 접근을 활성화 할 수 있습니다.",
@@ -190,12 +181,12 @@ class CustomTabBarController: UITabBarController {
 		}
 	}
 
-	func openCamera() {
+	private func openCamera() {
 		#if targetEnvironment(simulator)
 		fatalError()
 		#endif
 
-		// Privacy - Camera Usage Description
+
 		AVCaptureDevice.requestAccess(for: .video) { [weak self] isAuthorized in
 			guard isAuthorized else { 
 				self?.showAlertGoToSetting()

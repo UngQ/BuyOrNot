@@ -75,6 +75,9 @@
 		A55990F72BCC44670096B98A /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990F62BCC44670096B98A /* UserDefaultsKeys.swift */; };
 		A55990FA2BCC4A190096B98A /* CustomTabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990F92BCC4A190096B98A /* CustomTabbarController.swift */; };
 		A55990FC2BCCABD50096B98A /* ImagePostQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990FB2BCCABD50096B98A /* ImagePostQuery.swift */; };
+		A59F22222BE39326003B477D /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F22212BE39326003B477D /* EditProfileViewController.swift */; };
+		A59F22242BE39330003B477D /* EditProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F22232BE39330003B477D /* EditProfileViewModel.swift */; };
+		A59F22262BE3C3DE003B477D /* ProfileQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F22252BE3C3DE003B477D /* ProfileQuery.swift */; };
 		A5A92E912BCD5730006434C6 /* Notification.Name+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A92E902BCD5730006434C6 /* Notification.Name+Ex.swift */; };
 		A5A92E932BCD7632006434C6 /* PostQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A92E922BCD7632006434C6 /* PostQuery.swift */; };
 		A5A92E972BCD79D7006434C6 /* UploadPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A92E962BCD79D7006434C6 /* UploadPostViewController.swift */; };
@@ -85,6 +88,7 @@
 		A5B4967A2BD0463E0079A3B1 /* TabManController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B496792BD0463D0079A3B1 /* TabManController.swift */; };
 		A5B4967C2BD04A500079A3B1 /* TotalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B4967B2BD04A500079A3B1 /* TotalViewController.swift */; };
 		A5B4967F2BD04F330079A3B1 /* ContentPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B4967E2BD04F330079A3B1 /* ContentPostViewController.swift */; };
+		A5C9EEE62BE3135900CABA05 /* EditCommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C9EEE52BE3135900CABA05 /* EditCommentViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -149,6 +153,9 @@
 		A55990F62BCC44670096B98A /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
 		A55990F92BCC4A190096B98A /* CustomTabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabbarController.swift; sourceTree = "<group>"; };
 		A55990FB2BCCABD50096B98A /* ImagePostQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePostQuery.swift; sourceTree = "<group>"; };
+		A59F22212BE39326003B477D /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
+		A59F22232BE39330003B477D /* EditProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewModel.swift; sourceTree = "<group>"; };
+		A59F22252BE3C3DE003B477D /* ProfileQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileQuery.swift; sourceTree = "<group>"; };
 		A5A92E902BCD5730006434C6 /* Notification.Name+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification.Name+Ex.swift"; sourceTree = "<group>"; };
 		A5A92E922BCD7632006434C6 /* PostQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostQuery.swift; sourceTree = "<group>"; };
 		A5A92E962BCD79D7006434C6 /* UploadPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPostViewController.swift; sourceTree = "<group>"; };
@@ -157,6 +164,7 @@
 		A5B496792BD0463D0079A3B1 /* TabManController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabManController.swift; sourceTree = "<group>"; };
 		A5B4967B2BD04A500079A3B1 /* TotalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalViewController.swift; sourceTree = "<group>"; };
 		A5B4967E2BD04F330079A3B1 /* ContentPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPostViewController.swift; sourceTree = "<group>"; };
+		A5C9EEE52BE3135900CABA05 /* EditCommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCommentViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -207,6 +215,7 @@
 				A5589FF72BD4E087000C1B9D /* ProfileViewController.swift */,
 				A5589FF92BD4E092000C1B9D /* ProfileViewModel.swift */,
 				A558A0572BDC098B000C1B9D /* Tabman */,
+				A59F22202BE39303003B477D /* Edit */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -225,6 +234,7 @@
 			isa = PBXGroup;
 			children = (
 				A558A01C2BD6D5DF000C1B9D /* EditCommentViewController.swift */,
+				A5C9EEE52BE3135900CABA05 /* EditCommentViewModel.swift */,
 			);
 			path = Edit;
 			sourceTree = "<group>";
@@ -391,6 +401,15 @@
 			path = Tabbar;
 			sourceTree = "<group>";
 		};
+		A59F22202BE39303003B477D /* Edit */ = {
+			isa = PBXGroup;
+			children = (
+				A59F22212BE39326003B477D /* EditProfileViewController.swift */,
+				A59F22232BE39330003B477D /* EditProfileViewModel.swift */,
+			);
+			path = Edit;
+			sourceTree = "<group>";
+		};
 		A5A92E942BCD77E5006434C6 /* Query */ = {
 			isa = PBXGroup;
 			children = (
@@ -401,6 +420,7 @@
 				A5A92E922BCD7632006434C6 /* PostQuery.swift */,
 				A5589FE82BD2907A000C1B9D /* LikeQuery.swift */,
 				A558A0192BD66333000C1B9D /* CommentQuery.swift */,
+				A59F22252BE3C3DE003B477D /* ProfileQuery.swift */,
 			);
 			path = Query;
 			sourceTree = "<group>";
@@ -566,6 +586,7 @@
 				A5589FF52BD4DAA5000C1B9D /* String+Ex.swift in Sources */,
 				A55990EA2BCC1DCE0096B98A /* PostViewController.swift in Sources */,
 				A558A0182BD63CF6000C1B9D /* CommentTableViewCell.swift in Sources */,
+				A59F22262BE3C3DE003B477D /* ProfileQuery.swift in Sources */,
 				A5B496672BCE9CC30079A3B1 /* NetworkModel.swift in Sources */,
 				A5A92E932BCD7632006434C6 /* PostQuery.swift in Sources */,
 				A55990F72BCC44670096B98A /* UserDefaultsKeys.swift in Sources */,
@@ -583,7 +604,9 @@
 				A55990C32BCC1A450096B98A /* BaseViewController.swift in Sources */,
 				A5589FAF2BD1F8CC000C1B9D /* PostTableViewCell.swift in Sources */,
 				A559908F2BCBFED00096B98A /* AppDelegate.swift in Sources */,
+				A5C9EEE62BE3135900CABA05 /* EditCommentViewModel.swift in Sources */,
 				A55990CB2BCC1AC30096B98A /* ViewModelType.swift in Sources */,
+				A59F22242BE39330003B477D /* EditProfileViewModel.swift in Sources */,
 				A55990E22BCC1C3B0096B98A /* LoginQuery.swift in Sources */,
 				A5589FF82BD4E087000C1B9D /* ProfileViewController.swift in Sources */,
 				A55990A72BCC00830096B98A /* SignInViewModel.swift in Sources */,
@@ -595,6 +618,7 @@
 				A55990FC2BCCABD50096B98A /* ImagePostQuery.swift in Sources */,
 				A528C74C2BDE128900F22167 /* FollowViewModel.swift in Sources */,
 				A5589FF32BD4D271000C1B9D /* Category.swift in Sources */,
+				A59F22222BE39326003B477D /* EditProfileViewController.swift in Sources */,
 				A558A01A2BD66333000C1B9D /* CommentQuery.swift in Sources */,
 				A55990CD2BCC1B460096B98A /* SignUpViewController.swift in Sources */,
 				A528C74A2BDE127E00F22167 /* FollowViewController.swift in Sources */,

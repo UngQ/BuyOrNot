@@ -50,7 +50,7 @@ class ContentPostViewController: BaseViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-
+		reloadData()
 	}
 
 	@objc func reloadData() {
@@ -69,7 +69,7 @@ class ContentPostViewController: BaseViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		reloadData()
+
 
 		navigationItem.title = viewModel.title
 

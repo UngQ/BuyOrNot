@@ -17,6 +17,7 @@ class ProfileViewController: BaseViewController {
 	let tabmanVC = TabmanInProfileViewController()
 
 	let navigationRightButton = UIButton()
+	let navigationLeftButton = UIButton()
 
 	let profileImageView = UIImageView()
 
@@ -27,6 +28,7 @@ class ProfileViewController: BaseViewController {
 	let postsButton = UIButton()
 	let followersButton = UIButton()
 	let followingButton = UIButton()
+
 
 	lazy var postsStackView = UIStackView(arrangedSubviews: [postsLabel, postsButton])
 	lazy var followersStackView = UIStackView(arrangedSubviews: [followersLabel, followersButton])
@@ -59,8 +61,7 @@ class ProfileViewController: BaseViewController {
 		 self.view.backgroundColor = .white
 		 setupProfileViews()
 		 configureButtons()
-		 setupUserNavigationItem()
-		 
+
 		 tabmanVC.myPostsVC.contentPostVCDelegate = self
 		 tabmanVC.likePostsVC.contentPostVCDelegate = self
 		 tabmanVC.dislikePostsVC.contentPostVCDelegate = self
@@ -117,7 +118,6 @@ class ProfileViewController: BaseViewController {
 	}
 
 	@objc private func followersButtonTapped() {
-		// Navigate to followers list screen
 		let followersVC = FollowViewController()
 		followersVC.followerOrFollowing = true
 		followersVC.viewModel = viewModel
@@ -125,16 +125,11 @@ class ProfileViewController: BaseViewController {
 	}
 
 	@objc private func followingButtonTapped() {
-		// Navigate to following list screen
 		let followingVC = FollowViewController()
 		followingVC.followerOrFollowing = false
 		followingVC.viewModel = viewModel
 		navigationController?.pushViewController(followingVC, animated: true)
 	}
-
-	private func setupUserNavigationItem() {
-
-		}
 
 
 	override func bind() {
@@ -198,6 +193,15 @@ class ProfileViewController: BaseViewController {
 		}
 		.disposed(by: disposeBag)
 
+		navigationLeftButton.rx.tap
+			.asDriver()
+			.drive(with: self) { owner, _ in
+				let vc = EditProfileViewController()
+				vc.viewModel.profileData.accept(owner.viewModel.profileData.value)
+				owner.navigationController?.pushViewController(vc, animated: true)
+			}
+			.disposed(by: disposeBag)
+
 
 	}
 
@@ -206,6 +210,12 @@ class ProfileViewController: BaseViewController {
 		 navigationRightButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
 		 navigationRightButton.tintColor = .white
 		 navigationItem.rightBarButtonItem = UIBarButtonItem(customView: navigationRightButton)
+
+		 navigationLeftButton.setBackgroundImage(UIImage(systemName: "gearshape.fill"), for: .normal)
+		 navigationLeftButton.layer.cornerRadius = 15
+		 navigationLeftButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+		 navigationLeftButton.tintColor = .systemBlue
+		 navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navigationLeftButton)
 
 		 [postsStackView, followersStackView, followingStackView].forEach { stackView in
 			 stackView.axis = .vertical
@@ -265,7 +275,7 @@ extension ProfileViewController: ContentPostViewControllerDelegate {
 
 				UIView.animate(withDuration: 0.3) {
 					self.horizontalStackView.isHidden = false
-					self.navigationController?.isNavigationBarHidden = false
+//					self.navigationController?.isNavigationBarHidden = false
 					self.containerView.snp.remakeConstraints { make in
 						make.top.equalTo(self.profileImageView.snp.bottom).offset(10)
 						make.horizontalEdges.equalToSuperview()
@@ -278,7 +288,7 @@ extension ProfileViewController: ContentPostViewControllerDelegate {
 		case .up:
 			UIView.animate(withDuration: 0.3) {
 				self.horizontalStackView.isHidden = true
-				self.navigationController?.isNavigationBarHidden = true
+//				self.navigationController?.isNavigationBarHidden = true
 				self.containerView.snp.remakeConstraints { make in
 					   make.edges.equalTo(self.view.safeAreaLayoutGuide)
 				   }

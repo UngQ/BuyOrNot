@@ -136,7 +136,17 @@ override func bind() {
 			//삭제 버튼
 			cell.deleteButton.rx.tap
 				.subscribe(with: self, onNext: { owner, _ in
-					owner.showDeletionAlert(for: row, deleteSubject: confirmDeleteTapped)
+
+					owner.showDeletionAlert(for: row, deleteSubject: confirmDeleteTapped) {
+
+						if self.viewModel.totalOrDetail {
+							confirmDeleteTapped.onNext(row)
+							self.reloadData()
+						} else {
+							confirmDeleteTapped.onNext(row)
+							self.navigationController?.popViewController(animated: true)
+						}
+					}
 				})
 				.disposed(by: cell.disposeBag)
 
@@ -169,6 +179,7 @@ override func bind() {
 					make.left.right.equalToSuperview().inset(10)
 					make.height.equalTo(32)
 				}
+				
 			} else {
 				cell.likeDislikeProgressView.snp.remakeConstraints { make in
 					make.top.equalTo(cell.postImageView.snp.bottom).offset(5)
@@ -352,20 +363,24 @@ override func bind() {
 		}
 	}
 
-	private func showDeletionAlert(for row: Int, deleteSubject: PublishSubject<Int>) {
-		let alert = UIAlertController(title: "게시글 삭제", message: "게시글을 삭제하시겠습니까?", preferredStyle: .alert)
-		alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
-		alert.addAction(UIAlertAction(title: "확인", style: .destructive, handler: { _ in
-			if self.viewModel.totalOrDetail {
-				deleteSubject.onNext(row)
-				self.reloadData()
-			} else {
-				deleteSubject.onNext(row)
-				self.navigationController?.popViewController(animated: true)
-			}
-		}))
-		present(alert, animated: true, completion: nil)
-	}
+//	private func showDeletionAlert(for row: Int, deleteSubject: PublishSubject<Int>) {
+//		let alert = UIAlertController(title: "게시글 삭제", message: "게시글을 삭제하시겠습니까?", preferredStyle: .alert)
+//		alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+//		alert.addAction(UIAlertAction(title: "확인", style: .destructive, handler: { _ in
+//			if self.viewModel.totalOrDetail {
+//				deleteSubject.onNext(row)
+//				self.reloadData()
+//			} else {
+//				deleteSubject.onNext(row)
+//				self.navigationController?.popViewController(animated: true)
+//			}
+//		}))
+//		present(alert, animated: true, completion: nil)
+//	}
+
+//	override func showDeletionAlert(for row: Int, deleteSubject: PublishSubject<Int>, completionHandler: @escaping () -> Void) {
+//
+//	}
 
 	override func configureLayout() {
 		view.addSubview(tableView)

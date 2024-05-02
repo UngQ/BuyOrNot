@@ -34,12 +34,14 @@ enum Router {
 	case myLikes(query: PostQueryItems)
 	case myDislikes(query: PostQueryItems)
 
+
 	case othersProfile(id: String)
 	
 	case plusFollow(id: String)
 	case deleteFollow(id: String)
 
 	case deletePost(id: String)
+	case editProfile(query: Encodable)
 }
 
 extension Router: TargetType {
@@ -71,7 +73,8 @@ extension Router: TargetType {
 			 .plusFollow:
 			return .post
 
-		case .updateComment:
+		case .updateComment,
+				.editProfile:
 			return .put
 
 		case .deleteComment,
@@ -95,36 +98,45 @@ extension Router: TargetType {
 		case .uploadImage:
 			return "/v1/posts/files"
 		case .uploadPost,
-			 .lookPosts:
+				.lookPosts:
 			return "/v1/posts"
 		case .uploadComment(let id, _):
 			return "/v1/posts/\(id)/comments"
-		case .lookPost(let id):
+		
+		case .lookPost(let id),
+			 .deletePost(let id):
 			return "/v1/posts/\(id)"
+
 		case .likePost(let id, _, let like):
 			return "/v1/posts/\(id)/\(like)"
+		
 		case .hashTag:
 			return "/v1/posts/hashtags"
+		
 		case .userPost(_, let id):
 			return "/v1/posts/users/\(id)"
-		case .deleteComment(let id, let commentId):
+		
+		case .deleteComment(let id, let commentId),
+			 .updateComment(let id, let commentId, _):
 			return "/v1/posts/\(id)/comments/\(commentId)"
-		case .updateComment(let id, let commentId, _):
-			return "/v1/posts/\(id)/comments/\(commentId)"
-		case .myProfile:
+
+		case .myProfile,
+			 .editProfile:
 			return "/v1/users/me/profile"
+		
 		case .myLikes:
 			return "/v1/posts/likes/me"
+		
 		case .myDislikes:
 			return "/v1/posts/likes-2/me"
+		
 		case .othersProfile(let id):
 			return "/v1/users/\(id)/profile"
+		
 		case .plusFollow(let id),
 				.deleteFollow(let id):
 			return "/v1/follow/\(id)"
 
-		case .deletePost(let id):
-			return "/v1/posts/\(id)"
 
 
 		}
@@ -147,7 +159,8 @@ extension Router: TargetType {
 				HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue
 			]
 			
-		case .uploadImage:
+		case .uploadImage,
+			 .editProfile:
 			return [HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
 					HTTPHeader.contentType.rawValue: HTTPHeader.multipart.rawValue,
 					HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
@@ -225,7 +238,8 @@ extension Router: TargetType {
 				.othersProfile,
 				.plusFollow,
 				.deleteFollow,
-				.deletePost
+				.deletePost,
+				.editProfile
 				:
 			return nil
 		case .login(let query),

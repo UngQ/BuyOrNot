@@ -16,6 +16,7 @@ struct LoginModel: Decodable {
 	let profileImage: String?
 	let accessToken: String
 	let refreshToken: String
+
 }
 
 struct AccessTokenModel: Decodable {

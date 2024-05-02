@@ -97,6 +97,24 @@ class BaseViewController: UIViewController {
 
 	}
 
+	func showDeletionAlert(for row: Int, deleteSubject: PublishSubject<Int>, completionHandler: @escaping () -> Void) {
+		let alert = UIAlertController(title: "게시글 삭제", message: "게시글을 삭제하시겠습니까?", preferredStyle: .alert)
+		alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+		alert.addAction(UIAlertAction(title: "확인", style: .destructive, handler: { _ in
+
+			completionHandler()
+
+			//			if self.viewModel.totalOrDetail {
+//				deleteSubject.onNext(row)
+//				self.reloadData()
+//			} else {
+//				deleteSubject.onNext(row)
+//				self.navigationController?.popViewController(animated: true)
+//			}
+		}))
+		present(alert, animated: true, completion: nil)
+	}
+
 	@available (*, unavailable)
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")

@@ -54,13 +54,14 @@ class CommentViewController: BaseViewController {
 	override func bind() {
 		let editButtonTapped = PublishSubject<Int>()
 		let deleteButtonTapped = PublishSubject<Int>()
+		let confirmDeleteTapped = PublishSubject<Int>()
 
 
 
 		let input = CommentViewModel.Input(commentText: commentTextField.rx.text.orEmpty,
 										   sendButtonTap: sendButton.rx.tap,
 										   editButtonTap: editButtonTapped.asObservable(),
-										   deleteButtonTap: deleteButtonTapped.asObservable())
+										   deleteButtonTap: confirmDeleteTapped.asObservable())
 
 
 		let output = viewModel.transform(input: input)
@@ -109,16 +110,31 @@ class CommentViewController: BaseViewController {
 					.map { row }
 					.bind(to: editButtonTapped)
 					.disposed(by: cell.disposeBag)
+//				cell.deleteButton.rx.tap
+//					.map { row }
+//					.bind(to: deleteButtonTapped)
+//					.disposed(by: cell.disposeBag)
+
 				cell.deleteButton.rx.tap
-					.map { row }
-					.bind(to: deleteButtonTapped)
+					.subscribe(with: self) { owner, _ in
+						owner.showDeletionAlert(for: row, deleteSubject: confirmDeleteTapped) {
+							confirmDeleteTapped.onNext(row)
+						}
+					}
 					.disposed(by: cell.disposeBag)
 
 				cell.editButton.rx.tap
 					.asDriver()
 					.drive(with: self) { owner, _ in
-						print("여러번대나")
-						owner.navigationController?.pushViewController(EditCommentViewController(), animated: true)
+
+
+						let vc = EditCommentViewController()
+						vc.viewModel.postId = owner.viewModel.postID
+						vc.viewModel.commentId = element.comment_id
+						vc.commentTextField.text = element.content
+						
+
+						owner.navigationController?.pushViewController(vc, animated: true)
 					}
 					.disposed(by: cell.disposeBag)
 
