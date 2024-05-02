@@ -49,11 +49,14 @@ struct PostModel: Decodable, Equatable {
 	var likes2: [String]
 	let hashTags: [String]
 	let comments: [CommentModel]
+	let buyers: [String]
 
 	static func == (lhs: PostModel, rhs: PostModel) -> Bool {
 		return lhs.post_id == rhs.post_id
 	 }
 }
+
+
 
 struct CommentModel: Decodable, Equatable {
 	let comment_id: String

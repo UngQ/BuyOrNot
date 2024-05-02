@@ -10,6 +10,8 @@ import RxSwift
 import RxCocoa
 import Kingfisher
 import RxGesture
+import iamport_ios
+import WebKit
 
 
 class PostViewController: BaseViewController {
@@ -19,7 +21,6 @@ class PostViewController: BaseViewController {
 	private var currentCategory = "전체"
 	let tableView = UITableView()
 	private let refreshControl = UIRefreshControl()
-
 
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -116,6 +117,7 @@ override func bind() {
 			row, element, cell in
 			cell.selectionStyle = .none
 			print("\(row) 여기가 언제 실행되는가")
+			print(element.buyers)
 
 			guard let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) else {
 				return
@@ -300,6 +302,16 @@ override func bind() {
 
 					let nav = UINavigationController(rootViewController: vc)
 					owner.present(nav, animated: true)
+				}
+				.disposed(by: cell.disposeBag)
+
+			cell.buyButton.rx.tap
+				.subscribe(with: self) { owner, _ in
+
+					let vc = PaymentViewController()
+					vc.element = element
+					owner.present(vc, animated: true)
+					
 				}
 				.disposed(by: cell.disposeBag)
 

@@ -42,6 +42,8 @@ enum Router {
 
 	case deletePost(id: String)
 	case editProfile(query: Encodable)
+
+	case validationPayment(query: Encodable)
 }
 
 extension Router: TargetType {
@@ -70,7 +72,8 @@ extension Router: TargetType {
 			 .uploadPost,
 			 .uploadComment,
 			 .likePost,
-			 .plusFollow:
+			 .plusFollow,
+			 .validationPayment:
 			return .post
 
 		case .updateComment,
@@ -137,6 +140,8 @@ extension Router: TargetType {
 				.deleteFollow(let id):
 			return "/v1/follow/\(id)"
 
+		case .validationPayment:
+			return "/v1/payments/validation"
 
 
 		}
@@ -168,7 +173,8 @@ extension Router: TargetType {
 			case .uploadPost,
 				.likePost,
 				.uploadComment,
-				.updateComment:
+				.updateComment,
+				.validationPayment:
 			return [HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
 					HTTPHeader.contentType.rawValue: HTTPHeader.json.rawValue,
 					HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
@@ -240,6 +246,7 @@ extension Router: TargetType {
 				.deleteFollow,
 				.deletePost,
 				.editProfile
+
 				:
 			return nil
 		case .login(let query),
@@ -248,7 +255,8 @@ extension Router: TargetType {
 			.uploadPost(let query),
 			.likePost(_, let query, _),
 			.uploadComment(_, let query),
-			.updateComment(_, _, let query):
+			.updateComment(_, _, let query),
+			.validationPayment(let query):
 			let encoder = JSONEncoder()
 			return try? encoder.encode(query)
 

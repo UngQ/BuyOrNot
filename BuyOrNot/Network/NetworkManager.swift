@@ -77,6 +77,7 @@ struct NetworkManager {
 						.validate(statusCode: 200..<300)
 						.responseDecodable(of: T.self) { response in
 							print(response.request?.url)
+							
 							switch response.result {
 							case .success(let result):
 								print("success")

@@ -45,4 +45,8 @@ extension String {
 		customFormatter.dateFormat = "yyyy년 MM월 dd일"
 		return customFormatter.string(from: date)
 	}
+
+	func numericString() -> String {
+		return self.filter { "0123456789".contains($0) }
+	}
 }

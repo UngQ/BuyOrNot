@@ -21,16 +21,25 @@ class EditProfileViewModel: ViewModelType {
 
 		let nicknameText: ControlProperty<String>
 
-		let saveButtonTapped: ControlEvent<Void>
+		let saveButtonTapped: Observable<Void>
 	}
 
 	struct Output {
+		let isValidation: Driver<Bool>
 		let successTrigger: Driver<Void>
 
 	}
 
 	func transform(input: Input) -> Output {
+		let isValidation = PublishRelay<Bool>()
 		let successTrigger = PublishRelay<Void>()
+
+		input.nicknameText
+			.map { self.isValidNickname($0) }
+			.bind(with: self) { owner, result in
+				isValidation.accept(result)
+			}
+			.disposed(by: disposeBag)
 
 		input.saveButtonTapped
 			.withLatestFrom(input.nicknameText)
@@ -47,6 +56,12 @@ class EditProfileViewModel: ViewModelType {
 			}
 			.disposed(by: disposeBag)
 
-		return Output(successTrigger: successTrigger.asDriver(onErrorJustReturn: ()))
+		return Output(isValidation: isValidation.asDriver(onErrorJustReturn: false),
+					  successTrigger: successTrigger.asDriver(onErrorJustReturn: ()))
+	}
+
+	func isValidNickname(_ nickname: String) -> Bool {
+		let nicknameRegex = "^[a-zA-Z0-9가-힣]{3,10}$"
+		return NSPredicate(format: "SELF MATCHES %@", nicknameRegex).evaluate(with: nickname)
 	}
 }

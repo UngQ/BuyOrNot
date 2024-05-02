@@ -38,34 +38,15 @@ class PostTableViewCell: UITableViewCell {
 		return button
 	}()
 
+	let buyButton = UIButton()
+
 	override func prepareForReuse() {
 		super.prepareForReuse()
-//		likeButton.transform = CGAffineTransform.identity
-//		  dislikeButton.transform = CGAffineTransform.identity
-//		likeButton.alpha = 1
-//		 dislikeButton.alpha = 1
-//		likeButton.removeTarget(nil, action: nil, for: .allEvents)
-//		   dislikeButton.removeTarget(nil, action: nil, for: .allEvents)
-//
 		profileImageView.image = UIImage(systemName: "person.circle.fill")
-//		usernameLabel.text = ""
-//		likeLabel.text = ""
-//		dislikeLabel.text = ""
-//		timeLabel.text = ""
-//
-//
 		likeDislikeProgressView.isHidden = true
-
 		likeLabel.isHidden = true
 		dislikeLabel.isHidden = true
-//		likeLabel.alpha = 1
-//		dislikeLabel.alpha = 1
-//			likeDislikeProgressView.trackTintColor = .systemGray4
-//			likeDislikeProgressView.progressTintColor = .systemBlue
-
-
 		disposeBag = DisposeBag()
-
 	}
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -85,6 +66,7 @@ class PostTableViewCell: UITableViewCell {
 
 		contentView.addSubview(dislikeLabel)
 		contentView.addSubview(deleteButton)
+		contentView.addSubview(buyButton)
 
 		setupViews()
 		setupConstraints()
@@ -209,6 +191,14 @@ class PostTableViewCell: UITableViewCell {
 			  make.height.equalTo(25)
 			  make.width.equalTo(deleteButton.snp.height)
 		}
+
+		buyButton.snp.makeConstraints { make in
+			make.trailing.bottom.equalTo(postImageView).inset(8)
+			make.height.equalTo(30)
+			make.width.equalTo(90)
+		}
+
+		buyButton.backgroundColor = .systemPink
 	}
 
 }
