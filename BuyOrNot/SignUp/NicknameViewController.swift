@@ -43,9 +43,9 @@ class NicknameViewController: BaseViewController {
 		output.isCompleteJoin
 			.drive(with: self) { owner, complete in
 				print("Completed")
-				
+
 				UIViewController.changeRootView(to: CustomTabBarController(), isNav: true)
-				
+
 			}
 			.disposed(by: disposeBag)
 

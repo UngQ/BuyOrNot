@@ -29,6 +29,7 @@ struct NetworkManager {
 			do {
 				let urlRequest = try route.asURLRequest()
 
+				//포스트 업로드
 				if case Router.uploadImage(let query) = route {
 					guard let image = query as? ImagePostQuery else { return Disposables.create() }
 					AF.upload(multipartFormData: { multipartFormData in
@@ -46,6 +47,7 @@ struct NetworkManager {
 							single(.failure(error))
 						}
 					}
+				//프로필 수정
 				} else if case Router.editProfile(let query) = route {
 
 					guard let editData = query as? ProfileQuery else { return Disposables.create() }
@@ -72,6 +74,7 @@ struct NetworkManager {
 						}
 					}
 
+				//그 외
 				} else {
 					AF.request(urlRequest)
 						.validate(statusCode: 200..<300)
@@ -111,6 +114,7 @@ struct NetworkManager {
 		})
 	}
 
+	//응답값 없을때
 	static func performRequestVoidType(route: Router) -> Single<Void> {
 		return Single<Void>.create { single in
 			do {

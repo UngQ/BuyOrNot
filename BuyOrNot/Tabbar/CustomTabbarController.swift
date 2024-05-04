@@ -16,8 +16,13 @@ class CustomTabBarController: UITabBarController {
 
 	let disposeBag = DisposeBag()
 	var category = ""
+	
 
-	private let firstVC = UINavigationController(rootViewController: PostViewController())
+	let postVC = PostViewController()
+	lazy var firstVC = {
+		let vc = postVC
+		return UINavigationController(rootViewController: PostViewController())
+	}()
 	private let thirdVC = UINavigationController(rootViewController: ProfileViewController())
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -43,6 +48,7 @@ class CustomTabBarController: UITabBarController {
 		firstVC.tabBarItem.image = UIImage(systemName: "house.fill")
 
 		viewControllers = [firstVC, UIViewController(), thirdVC]
+
 	}
 
 	private func setMyProfileViewInTabbar() {

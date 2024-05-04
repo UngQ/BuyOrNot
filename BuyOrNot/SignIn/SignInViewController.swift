@@ -74,8 +74,7 @@ final class SignInViewController: BaseViewController {
 						
 					}
 
-
-						UIViewController.changeRootView(to: CustomTabBarController(), isNav: true)
+					UIViewController.changeRootView(to: CustomTabBarController(), isNav: true)
 
 				}
 			}

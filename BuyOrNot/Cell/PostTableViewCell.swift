@@ -193,12 +193,18 @@ class PostTableViewCell: UITableViewCell {
 		}
 
 		buyButton.snp.makeConstraints { make in
-			make.trailing.bottom.equalTo(postImageView).inset(8)
+			make.bottom.equalTo(postImageView.snp.top).offset(-10)
+			make.trailing.equalToSuperview().inset(10)
 			make.height.equalTo(30)
 			make.width.equalTo(90)
 		}
 
 		buyButton.backgroundColor = .systemPink
+		buyButton.setTitle("BUY NOW", for: .normal)
+		buyButton.layer.cornerRadius = 12
+		buyButton.layer.borderWidth = 1
+		buyButton.layer.borderColor = UIColor.systemYellow.cgColor
+		buyButton.titleLabel?.font = .boldSystemFont(ofSize: 14)
 	}
 
 }

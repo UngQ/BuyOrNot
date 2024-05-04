@@ -39,6 +39,9 @@ class EditProfileViewController: BaseViewController {
 
 	private let imagePicker = UIImagePickerController()
 
+	let navigationRightButton = UIButton()
+
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupViews()
@@ -53,11 +56,47 @@ class EditProfileViewController: BaseViewController {
 		profileImageView.loadImage(from: profileImage)
 		nicknameTextField.text = viewModel.profileData.value.nick
 
+		navigationRightButton.setBackgroundImage(UIImage(systemName: "person.slash.fill"), for: .normal)
+		navigationRightButton.layer.cornerRadius = 15
+		navigationRightButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+		navigationRightButton.tintColor = .systemRed
+		navigationItem.rightBarButtonItem = UIBarButtonItem(customView: navigationRightButton)
+
+		self.nicknameTextField.becomeFirstResponder()
+		if let endPosition = self.nicknameTextField.position(from: self.nicknameTextField.endOfDocument, offset: 0) {
+			self.nicknameTextField.selectedTextRange = self.nicknameTextField.textRange(from: endPosition, to: endPosition)
+		}
+
 	}
 
-	override func bind() {
+	private func promptForDeletion() {
+		let alert = UIAlertController(title: "계정 탈퇴 확인", message: "비밀번호를 입력하세요", preferredStyle: .alert)
+		alert.addTextField { textField in
+			textField.placeholder = "비밀번호 입력"
+			textField.isSecureTextEntry = true
+		}
+		let action = UIAlertAction(title: "확인", style: .destructive) { [unowned self] _ in
+			guard let password = alert.textFields?.first?.text,
+				  let savedPassword = UserDefaults.standard.string(forKey: "password"),
+				  password == savedPassword else {
+				self.showMismatchError()
+				return
+			}
+			self.viewModel.deleteTrigger.accept(())
+		}
+		alert.addAction(action)
+		alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+		present(alert, animated: true)
+	}
 
-	let confirmDeleteTapped = PublishSubject<Void>()
+	private func showMismatchError() {
+		 let alert = UIAlertController(title: "오류", message: "비밀번호가 일치하지 않습니다.", preferredStyle: .alert)
+		 alert.addAction(UIAlertAction(title: "확인", style: .default))
+		 present(alert, animated: true)
+	 }
+
+	override func bind() {
+		let confirmDeleteTapped = PublishSubject<Void>()
 
 
 		let input = EditProfileViewModel.Input(nicknameText: nicknameTextField.rx.text.orEmpty,
@@ -84,10 +123,31 @@ class EditProfileViewController: BaseViewController {
 			.disposed(by: disposeBag)
 
 
+		output.deleteResult
+			.drive(with: self) { owner, _ in
+				
+				owner.view.makeToast("그동안 이용해주셔서 감사합니다.😢", position: .center, title: "회원탈퇴가 완료되었습니다.")
+
+
+				let vc = SignInViewController()
+				vc.viewModel.handleAutoLogin("", password: "", enable: false)
+
+				DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+					UIViewController.changeRootView(to: vc, isNav: true)
+				}
+
+			}
+			.disposed(by: disposeBag)
 
 		output.successTrigger
 			.drive(with: self) { owner, _ in
 				EditProfileViewController.changeRootView(to: CustomTabBarController(), isNav: true)
+			}
+			.disposed(by: disposeBag)
+
+		navigationRightButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.promptForDeletion()
 			}
 			.disposed(by: disposeBag)
 	}

@@ -50,6 +50,7 @@ class PostViewModel: ViewModelType {
 
 				 if self.isLoading && self.nextCursor == "0" {
 					 message.accept("더 이상 게시물이 없습니다.")
+					 
 					 return .never()
 				 }
 

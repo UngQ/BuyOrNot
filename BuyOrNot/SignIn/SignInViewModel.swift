@@ -55,6 +55,10 @@ final class SignInViewModel: ViewModelType {
 			})
 			.flatMap { loginQuery in
 				print("\(loginQuery)) 이곳인가")
+
+				//회원 탈퇴시, 비밀번호 확인용 (API에서 비밀번호값 미제공)
+				UserDefaults.standard.set(loginQuery.password, forKey: UserDefaultsKey.password.key)
+
 				return NetworkManager.createLogin(query: loginQuery)
 					.catch { error -> Single<LoginModel> in
 						errorMessage.accept("이메일 혹은 비밀번호가 올바르지 않습니다.")
@@ -68,6 +72,7 @@ final class SignInViewModel: ViewModelType {
 				} else {
 					UserDefaults.standard.set("", forKey: UserDefaultsKey.profileImage.key)
 				}
+
 				UserDefaults.standard.set(loginModel.nick, forKey: UserDefaultsKey.nick.key)
 				UserDefaults.standard.set(loginModel.user_id, forKey: UserDefaultsKey.userId.key)
 				UserDefaults.standard.set(loginModel.accessToken, forKey: UserDefaultsKey.accessToken.key)

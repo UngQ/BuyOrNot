@@ -17,22 +17,30 @@ class EditProfileViewModel: ViewModelType {
 
 	var profileImage: Data? = nil
 
+	let deleteTrigger = PublishRelay<Void>()
+
+
 	struct Input {
 
 		let nicknameText: ControlProperty<String>
-
 		let saveButtonTapped: Observable<Void>
 	}
 
 	struct Output {
+
+		let deleteResult: Driver<Void>
+
 		let isValidation: Driver<Bool>
 		let successTrigger: Driver<Void>
 
 	}
 
 	func transform(input: Input) -> Output {
+		let deleteTrigger = PublishRelay<Void>()
+
 		let isValidation = PublishRelay<Bool>()
 		let successTrigger = PublishRelay<Void>()
+		
 
 		input.nicknameText
 			.map { self.isValidNickname($0) }
@@ -56,7 +64,21 @@ class EditProfileViewModel: ViewModelType {
 			}
 			.disposed(by: disposeBag)
 
-		return Output(isValidation: isValidation.asDriver(onErrorJustReturn: false),
+		self.deleteTrigger
+			.flatMap {
+				NetworkManager.performRequest(route: .withdraw, decodingType: JoinModel.self)
+			}
+			.subscribe(with: self) { owner, result in
+			print("서버통신")
+				print(result)
+			deleteTrigger.accept(())
+		}
+		.disposed(by: disposeBag)
+
+
+
+		return Output(deleteResult: deleteTrigger.asDriver(onErrorJustReturn: ()),
+					  isValidation: isValidation.asDriver(onErrorJustReturn: false),
 					  successTrigger: successTrigger.asDriver(onErrorJustReturn: ()))
 	}
 

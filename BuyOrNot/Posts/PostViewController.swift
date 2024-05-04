@@ -52,12 +52,13 @@ class PostViewController: BaseViewController {
         super.viewDidLoad()
 		reloadData()
 
-
 		if viewModel.totalOrDetail {
 
 			setNavigationTitleImage()
 			
 			setupInteractiveTitleAsLeftBarButtonItem()
+
+
 
 		} else {
 			self.navigationItem.title = "게시물"
@@ -125,8 +126,10 @@ override func bind() {
 
 			if myId == element.creator.user_id {
 				cell.deleteButton.isHidden = false
+				cell.buyButton.isHidden = true
 			} else {
 				cell.deleteButton.isHidden = true
+				cell.buyButton.isHidden = false
 			}
 
 			cell.like = element.likes.contains(myId)
@@ -343,6 +346,9 @@ override func bind() {
 	output.cautionMessage
 		.drive(with: self) { owner, message in
 			owner.view.makeToast(message, position: .center)
+			owner.loadingLottieView.isHidden = true
+			owner.loadingLottieView.stop()
+
 		}
 		.disposed(by: disposeBag)
 
@@ -352,7 +358,7 @@ override func bind() {
 
 
 	func playAppropriateAnimation(for type: String, likeCondition: Bool, dislikeCondition: Bool) {
-//		guard !likeCondition && !dislikeCondition else { return }
+
 		switch type {
 		case "like":
 			if !likeCondition {
@@ -375,33 +381,13 @@ override func bind() {
 		}
 	}
 
-//	private func showDeletionAlert(for row: Int, deleteSubject: PublishSubject<Int>) {
-//		let alert = UIAlertController(title: "게시글 삭제", message: "게시글을 삭제하시겠습니까?", preferredStyle: .alert)
-//		alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
-//		alert.addAction(UIAlertAction(title: "확인", style: .destructive, handler: { _ in
-//			if self.viewModel.totalOrDetail {
-//				deleteSubject.onNext(row)
-//				self.reloadData()
-//			} else {
-//				deleteSubject.onNext(row)
-//				self.navigationController?.popViewController(animated: true)
-//			}
-//		}))
-//		present(alert, animated: true, completion: nil)
-//	}
-
-//	override func showDeletionAlert(for row: Int, deleteSubject: PublishSubject<Int>, completionHandler: @escaping () -> Void) {
-//
-//	}
-
 	override func configureLayout() {
 		view.addSubview(tableView)
 		view.addSubview(loadingLottieView)
 		view.addSubview(likeLottieView)
 		view.addSubview(dislikeLottieView)
 
-		
-
+	
 		tableView.snp.makeConstraints { make in
 			make.top.equalTo(view.safeAreaLayoutGuide)
 			make.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
