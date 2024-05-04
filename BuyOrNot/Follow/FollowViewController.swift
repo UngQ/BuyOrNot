@@ -16,7 +16,13 @@ class FollowViewController: BaseViewController {
 
 
 	let listTableView = UITableView()
-	
+	let emptyLabel = {
+		let view = UILabel()
+		view.text = "아직 팔로워/팔로잉이 없습니다."
+		view.font = .boldSystemFont(ofSize: 16)
+		view.textAlignment = .center
+		return view
+	}()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,8 +46,21 @@ class FollowViewController: BaseViewController {
 
 		let output = viewModel.transform(input: input)
 
+
+
 		//팔로워 뷰
 		if self.followerOrFollowing {
+
+			output.data.map({ $0.followers })
+				.drive(with: self) { owner, follow in
+					if follow == [] {
+						owner.emptyLabel.isHidden = false
+					} else {
+						owner.emptyLabel.isHidden = true
+					}
+				}
+				.disposed(by: disposeBag)
+
 			output.data.map { $0.followers }
 				.drive(listTableView.rx.items(cellIdentifier: FollowTableViewCell.id, cellType: FollowTableViewCell.self)) { row, element, cell  in
 
@@ -165,6 +184,19 @@ class FollowViewController: BaseViewController {
 				.disposed(by: disposeBag)
 		}	else {
 			//팔로잉 뷰
+
+			output.data.map({ $0.following })
+				.drive(with: self) { owner, follow in
+					if follow == [] {
+						owner.emptyLabel.isHidden = false
+
+					} else {
+						owner.emptyLabel.isHidden = true
+					}
+				}
+				.disposed(by: disposeBag)
+
+
 			output.data.map { $0.following }
 				.drive(listTableView.rx.items(cellIdentifier: FollowTableViewCell.id, cellType: FollowTableViewCell.self)) { row, element, cell  in
 					cell.selectionStyle = .none
@@ -294,6 +326,11 @@ class FollowViewController: BaseViewController {
 		listTableView.register(FollowTableViewCell.self, forCellReuseIdentifier: FollowTableViewCell.id)
 		listTableView.rowHeight = 80
 
+		view.addSubview(emptyLabel)
+
+		emptyLabel.snp.makeConstraints { make in
+			make.centerY.centerX.equalToSuperview()
+		}
 	}
 
 

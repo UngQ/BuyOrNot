@@ -46,6 +46,7 @@ enum Router {
 	case validationPayment(query: Encodable)
 
 	case withdraw
+	case paymentList
 }
 
 extension Router: TargetType {
@@ -65,7 +66,8 @@ extension Router: TargetType {
 				.myLikes,
 				.myDislikes,
 				.othersProfile,
-				.withdraw:
+				.withdraw,
+				.paymentList:
 			return .get
 
 		case .login,
@@ -149,6 +151,9 @@ extension Router: TargetType {
 		case .withdraw:
 			return "/v1/users/withdraw"
 
+		case .paymentList:
+			return "/v1/payments/me"
+
 
 		}
 	}
@@ -197,7 +202,8 @@ extension Router: TargetType {
 			.plusFollow,
 			.deleteFollow,
 			.deletePost,
-			.withdraw
+			.withdraw,
+			.paymentList
 			:
 			return [
 				HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
@@ -253,7 +259,8 @@ extension Router: TargetType {
 				.deleteFollow,
 				.deletePost,
 				.editProfile,
-				.withdraw
+				.withdraw,
+				.paymentList
 
 				:
 			return nil

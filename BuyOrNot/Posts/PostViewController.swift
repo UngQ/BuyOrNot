@@ -127,10 +127,27 @@ override func bind() {
 			if myId == element.creator.user_id {
 				cell.deleteButton.isHidden = false
 				cell.buyButton.isHidden = true
+				if element.buyers.count >= 1 {
+					cell.buyButton.isHidden = false
+					cell.buyButton.setTitle("판매완료", for: .normal)
+					cell.buyButton.backgroundColor = .darkGray
+					cell.buyButton.isEnabled = false
+					cell.deleteButton.snp.remakeConstraints { make in
+						make.bottom.equalTo(cell.postImageView.snp.top).offset(-10)
+						make.trailing.equalTo(cell.buyButton.snp.leading).offset(-10)
+					
+					}
+				}
 			} else {
 				cell.deleteButton.isHidden = true
 				cell.buyButton.isHidden = false
+				if element.buyers.count >= 1 {
+					cell.buyButton.setTitle("판매완료", for: .normal)
+					cell.buyButton.backgroundColor = .darkGray
+					cell.buyButton.isEnabled = false
+				}
 			}
+
 
 			cell.like = element.likes.contains(myId)
 			cell.dislike = element.likes2.contains(myId)

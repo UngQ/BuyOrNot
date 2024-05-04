@@ -16,8 +16,8 @@ class ProfileViewController: BaseViewController {
 	private var containerView = UIView()
 	let tabmanVC = TabmanInProfileViewController()
 
-	let navigationRightButton = UIButton()
-	let navigationLeftButton = UIButton()
+	let logoutOrFollowButton = UIButton()
+	let profileSettingButton = UIButton()
 
 	let profileImageView = UIImageView()
 
@@ -65,6 +65,7 @@ class ProfileViewController: BaseViewController {
 		 tabmanVC.myPostsVC.contentPostVCDelegate = self
 		 tabmanVC.likePostsVC.contentPostVCDelegate = self
 		 tabmanVC.dislikePostsVC.contentPostVCDelegate = self
+		 tabmanVC.purchaseListVC.contentPostVCDelegate = self
 
 
 	 }
@@ -133,7 +134,7 @@ class ProfileViewController: BaseViewController {
 
 
 	override func bind() {
-		let input = ProfileViewModel.Input(navigationRightButtonTapped: navigationRightButton.rx.tap,
+		let input = ProfileViewModel.Input(navigationRightButtonTapped: logoutOrFollowButton.rx.tap,
 										   deleteButtonTapped: nil
 										   ,unfollowButtonTapped: nil,
 										   followButtonTapped: nil)
@@ -144,19 +145,23 @@ class ProfileViewController: BaseViewController {
 			.drive(with: self) { owner, profileData in
 
 				if owner.viewModel.myOrOther || profileData.user_id == owner.viewModel.myId {
-					owner.navigationRightButton.setImage(UIImage(systemName: "door.left.hand.open"), for: .normal)
-					owner.navigationRightButton.layer.backgroundColor = UIColor(white: 0, alpha: 0.2).cgColor
+					owner.logoutOrFollowButton.setImage(UIImage(systemName: "door.left.hand.open"), for: .normal)
+					owner.logoutOrFollowButton.layer.backgroundColor = UIColor(white: 0, alpha: 0.2).cgColor
+					owner.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: owner.logoutOrFollowButton),
+																UIBarButtonItem(customView: owner.profileSettingButton) ]
+
 				} else {
 
 					let followerIds = profileData.followers.map { $0.user_id }
 					let isFollower = followerIds.contains(owner.viewModel.myId)
 					if isFollower {
-						owner.navigationRightButton.setImage(UIImage(systemName: "person.crop.circle.fill.badge.minus"), for: .normal)
-						owner.navigationRightButton.backgroundColor = .systemRed
+						owner.logoutOrFollowButton.setImage(UIImage(systemName: "person.crop.circle.fill.badge.minus"), for: .normal)
+						owner.logoutOrFollowButton.backgroundColor = .systemRed
 					} else {
-						owner.navigationRightButton.setImage(UIImage(systemName: "person.crop.circle.fill.badge.plus"), for: .normal)
-						owner.navigationRightButton.backgroundColor = .systemBlue
+						owner.logoutOrFollowButton.setImage(UIImage(systemName: "person.crop.circle.fill.badge.plus"), for: .normal)
+						owner.logoutOrFollowButton.backgroundColor = .systemBlue
 					}
+					owner.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: owner.logoutOrFollowButton)]
 				}
 
 
@@ -193,7 +198,7 @@ class ProfileViewController: BaseViewController {
 		}
 		.disposed(by: disposeBag)
 
-		navigationLeftButton.rx.tap
+		profileSettingButton.rx.tap
 			.asDriver()
 			.drive(with: self) { owner, _ in
 				let vc = EditProfileViewController()
@@ -206,16 +211,15 @@ class ProfileViewController: BaseViewController {
 	}
 
 	 private func setupProfileViews() {
-		 navigationRightButton.layer.cornerRadius = 15
-		 navigationRightButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-		 navigationRightButton.tintColor = .white
-		 navigationItem.rightBarButtonItem = UIBarButtonItem(customView: navigationRightButton)
+		 logoutOrFollowButton.layer.cornerRadius = 15
+		 logoutOrFollowButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+		 logoutOrFollowButton.tintColor = .white
 
-		 navigationLeftButton.setBackgroundImage(UIImage(systemName: "gearshape.fill"), for: .normal)
-		 navigationLeftButton.layer.cornerRadius = 15
-		 navigationLeftButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-		 navigationLeftButton.tintColor = .systemBlue
-		 navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navigationLeftButton)
+		 profileSettingButton.setBackgroundImage(UIImage(systemName: "gearshape.fill"), for: .normal)
+		 profileSettingButton.layer.cornerRadius = 15
+		 profileSettingButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+		 profileSettingButton.tintColor = .systemBlue
+
 
 		 [postsStackView, followersStackView, followingStackView].forEach { stackView in
 			 stackView.axis = .vertical
@@ -309,6 +313,8 @@ extension ProfileViewController: ContentPostViewControllerDelegate {
 			vc.viewModel.id = self.tabmanVC.likePostsVC.viewModel.postsData.value[index].post_id
 		} else if self.tabmanVC.currentIndex == 2 {
 			vc.viewModel.id = self.tabmanVC.dislikePostsVC.viewModel.postsData.value[index].post_id
+		} else if self.tabmanVC.currentIndex == 3 {
+			vc.viewModel.id = self.tabmanVC.purchaseListVC.viewModel.postsData.value.data[index].post_id
 		}
 		self.navigationController?.pushViewController(vc, animated: true)
 	}

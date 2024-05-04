@@ -31,7 +31,7 @@ class ContentPostViewModel: ViewModelType {
 	var disposeBag = DisposeBag()
 
 	let viewWillAppearTrigger = PublishRelay<Void>()
-	 let postsData = BehaviorRelay<[PostModel]>(value: [])
+	let postsData = BehaviorRelay<[PostModel]>(value: [])
 
 
 	struct Input {

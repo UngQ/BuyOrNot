@@ -19,6 +19,7 @@ class TabmanInProfileViewController: TabmanViewController {
 	let myPostsVC = ContentPostViewController()
 	let likePostsVC = ContentPostViewController()
 	let dislikePostsVC = ContentPostViewController()
+	let purchaseListVC = PurchaseListViewController()
 
 	private let baseView = UIView()
 
@@ -42,6 +43,7 @@ class TabmanInProfileViewController: TabmanViewController {
 			viewControllers.append(UINavigationController(rootViewController: myPostsVC))
 			viewControllers.append(UINavigationController(rootViewController: likePostsVC))
 			viewControllers.append(UINavigationController(rootViewController: dislikePostsVC))
+			viewControllers.append(UINavigationController(rootViewController: purchaseListVC))
 		} else {
 			myPostsVC.collectionViewLayout = UICollectionViewFlowLayout.createThreeColumnFlowLayout(in: self.view)
 			myPostsVC.viewModel.content = .myPosts
@@ -113,6 +115,8 @@ extension TabmanInProfileViewController: PageboyViewControllerDataSource, TMBarD
 			item.image = UIImage(systemName: "hand.thumbsup") // 두 번째 탭 아이템 이미지
 		case 2:
 			item.image = UIImage(systemName: "hand.thumbsdown") // 세 번째 탭 아이템 이미지
+		case 3:
+			item.image = UIImage(systemName: "list.clipboard") // 세 번째 탭 아이템 이미지
 		default:
 			break
 		}

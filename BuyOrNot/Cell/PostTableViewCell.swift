@@ -46,6 +46,9 @@ class PostTableViewCell: UITableViewCell {
 		likeDislikeProgressView.isHidden = true
 		likeLabel.isHidden = true
 		dislikeLabel.isHidden = true
+		buyButton.backgroundColor = .systemPink
+		buyButton.setTitle("구매하기", for: .normal)
+		buyButton.isEnabled = true
 		disposeBag = DisposeBag()
 	}
 
@@ -200,7 +203,7 @@ class PostTableViewCell: UITableViewCell {
 		}
 
 		buyButton.backgroundColor = .systemPink
-		buyButton.setTitle("BUY NOW", for: .normal)
+		buyButton.setTitle("구매하기", for: .normal)
 		buyButton.layer.cornerRadius = 12
 		buyButton.layer.borderWidth = 1
 		buyButton.layer.borderColor = UIColor.systemYellow.cgColor

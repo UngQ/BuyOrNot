@@ -61,8 +61,8 @@ class PaymentViewController: BaseViewController {
 						return .never()
 					})
 					.subscribe(with: self) { owner, result in
-						print(result)
-						owner.dismiss(animated: true)
+
+						UIViewController.changeRootView(to: CustomTabBarController(), isNav: true)
 					}
 					.disposed(by: self.disposebag)
 
@@ -70,6 +70,8 @@ class PaymentViewController: BaseViewController {
 
 			}
 		}
+		
+
     }
     
 

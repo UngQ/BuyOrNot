@@ -68,10 +68,14 @@ struct CommentModel: Decodable, Equatable {
 }
 
 
-struct CreatorModel: Decodable {
+struct CreatorModel: Decodable, Equatable {
 	let user_id: String
 	let nick: String
 	let profileImage: String?
+
+	static func == (lhs: CreatorModel, rhs: CreatorModel) -> Bool {
+		 return lhs.user_id == rhs.user_id
+	 }
 }
 
 struct PostsModel: Decodable, Equatable {
@@ -96,4 +100,22 @@ struct FollowModel: Decodable {
 	let nick: String
 	let opponent_nick: String
 	let following_status: Bool
+}
+
+struct PaymentsDataListModel: Decodable {
+	let data: [PaymentsDataModel]
+}
+
+struct PaymentsDataModel: Decodable, Equatable {
+	let payment_id: String
+	let buyer_id: String
+	let post_id: String
+	let merchant_uid: String
+	let productName: String
+	let price: Int
+	let paidAt: String
+
+	static func == (lhs: PaymentsDataModel, rhs: PaymentsDataModel) -> Bool {
+		return lhs.payment_id == rhs.payment_id
+	 }
 }

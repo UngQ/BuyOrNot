@@ -103,7 +103,6 @@ class ProfileViewModel: ViewModelType {
 
 						 newProfileData.followers.remove(at: index)
 					 } else {
-						 // If not found, add as new follower
 						 let myData = CreatorModel(user_id: self.myId, nick: self.myNick, profileImage: "")
 						 newProfileData.followers.append(myData)
 					 }
