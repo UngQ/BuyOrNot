@@ -9,9 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
-
 import IQKeyboardManagerSwift
-
 
 protocol CommentViewControllerDelegate: AnyObject {
 	func pushOthersProfile(myOrOther: Bool, id: String)
@@ -256,17 +254,21 @@ final class CommentViewController: BaseViewController {
 	}
 
 	func setupConstraints() {
+
+		emptyLabel.snp.makeConstraints { make in
+			make.top.equalTo(view.safeAreaLayoutGuide).offset(100)
+			make.centerX.equalTo(view)
+		}
+
 		commentTableView.snp.makeConstraints { make in
 			make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
 			make.left.right.equalTo(view)
-			// Initially, this will position just above the text field
 			make.bottom.equalTo(commentTextField.snp.top).offset(-10)
 		}
 
 		commentTextField.snp.makeConstraints { make in
 			make.left.equalTo(view.snp.left).offset(10)
 			make.right.equalTo(sendButton.snp.left).offset(-10)
-			// Reference this constraint to adjust when keyboard shows/hides
 			textFieldBottomConstraint = make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-10).constraint
 		}
 
@@ -274,7 +276,6 @@ final class CommentViewController: BaseViewController {
 			make.right.equalTo(view.snp.right).offset(-10)
 			make.height.equalTo(commentTextField.snp.height)
 			make.width.equalTo(50)
-			// Reference this constraint to adjust when keyboard shows/hides
 			buttonBottomConstraint = make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-10).constraint
 		}
 	}

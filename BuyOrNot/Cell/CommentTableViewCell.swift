@@ -16,7 +16,7 @@ class CommentTableViewCell: UITableViewCell {
 	let profileImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.contentMode = .scaleAspectFill
-		imageView.layer.cornerRadius = 20
+		imageView.layer.cornerRadius = 15
 		imageView.clipsToBounds = true
 		imageView.image = UIImage(systemName: "person.crop.circle")
 		return imageView
@@ -67,6 +67,7 @@ class CommentTableViewCell: UITableViewCell {
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
+		profileImageView.image = nil
 
 		disposeBag = DisposeBag()
 	}
