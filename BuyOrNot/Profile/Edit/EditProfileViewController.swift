@@ -67,6 +67,8 @@ final class EditProfileViewController: BaseViewController {
 			self.nicknameTextField.selectedTextRange = self.nicknameTextField.textRange(from: endPosition, to: endPosition)
 		}
 
+
+
 	}
 
 	private func promptForDeletion() {

@@ -98,6 +98,7 @@
 		A59F225D2BE7C91D003B477D /* PaymentsDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F225C2BE7C91D003B477D /* PaymentsDataModel.swift */; };
 		A59F225F2BE7C939003B477D /* NaverImagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F225E2BE7C939003B477D /* NaverImagesModel.swift */; };
 		A59F22612BE7C945003B477D /* NaverImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F22602BE7C945003B477D /* NaverImageModel.swift */; };
+		A59F22642BE9342D003B477D /* RxKeyboard in Frameworks */ = {isa = PBXBuildFile; productRef = A59F22632BE9342D003B477D /* RxKeyboard */; };
 		A5A92E912BCD5730006434C6 /* Notification.Name+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A92E902BCD5730006434C6 /* Notification.Name+Ex.swift */; };
 		A5A92E932BCD7632006434C6 /* PostQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A92E922BCD7632006434C6 /* PostQuery.swift */; };
 		A5A92E972BCD79D7006434C6 /* UploadPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A92E962BCD79D7006434C6 /* UploadPostViewController.swift */; };
@@ -212,6 +213,7 @@
 				A5B4966A2BCECE330079A3B1 /* IQKeyboardManagerSwift in Frameworks */,
 				A5B496772BD045560079A3B1 /* Tabman in Frameworks */,
 				A558A04C2BD95EF9000C1B9D /* RxGesture in Frameworks */,
+				A59F22642BE9342D003B477D /* RxKeyboard in Frameworks */,
 				A59F22292BE3E92F003B477D /* iamport-ios in Frameworks */,
 				A558A0392BD8E0F1000C1B9D /* Lottie in Frameworks */,
 				A55990B82BCC012F0096B98A /* Toast in Frameworks */,
@@ -561,6 +563,7 @@
 				A558A04B2BD95EF9000C1B9D /* RxGesture */,
 				A558A0552BDBAC15000C1B9D /* KeychainSwift */,
 				A59F22282BE3E92F003B477D /* iamport-ios */,
+				A59F22632BE9342D003B477D /* RxKeyboard */,
 			);
 			productName = BuyOrNot;
 			productReference = A559908B2BCBFED00096B98A /* BuyOrNot.app */;
@@ -602,6 +605,7 @@
 				A558A04A2BD95EF9000C1B9D /* XCRemoteSwiftPackageReference "RxGesture" */,
 				A558A0542BDBAC15000C1B9D /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				A59F22272BE3E92F003B477D /* XCRemoteSwiftPackageReference "iamport-ios" */,
+				A59F22622BE9342D003B477D /* XCRemoteSwiftPackageReference "RxKeyboard" */,
 			);
 			productRefGroup = A559908C2BCBFED00096B98A /* Products */;
 			projectDirPath = "";
@@ -1024,6 +1028,14 @@
 				minimumVersion = 1.4.1;
 			};
 		};
+		A59F22622BE9342D003B477D /* XCRemoteSwiftPackageReference "RxKeyboard" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RxSwiftCommunity/RxKeyboard.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.1;
+			};
+		};
 		A5B496682BCECE330079A3B1 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
@@ -1092,6 +1104,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A59F22272BE3E92F003B477D /* XCRemoteSwiftPackageReference "iamport-ios" */;
 			productName = "iamport-ios";
+		};
+		A59F22632BE9342D003B477D /* RxKeyboard */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A59F22622BE9342D003B477D /* XCRemoteSwiftPackageReference "RxKeyboard" */;
+			productName = RxKeyboard;
 		};
 		A5B496692BCECE330079A3B1 /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -8,6 +8,10 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import SnapKit
+
+import IQKeyboardManagerSwift
+
 
 protocol CommentViewControllerDelegate: AnyObject {
 	func pushOthersProfile(myOrOther: Bool, id: String)
@@ -36,6 +40,9 @@ final class CommentViewController: BaseViewController {
 		return view
 	}()
 
+	private var textFieldBottomConstraint: Constraint?
+	private var buttonBottomConstraint: Constraint?
+
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		self.viewModel.viewWillAppearTrigger.accept(())
@@ -46,7 +53,52 @@ final class CommentViewController: BaseViewController {
 		self.navigationItem.title = "댓글"
 
 		setupConstraints()
+
+		IQKeyboardManager.shared.disabledDistanceHandlingClasses = [CommentViewController.self]
+		registerKeyboardNotification()
+
 	}
+
+	func registerKeyboardNotification()
+	{
+		// 키보드 표시 노티피케이션 등록
+		NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
+											   name: UIResponder.keyboardWillShowNotification,
+											   object: nil)
+		// 키보드 사라짐 노티피케이션 등록
+		NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
+											   name: UIResponder.keyboardWillHideNotification,
+											   object: nil)
+	 }
+
+
+	@objc func keyboardWillShow(_ notification: Notification) {
+		if let keyboardFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+			let keyboardHeight = keyboardFrame.height - view.safeAreaInsets.bottom
+
+			UIView.animate(withDuration: 0.3) {
+				self.textFieldBottomConstraint?.update(inset: keyboardHeight + 10)
+				self.buttonBottomConstraint?.update(inset: keyboardHeight + 10)
+				self.commentTableView.snp.updateConstraints { make in
+					make.bottom.equalTo(self.commentTextField.snp.top).offset(-10)
+				}
+				self.view.layoutIfNeeded()
+			}
+		}
+	}
+
+	@objc func keyboardWillHide(_ notification: Notification) {
+		UIView.animate(withDuration: 0.3) {
+			self.textFieldBottomConstraint?.update(inset: 10)
+			self.buttonBottomConstraint?.update(inset: 10)
+			self.commentTableView.snp.updateConstraints { make in
+				make.bottom.equalTo(self.commentTextField.snp.top).offset(-10)
+			}
+			self.view.layoutIfNeeded()
+		}
+	}
+
+
 
 	override func bind() {
 		let editButtonTapped = PublishSubject<Int>()
@@ -62,6 +114,8 @@ final class CommentViewController: BaseViewController {
 
 
 		let output = viewModel.transform(input: input)
+
+
 
 		output.isValidation
 			.drive(with: self) { owner, validation in
@@ -201,36 +255,27 @@ final class CommentViewController: BaseViewController {
 
 	}
 
-	private func presentHalfModal() {
-		if let sheetPresentationController = sheetPresentationController {
-			sheetPresentationController.detents = [.medium(), .large()]
-			sheetPresentationController.prefersGrabberVisible = true
-		}
-	}
-
-
 	func setupConstraints() {
-		emptyLabel.snp.makeConstraints { make in
-			make.centerY.centerX.equalToSuperview()
-		}
-
 		commentTableView.snp.makeConstraints { make in
-			make.top.equalTo(view.safeAreaLayoutGuide)
+			make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
 			make.left.right.equalTo(view)
+			// Initially, this will position just above the text field
 			make.bottom.equalTo(commentTextField.snp.top).offset(-10)
 		}
 
 		commentTextField.snp.makeConstraints { make in
 			make.left.equalTo(view.snp.left).offset(10)
 			make.right.equalTo(sendButton.snp.left).offset(-10)
-			make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-10)
+			// Reference this constraint to adjust when keyboard shows/hides
+			textFieldBottomConstraint = make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-10).constraint
 		}
 
 		sendButton.snp.makeConstraints { make in
 			make.right.equalTo(view.snp.right).offset(-10)
-			make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-10)
 			make.height.equalTo(commentTextField.snp.height)
 			make.width.equalTo(50)
+			// Reference this constraint to adjust when keyboard shows/hides
+			buttonBottomConstraint = make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-10).constraint
 		}
 	}
 
