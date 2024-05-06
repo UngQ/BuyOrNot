@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EditCommentViewController: BaseViewController {
+final class EditCommentViewController: BaseViewController {
 
 
 	let viewModel = EditCommentViewModel()

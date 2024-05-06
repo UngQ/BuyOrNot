@@ -14,7 +14,7 @@ import iamport_ios
 import WebKit
 
 
-class PostViewController: BaseViewController {
+final class PostViewController: BaseViewController {
 
 	let viewModel = PostViewModel()
 
@@ -23,29 +23,14 @@ class PostViewController: BaseViewController {
 	private let refreshControl = UIRefreshControl()
 
 
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-
-
-	}
-
 	@objc func reloadData() {
-
 		self.loadingLottieView.isHidden = false
 		self.loadingLottieView.play()
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-			
 			self.viewModel.isLoading = false
 			self.viewModel.nextCursor = nil
 			self.viewModel.viewWillAppearTrigger.accept(())
-
 			}
-
-	}
-
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-		
 	}
 
     override func viewDidLoad() {
@@ -53,17 +38,11 @@ class PostViewController: BaseViewController {
 		reloadData()
 
 		if viewModel.totalOrDetail {
-
 			setNavigationTitleImage()
-			
 			setupInteractiveTitleAsLeftBarButtonItem()
-
-
-
 		} else {
 			self.navigationItem.title = "게시물"
 		}
-
 	}
 
 
@@ -148,12 +127,8 @@ override func bind() {
 				}
 			}
 
-
 			cell.like = element.likes.contains(myId)
 			cell.dislike = element.likes2.contains(myId)
-
-			print(cell.like, cell.dislike)
-
 
 			//삭제 버튼
 			cell.deleteButton.rx.tap
@@ -177,10 +152,7 @@ override func bind() {
 			if let endPoint = element.creator.profileImage {
 				let profileImage = "\(APIKey.baseURL.rawValue)/v1/\(endPoint)"
 				cell.profileImageView.loadImage(from: profileImage)
-			} 
-
-
-
+			}
 
 			//셀 작성자 이름
 			cell.usernameLabel.text = element.creator.nick
@@ -209,9 +181,6 @@ override func bind() {
 					make.height.equalTo(0)
 				}
 			}
-
-
-
 
 			//셀 포스트 이미지
 			let postImage = "\(APIKey.baseURL.rawValue)/v1/\(element.files[0])"
@@ -330,8 +299,8 @@ override func bind() {
 
 					let vc = PaymentViewController()
 					vc.element = element
-					owner.present(vc, animated: true)
-					
+					owner.navigationController?.pushViewController(vc, animated: true)
+
 				}
 				.disposed(by: cell.disposeBag)
 
@@ -365,14 +334,9 @@ override func bind() {
 			owner.view.makeToast(message, position: .center)
 			owner.loadingLottieView.isHidden = true
 			owner.loadingLottieView.stop()
-
 		}
 		.disposed(by: disposeBag)
-
-
-
 	}
-
 
 	func playAppropriateAnimation(for type: String, likeCondition: Bool, dislikeCondition: Bool) {
 
@@ -423,21 +387,14 @@ extension PostViewController: CommentViewControllerDelegate {
 	func pushOthersProfile(myOrOther: Bool, id: String) {
 		let vc = ProfileViewController()
 
-
-
 		if myOrOther {
-
-							self.navigationController?.pushViewController(vc, animated: true)
-
+			self.navigationController?.pushViewController(vc, animated: true)
 		} else {
-
-							vc.viewModel.myOrOther = false
-							vc.viewModel.othersId = id
-							vc.tabmanVC.myOrOthers = false
-							vc.tabmanVC.myPostsVC.viewModel.myId = id
-							self.navigationController?.pushViewController(vc, animated: true)
+			vc.viewModel.myOrOther = false
+			vc.viewModel.othersId = id
+			vc.tabmanVC.myOrOthers = false
+			vc.tabmanVC.myPostsVC.viewModel.myId = id
+			self.navigationController?.pushViewController(vc, animated: true)
 		}
 	}
-
-
 }

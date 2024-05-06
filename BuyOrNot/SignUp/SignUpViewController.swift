@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import Toast
 
-class SignUpViewController: BaseViewController {
+final class SignUpViewController: BaseViewController {
 
 	let viewModel = SignUpViewModel()
 
@@ -20,8 +20,6 @@ class SignUpViewController: BaseViewController {
 		let button = UIButton()
 		button.setTitle("중복 확인", for: .normal)
 		button.setTitleColor(Color.black, for: .normal)
-//		button.layer.borderWidth = 1
-//		button.layer.borderColor = Color.black.cgColor
 		button.layer.cornerRadius = 10
 		button.setTitleColor(.white, for: .normal)
 		return button
@@ -75,16 +73,12 @@ class SignUpViewController: BaseViewController {
 				owner.nextButton.isEnabled = valid
 			}
 			.disposed(by: disposeBag)
-
-
-
 	}
 
 	override func configureLayout() {
 		view.addSubview(emailTextField)
 		view.addSubview(validationButton)
 		view.addSubview(nextButton)
-
 
 		validationButton.snp.makeConstraints { make in
 			make.height.equalTo(50)
@@ -105,9 +99,5 @@ class SignUpViewController: BaseViewController {
 			make.top.equalTo(emailTextField.snp.bottom).offset(30)
 			make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
 		}
-
-
-
 	}
-
 }

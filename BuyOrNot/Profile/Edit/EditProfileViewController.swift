@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class EditProfileViewController: BaseViewController {
+final class EditProfileViewController: BaseViewController {
 
 
 	let viewModel = EditProfileViewModel()

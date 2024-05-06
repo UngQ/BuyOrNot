@@ -11,7 +11,7 @@ import Pageboy
 
 
 
-class TabmanInProfileViewController: TabmanViewController {
+final class TabmanInProfileViewController: TabmanViewController {
 
 	var myOrOthers = true
 
@@ -26,7 +26,7 @@ class TabmanInProfileViewController: TabmanViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-		view.backgroundColor = .systemRed
+	
 
 		if myOrOthers {
 			myPostsVC.collectionViewLayout = UICollectionViewFlowLayout.createThreeColumnFlowLayout(in: self.view)
@@ -67,21 +67,15 @@ class TabmanInProfileViewController: TabmanViewController {
 
 		bar.backgroundView.style = .blur(style: .regular)
 		bar.layout.contentInset = UIEdgeInsets.zero
-//		bar.
-
 		bar.buttons.customize { (button) in
 
 			button.tintColor = .systemGray
 			button.selectedTintColor = .textPoint
 			button.font = .systemFont(ofSize: 6)
-//			button.selectedFont = .boldSystemFont(ofSize: 12)
 		  }
-//		bar.indicator.weight = .light
 		bar.indicator.tintColor = Color.black
 		bar.indicator.overscrollBehavior = .compress
 		bar.layout.alignment = .centerDistributed
-//		bar.layout.contentMode = .fit
-//		bar.layout.interButtonSpacing = 0
 		bar.layout.transitionStyle = .snap
 
 		addBar(bar, dataSource: self, at: .custom(view: baseView, layout: nil))

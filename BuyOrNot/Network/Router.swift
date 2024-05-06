@@ -47,12 +47,19 @@ enum Router {
 
 	case withdraw
 	case paymentList
+
+	case naverPhoto(query: String, start: Int, display: String)
 }
 
 extension Router: TargetType {
 
 	var baseURL: String {
-		return APIKey.baseURL.rawValue
+		switch self {
+		case .naverPhoto:
+			return APIKey.naverPhotoURL.rawValue
+		default:
+			return APIKey.baseURL.rawValue
+		}
 	}
 
 	var method: Alamofire.HTTPMethod {
@@ -67,7 +74,8 @@ extension Router: TargetType {
 				.myDislikes,
 				.othersProfile,
 				.withdraw,
-				.paymentList:
+				.paymentList,
+				.naverPhoto:
 			return .get
 
 		case .login,
@@ -154,6 +162,8 @@ extension Router: TargetType {
 		case .paymentList:
 			return "/v1/payments/me"
 
+		case .naverPhoto:
+			return "/v1/search/image"
 
 		}
 	}
@@ -209,6 +219,10 @@ extension Router: TargetType {
 				HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
 				HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
 
+		case .naverPhoto:
+			return ["X-Naver-Client-Id": APIKey.naverClientID.rawValue,
+					"X-Naver-Client-Secret": APIKey.naverClientSecret.rawValue]
+
 		}
 	}
 
@@ -221,13 +235,12 @@ extension Router: TargetType {
 		case .lookPosts(let query),
 				.userPost(let query, _),
 				.myLikes(let query),
-				.myDislikes(let query)
-				:
-				return [
-					URLQueryItem(name: "next", value: query.next),
-					URLQueryItem(name: "limit", value: query.limit),
-					URLQueryItem(name: "product_id", value: query.product_id)
-				]
+				.myDislikes(let query):
+			return [
+				URLQueryItem(name: "next", value: query.next),
+				URLQueryItem(name: "limit", value: query.limit),
+				URLQueryItem(name: "product_id", value: query.product_id)
+			]
 
 		case .hashTag(let query):
 			return [
@@ -235,6 +248,12 @@ extension Router: TargetType {
 				URLQueryItem(name: "limit", value: query.limit),
 				URLQueryItem(name: "product_id", value: query.product_id),
 				URLQueryItem(name: "hashTag", value: query.hashTag)
+			]
+		case .naverPhoto(let query, let start, let display):
+			return [
+				URLQueryItem(name: "query", value: query),
+				URLQueryItem(name: "start", value: "\(start)"),
+				URLQueryItem(name: "display", value: display)
 			]
 
 		default:
@@ -244,37 +263,19 @@ extension Router: TargetType {
 
 	var body: Data? {
 		switch self {
-		case .tokenRefresh,
-				.uploadImage,
-				.lookPosts,
-				.hashTag,
-				.lookPost,
-				.userPost,
-				.deleteComment,
-				.myProfile,
-				.myLikes,
-				.myDislikes,
-				.othersProfile,
-				.plusFollow,
-				.deleteFollow,
-				.deletePost,
-				.editProfile,
-				.withdraw,
-				.paymentList
-
-				:
-			return nil
 		case .login(let query),
-			.validationEmail(let query),
-			.join(let query),
-			.uploadPost(let query),
-			.likePost(_, let query, _),
-			.uploadComment(_, let query),
-			.updateComment(_, _, let query),
-			.validationPayment(let query):
+				.validationEmail(let query),
+				.join(let query),
+				.uploadPost(let query),
+				.likePost(_, let query, _),
+				.uploadComment(_, let query),
+				.updateComment(_, _, let query),
+				.validationPayment(let query):
 			let encoder = JSONEncoder()
 			return try? encoder.encode(query)
 
+		default:
+			return nil
 		}
 	}
 }

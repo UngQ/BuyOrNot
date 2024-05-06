@@ -19,7 +19,7 @@ enum ScrollDirection {
 	case down
 }
 
-class ContentPostViewController: BaseViewController {
+final class ContentPostViewController: BaseViewController {
 
 
 	lazy var viewModel = ContentPostViewModel()

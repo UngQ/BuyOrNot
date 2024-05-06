@@ -37,14 +37,12 @@ final class SignInViewModel: ViewModelType {
 			input.passwordText
 		)
 
-
 		loginObservable
 			.map { !$0.isEmpty && !$1.isEmpty }
 			.subscribe(with: self) { owner, valid in
 				loginValid.accept(valid)
 			}
 			.disposed(by: disposeBag)
-
 
 
 		input.loginButtonTapped
@@ -59,7 +57,7 @@ final class SignInViewModel: ViewModelType {
 				//회원 탈퇴시, 비밀번호 확인용 (API에서 비밀번호값 미제공)
 				UserDefaults.standard.set(loginQuery.password, forKey: UserDefaultsKey.password.key)
 
-				return NetworkManager.createLogin(query: loginQuery)
+				return NetworkManager.performRequest(route: .login(query: loginQuery), decodingType: LoginModel.self)
 					.catch { error -> Single<LoginModel> in
 						errorMessage.accept("이메일 혹은 비밀번호가 올바르지 않습니다.")
 						return Single.never()
@@ -102,7 +100,6 @@ final class SignInViewModel: ViewModelType {
 			
 			keychain.delete("userEmail")
 			keychain.delete("userPassword")
-//print(UserDefaults.standard.bool(forKey: "autoLoginEnabled"))
 
 			print("여기까지와야함")
 		}

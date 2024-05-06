@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class SignUpViewModel: ViewModelType {
+final class SignUpViewModel: ViewModelType {
 
 	var disposeBag: DisposeBag = DisposeBag()
 
@@ -24,7 +24,6 @@ class SignUpViewModel: ViewModelType {
 		let isValidation: Driver<Bool>
 
 	}
-
 
 	func transform(input: Input) -> Output {
 		let validationMessage = PublishRelay<String>()

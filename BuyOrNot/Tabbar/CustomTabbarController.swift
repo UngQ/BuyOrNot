@@ -12,12 +12,11 @@ import AVFoundation
 import IQKeyboardManagerSwift
 
 
-class CustomTabBarController: UITabBarController {
+final class CustomTabBarController: UITabBarController {
 
 	let disposeBag = DisposeBag()
 	var category = ""
 	
-
 	let postVC = PostViewController()
 	lazy var firstVC = {
 		let vc = postVC
@@ -63,9 +62,6 @@ class CustomTabBarController: UITabBarController {
 					guard let image = image else { return }
 					let circularProfileImage = self.circularImage(from: image, scaledToSize: CGSize(width: 30, height: 30))
 					self.thirdVC.tabBarItem = UITabBarItem(title: myProfile.nick, image: circularProfileImage.withRenderingMode(.alwaysOriginal), selectedImage: nil)
-
-
-
 				}
 			}
 			.disposed(by: disposeBag)
@@ -137,23 +133,11 @@ class CustomTabBarController: UITabBarController {
 		let camera = UIAlertAction(title: "카메라", style: .default) { action in
 			self.openCamera()
 		}
-		let web = UIAlertAction(title: "네이버", style: .default) { action in
 
-			//			   let vc = ImageWebSearchViewController()
-			//			   vc.valueSpace = {
-			//				   self.selectedURL = $0
-			//				   self.selectedImage = nil
-			//				   self.mainView.optionTableView.reloadRows(at: [IndexPath(row: 0, section: OptionType.image.rawValue)], with: .none)
-			//			   }
-			//
-			//			   self.present(vc, animated: true)
-
-		}
 		let cancel = UIAlertAction(title: "취소", style: .cancel)
 
 		alert.addAction(gallery)
 		alert.addAction(camera)
-		alert.addAction(web)
 		alert.addAction(cancel)
 
 		present(alert, animated: true)
@@ -183,7 +167,7 @@ class CustomTabBarController: UITabBarController {
 		[cancelAlert, goToSettingAlert]
 			.forEach(alertController.addAction(_:))
 		DispatchQueue.main.async {
-			self.present(alertController, animated: true) // must be used from main thread only
+			self.present(alertController, animated: true)
 		}
 	}
 
@@ -191,7 +175,6 @@ class CustomTabBarController: UITabBarController {
 		#if targetEnvironment(simulator)
 		fatalError()
 		#endif
-
 
 		AVCaptureDevice.requestAccess(for: .video) { [weak self] isAuthorized in
 			guard isAuthorized else { 
@@ -201,7 +184,7 @@ class CustomTabBarController: UITabBarController {
 			DispatchQueue.main.async {
 				  let pickerController = UIImagePickerController()
 				  pickerController.sourceType = .camera
-				  pickerController.allowsEditing = false
+				  pickerController.allowsEditing = true
 				  pickerController.mediaTypes = ["public.image"]
 				  pickerController.delegate = self
 				  self?.present(pickerController, animated: true)

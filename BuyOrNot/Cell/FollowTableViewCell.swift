@@ -31,9 +31,8 @@ class FollowTableViewCell: UITableViewCell {
 
 	 let followButton: UIButton = {
 		 let button = UIButton(type: .system)
-		 button.setTitle("Follow", for: .normal)
-		 button.layer.borderWidth = 1
-		 button.layer.borderColor = UIColor.blue.cgColor
+		 button.tintColor = .white
+		 button.titleLabel?.font = .boldSystemFont(ofSize: 12)
 		 button.layer.cornerRadius = 5
 		 return button
 	 }()

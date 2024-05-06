@@ -8,7 +8,7 @@
 import UIKit
 import RxSwift
 
-class FollowViewController: BaseViewController {
+final class FollowViewController: BaseViewController {
 
 	var viewModel: ProfileViewModel?
 
@@ -63,6 +63,7 @@ class FollowViewController: BaseViewController {
 
 			output.data.map { $0.followers }
 				.drive(listTableView.rx.items(cellIdentifier: FollowTableViewCell.id, cellType: FollowTableViewCell.self)) { row, element, cell  in
+					cell.selectionStyle = .none
 
 					guard let viewModel = self.viewModel else { return }
 
@@ -134,6 +135,7 @@ class FollowViewController: BaseViewController {
 
 						if isFollowing {
 							cell.followButton.setTitle("언팔하기", for: .normal)
+							cell.followButton.backgroundColor = .lightGray
 							cell.followButton.rx
 								.tap
 								.map { row }
@@ -141,6 +143,7 @@ class FollowViewController: BaseViewController {
 								.disposed(by: cell.disposeBag)
 						} else {
 							cell.followButton.setTitle("팔로우하기", for: .	normal)
+							cell.followButton.backgroundColor = .systemBlue
 							cell.followButton.rx
 								.tap
 								.map { row }
@@ -160,6 +163,7 @@ class FollowViewController: BaseViewController {
 
 							if isFollowing {
 								cell.followButton.setTitle("언팔하기", for: .normal)
+								cell.followButton.backgroundColor = .lightGray
 								cell.followButton.rx
 									.tap
 									.map { row }
@@ -167,6 +171,7 @@ class FollowViewController: BaseViewController {
 									.disposed(by: cell.disposeBag)
 							} else {
 								cell.followButton.setTitle("팔로우하기", for: .	normal)
+								cell.followButton.backgroundColor = .systemBlue
 								cell.followButton.rx
 									.tap
 									.map { row }
@@ -248,7 +253,8 @@ class FollowViewController: BaseViewController {
 					if viewModel.myOrOther {
 						viewModel.followerOrFollowing = true
 
-						cell.followButton.backgroundColor = .brown
+						cell.followButton.setTitle("삭제", for: .normal)
+						cell.followButton.backgroundColor = .lightGray
 
 
 						cell.followButton.rx
@@ -268,6 +274,7 @@ class FollowViewController: BaseViewController {
 
 							if isFollowing {
 								cell.followButton.setTitle("언팔하기", for: .normal)
+								cell.followButton.backgroundColor = .lightGray
 								cell.followButton.rx
 									.tap
 									.map { row }
@@ -275,6 +282,7 @@ class FollowViewController: BaseViewController {
 									.disposed(by: cell.disposeBag)
 							} else {
 								cell.followButton.setTitle("팔로우하기", for: .	normal)
+								cell.followButton.backgroundColor = .systemBlue
 								cell.followButton.rx
 									.tap
 									.map { row }

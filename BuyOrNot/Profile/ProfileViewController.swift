@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class ProfileViewController: BaseViewController {
+final class ProfileViewController: BaseViewController {
 
 	let viewModel = ProfileViewModel()
 
@@ -92,16 +92,16 @@ class ProfileViewController: BaseViewController {
 		followingButton.titleLabel?.font = .boldSystemFont(ofSize: 16)
 
 
-		postsButton.setTitleColor(.textPoint, for: .normal) // Customize color as needed
+		postsButton.setTitleColor(.textPoint, for: .normal)
 		postsButton.addTarget(self, action: #selector(postsButtonTapped), for: .touchUpInside)
 
 
 
-		 followersButton.setTitleColor(.textPoint, for: .normal) // Customize color as needed
+		 followersButton.setTitleColor(.textPoint, for: .normal)
 		 followersButton.addTarget(self, action: #selector(followersButtonTapped), for: .touchUpInside)
 
 
-		 followingButton.setTitleColor(.textPoint, for: .normal) // Customize color as needed
+		 followingButton.setTitleColor(.textPoint, for: .normal)
 		 followingButton.addTarget(self, action: #selector(followingButtonTapped), for: .touchUpInside)
 	 }
 
@@ -279,20 +279,17 @@ extension ProfileViewController: ContentPostViewControllerDelegate {
 
 				UIView.animate(withDuration: 0.3) {
 					self.horizontalStackView.isHidden = false
-//					self.navigationController?.isNavigationBarHidden = false
 					self.containerView.snp.remakeConstraints { make in
 						make.top.equalTo(self.profileImageView.snp.bottom).offset(10)
 						make.horizontalEdges.equalToSuperview()
 						make.bottom.equalTo(self.view.safeAreaLayoutGuide)
 					}
-
 					self.view.layoutIfNeeded()
 				}
 
 		case .up:
 			UIView.animate(withDuration: 0.3) {
 				self.horizontalStackView.isHidden = true
-//				self.navigationController?.isNavigationBarHidden = true
 				self.containerView.snp.remakeConstraints { make in
 					   make.edges.equalTo(self.view.safeAreaLayoutGuide)
 				   }

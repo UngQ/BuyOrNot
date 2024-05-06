@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class UploadPostViewModel: ViewModelType {
+final class UploadPostViewModel: ViewModelType {
 
     var disposeBag: DisposeBag = DisposeBag()
 	var category = ""

@@ -16,7 +16,7 @@ enum Content: Int {
 	case dislikePosts
 }
 
-class ContentPostViewModel: ViewModelType {
+final class ContentPostViewModel: ViewModelType {
 
 	var content: Content?
 
@@ -35,8 +35,6 @@ class ContentPostViewModel: ViewModelType {
 
 
 	struct Input {
-
-
 	}
 
 	struct Output {

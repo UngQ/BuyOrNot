@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PurchaseListViewController: BaseViewController {
+final class PurchaseListViewController: BaseViewController {
 
 	let viewModel = PurchaseListViewModel()
 
@@ -33,7 +33,7 @@ class PurchaseListViewController: BaseViewController {
 		}
 
 		listTableView.register(PurchaseListTableViewCell.self, forCellReuseIdentifier: PurchaseListTableViewCell.id)
-		listTableView.rowHeight = 80
+		listTableView.rowHeight = 60
 
 		viewModel.viewDidLoadTrigger.accept(())
 
@@ -66,7 +66,7 @@ class PurchaseListViewController: BaseViewController {
 			.map { $0.data }
 			.drive(listTableView.rx.items(cellIdentifier: PurchaseListTableViewCell.id, cellType: PurchaseListTableViewCell.self)) { row, element, cell  in
 
-				cell.nameLabel.text = element.productName
+				cell.nameLabel.text = "🗒️ \(element.productName)"
 				cell.priceLabel.text = "\(element.price)원"
 
 			}

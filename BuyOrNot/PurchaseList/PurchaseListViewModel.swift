@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class PurchaseListViewModel: ViewModelType {
+final class PurchaseListViewModel: ViewModelType {
 
 	var disposeBag: DisposeBag = DisposeBag()
 

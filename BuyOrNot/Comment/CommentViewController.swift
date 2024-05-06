@@ -14,7 +14,7 @@ protocol CommentViewControllerDelegate: AnyObject {
 }
 
 
-class CommentViewController: BaseViewController {
+final class CommentViewController: BaseViewController {
 
 	let viewModel = CommentViewModel()
 	weak var commentVCDelegate: CommentViewControllerDelegate?
@@ -45,9 +45,6 @@ class CommentViewController: BaseViewController {
 		super.viewDidLoad()
 		self.navigationItem.title = "댓글"
 
-//		presentHalfModal()
-
-	
 		setupConstraints()
 	}
 
@@ -110,10 +107,7 @@ class CommentViewController: BaseViewController {
 					.map { row }
 					.bind(to: editButtonTapped)
 					.disposed(by: cell.disposeBag)
-//				cell.deleteButton.rx.tap
-//					.map { row }
-//					.bind(to: deleteButtonTapped)
-//					.disposed(by: cell.disposeBag)
+
 
 				cell.deleteButton.rx.tap
 					.subscribe(with: self) { owner, _ in
@@ -157,17 +151,12 @@ class CommentViewController: BaseViewController {
 
 							owner.commentVCDelegate?.pushOthersProfile(myOrOther: true, id: myId)
 							owner.dismiss(animated: true)
-//							owner.navigationController?.pushViewController(vc, animated: true)
-							
+		
 						} else {
 
 							owner.commentVCDelegate?.pushOthersProfile(myOrOther: false, id: element.creator.user_id)
 							owner.dismiss(animated: true)
-//							vc.viewModel.myOrOther = false
-//							vc.viewModel.othersId = element.creator.user_id
-//							vc.tabmanVC.myOrOthers = false
-//							vc.tabmanVC.myPostsVC.viewModel.myId = element.creator.user_id
-//							owner.navigationController?.pushViewController(vc, animated: true)
+
 						}
 					}
 					.disposed(by: cell.disposeBag)

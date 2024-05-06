@@ -18,7 +18,7 @@ class CommentTableViewCell: UITableViewCell {
 		imageView.contentMode = .scaleAspectFill
 		imageView.layer.cornerRadius = 20
 		imageView.clipsToBounds = true
-		imageView.image = UIImage(systemName: "person.crop.circle") // Placeholder image
+		imageView.image = UIImage(systemName: "person.crop.circle")
 		return imageView
 	}()
 
@@ -134,9 +134,5 @@ class CommentTableViewCell: UITableViewCell {
 
 	}
 
-//	func configure(with comment: Comment) {
-//		nicknameLabel.text = comment.nickname
-//		dateLabel.text = comment.date
-//		commentLabel.text = comment.text
-//	}
+
 }

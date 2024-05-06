@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PasswordViewController: BaseViewController {
+final class PasswordViewController: BaseViewController {
 
 	let viewModel = PasswordViewModel()
 
@@ -62,11 +62,7 @@ class PasswordViewController: BaseViewController {
 				owner.navigationController?.pushViewController(NicknameViewController(), animated: true)
 			}
 			.disposed(by: disposeBag)
-
-
 	}
-
-
 
 	override func configureLayout() {
 		view.addSubview(passwordTextField)

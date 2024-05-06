@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class ProfileViewModel: ViewModelType {
+final class ProfileViewModel: ViewModelType {
 
 	var myOrOther = true
 	var othersId: String = ""
@@ -177,7 +177,6 @@ class ProfileViewModel: ViewModelType {
 				print("HiHI")
 
 				var newData = self.profileData.value
-//				newData.following.removeAll { $0.user_id == follower.user_id }
 				self.myFollowingData.removeAll { $0.user_id == follow.user_id }
 
 				self.profileData.accept(newData)
@@ -213,7 +212,6 @@ class ProfileViewModel: ViewModelType {
 				print("HiHI")
 
 				var newData = self.profileData.value
-//				newData.following.append(follower)
 				self.myFollowingData.append(follow)
 
 				self.profileData.accept(newData)

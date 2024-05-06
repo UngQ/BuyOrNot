@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class NicknameViewModel: ViewModelType {
+final class NicknameViewModel: ViewModelType {
 
 	var disposeBag: DisposeBag = DisposeBag()
 
@@ -21,7 +21,6 @@ class NicknameViewModel: ViewModelType {
 	struct Output {
 		let isValidation: Driver<Bool>
 		let isCompleteJoin: Driver<Bool>
-
 	}
 
 	func transform(input: Input) -> Output {

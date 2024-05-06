@@ -10,8 +10,7 @@ import RxSwift
 import RxCocoa
 import Kingfisher
 
-
-class PostViewModel: ViewModelType {
+final class PostViewModel: ViewModelType {
 
 	var totalOrDetail = true
 	var id: String?

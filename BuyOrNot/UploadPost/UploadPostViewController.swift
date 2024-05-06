@@ -10,7 +10,7 @@ import SnapKit
 import Kingfisher
 import Alamofire
 
-class UploadPostViewController: BaseViewController {
+final class UploadPostViewController: BaseViewController {
 
 	let viewModel = UploadPostViewModel()
 

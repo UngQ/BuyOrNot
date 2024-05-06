@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NicknameViewController: BaseViewController {
+final class NicknameViewController: BaseViewController {
 
 
 	let viewModel = NicknameViewModel()
@@ -24,7 +24,6 @@ class NicknameViewController: BaseViewController {
 	}
 
 	override func bind() {
-
 
 		let input = NicknameViewModel.Input(nickname: nicknameTextField.rx.text.orEmpty,
 											nextButtonTap: nextButton.rx.tap)
@@ -48,11 +47,7 @@ class NicknameViewController: BaseViewController {
 
 			}
 			.disposed(by: disposeBag)
-
-
 	}
-
-
 
 	override func configureLayout() {
 		view.addSubview(nicknameTextField)

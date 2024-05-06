@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class EditCommentViewModel: ViewModelType {
+final class EditCommentViewModel: ViewModelType {
 
 	var disposeBag = DisposeBag()
 	var postId = ""
