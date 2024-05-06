@@ -108,7 +108,6 @@ final class ProfileViewController: BaseViewController {
 	@objc private func postsButtonTapped() {
 		UIView.animate(withDuration: 0.3) {
 			self.horizontalStackView.isHidden = true
-			self.navigationController?.isNavigationBarHidden = true
 			self.containerView.snp.remakeConstraints { make in
 				make.edges.equalTo(self.view.safeAreaLayoutGuide)
 			}
