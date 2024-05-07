@@ -62,6 +62,7 @@ final class SignInViewController: BaseViewController {
 		output.loginSuccessTrigger
 			.drive(with: self) { owner, _ in
 				print("대는겨ㅇㅇㅇ??")
+				owner.view.endEditing(true)
 				owner.successLoginLottieView.isHidden = false
 				owner.successLoginLottieView.play { completed in
 
@@ -73,6 +74,7 @@ final class SignInViewController: BaseViewController {
 						owner.viewModel.handleAutoLogin(email, password: password, enable: true)
 						
 					}
+
 
 					UIViewController.changeRootView(to: CustomTabBarController(), isNav: true)
 
