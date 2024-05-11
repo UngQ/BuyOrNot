@@ -63,6 +63,7 @@ final class SignInViewController: BaseViewController {
 			.drive(with: self) { owner, _ in
 				print("대는겨ㅇㅇㅇ??")
 				owner.view.endEditing(true)
+
 				owner.successLoginLottieView.isHidden = false
 				owner.successLoginLottieView.play { completed in
 
