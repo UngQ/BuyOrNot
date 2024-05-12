@@ -67,7 +67,7 @@ class CommentTableViewCell: UITableViewCell {
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
-		profileImageView.image = nil
+		profileImageView.image = UIImage(systemName: "person.crop.circle")
 
 		disposeBag = DisposeBag()
 	}
