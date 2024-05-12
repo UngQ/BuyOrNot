@@ -46,10 +46,21 @@ class PostTableViewCell: UITableViewCell {
 		likeDislikeProgressView.isHidden = true
 		likeLabel.isHidden = true
 		dislikeLabel.isHidden = true
+
+		buyButton.isHidden = false
 		buyButton.backgroundColor = .systemPink
 		buyButton.setTitle("구매하기", for: .normal)
 		buyButton.isEnabled = true
+
+		deleteButton.snp.remakeConstraints { make in
+			make.bottom.equalTo(postImageView.snp.top).offset(-10)
+			  make.trailing.equalToSuperview().inset(10)
+			  make.height.equalTo(25)
+			  make.width.equalTo(deleteButton.snp.height)
+		}
+
 		disposeBag = DisposeBag()
+
 	}
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
