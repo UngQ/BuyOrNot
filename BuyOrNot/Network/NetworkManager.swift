@@ -29,8 +29,8 @@ struct NetworkManager {
 			do {
 				let urlRequest = try route.asURLRequest()
 
-				//포스트 업로드
-				if case Router.uploadImage(let query) = route {
+				switch route {
+				case .uploadImage(let query):
 					guard let image = query as? ImagePostQuery else { return Disposables.create() }
 					AF.upload(multipartFormData: { multipartFormData in
 						multipartFormData.append(image.file,
@@ -47,9 +47,7 @@ struct NetworkManager {
 							single(.failure(error))
 						}
 					}
-				//프로필 수정
-				} else if case Router.editProfile(let query) = route {
-
+				case .editProfile(let query):
 					guard let editData = query as? ProfileQuery else { return Disposables.create() }
 
 					AF.upload(multipartFormData: { multipartFormData in
@@ -73,14 +71,12 @@ struct NetworkManager {
 							single(.failure(error))
 						}
 					}
-
-				//그 외
-				} else {
+				default:
 					AF.request(urlRequest)
 						.validate(statusCode: 200..<300)
 						.responseDecodable(of: T.self) { response in
 							print(response.request?.url)
-							
+
 							switch response.result {
 							case .success(let result):
 								print("success")
@@ -94,6 +90,72 @@ struct NetworkManager {
 							}
 						}
 				}
+//
+//				//포스트 업로드
+//				if case Router.uploadImage(let query) = route {
+//					guard let image = query as? ImagePostQuery else { return Disposables.create() }
+//					AF.upload(multipartFormData: { multipartFormData in
+//						multipartFormData.append(image.file,
+//												 withName: "files",
+//												 fileName: "buyOrNot.jpg",
+//												 mimeType: "image/jpg")
+//					}, with: urlRequest)
+//					.validate(statusCode: 200..<300)
+//					.responseDecodable(of: T.self) { response in
+//						switch response.result {
+//						case .success(let result):
+//							single(.success(result))
+//						case .failure(let error):
+//							single(.failure(error))
+//						}
+//					}
+//				//프로필 수정
+//				} else if case Router.editProfile(let query) = route {
+//
+//					guard let editData = query as? ProfileQuery else { return Disposables.create() }
+//
+//					AF.upload(multipartFormData: { multipartFormData in
+//
+//						if let data = editData.file {
+//							print("업로드되나요")
+//							multipartFormData.append(data, withName: "profile", fileName: "buyOrNot.jpg", mimeType: "image/jpg")
+//						}
+//						if let nick = editData.nick.data(using: .utf8) {
+//							multipartFormData.append(nick, withName: "nick")
+//						}
+//					}, with: urlRequest)
+//					.validate(statusCode: 200..<300)
+//					.responseDecodable(of: T.self) { response in
+//						switch response.result {
+//						case .success(let result):
+//							print("하ㅓ잉")
+//							single(.success(result))
+//						case .failure(let error):
+//							print(error)
+//							single(.failure(error))
+//						}
+//					}
+//
+//				//그 외
+//				} else {
+//					AF.request(urlRequest)
+//						.validate(statusCode: 200..<300)
+//						.responseDecodable(of: T.self) { response in
+//							print(response.request?.url)
+//							
+//							switch response.result {
+//							case .success(let result):
+//								print("success")
+//								single(.success(result))
+//								print(response.response?.statusCode)
+//							case .failure(let error):
+//								print("fail")
+//								print(response.response?.statusCode)
+//								single(.failure(error))
+//
+//							}
+//						}
+//				}
 			} catch {
 				single(.failure(error))
 			}
