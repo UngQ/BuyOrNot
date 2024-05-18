@@ -49,6 +49,10 @@ enum Router {
 	case paymentList
 
 	case naverPhoto(query: String, start: Int, display: String)
+
+	//chat
+	case myChats
+
 }
 
 extension Router: TargetType {
@@ -75,7 +79,8 @@ extension Router: TargetType {
 				.othersProfile,
 				.withdraw,
 				.paymentList,
-				.naverPhoto:
+				.naverPhoto,
+				.myChats:
 			return .get
 
 		case .login,
@@ -165,6 +170,9 @@ extension Router: TargetType {
 		case .naverPhoto:
 			return "/v1/search/image"
 
+		case .myChats:
+			return "/v1/chats"
+
 		}
 	}
 
@@ -213,7 +221,8 @@ extension Router: TargetType {
 			.deleteFollow,
 			.deletePost,
 			.withdraw,
-			.paymentList
+			.paymentList,
+			.myChats
 			:
 			return [
 				HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",

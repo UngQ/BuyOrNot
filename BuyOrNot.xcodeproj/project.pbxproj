@@ -109,6 +109,9 @@
 		A5B4967C2BD04A500079A3B1 /* TotalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B4967B2BD04A500079A3B1 /* TotalViewController.swift */; };
 		A5B4967F2BD04F330079A3B1 /* ContentPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B4967E2BD04F330079A3B1 /* ContentPostViewController.swift */; };
 		A5C9EEE62BE3135900CABA05 /* EditCommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C9EEE52BE3135900CABA05 /* EditCommentViewModel.swift */; };
+		A5FDCAB32BF72014006977B7 /* MessageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FDCAB22BF72014006977B7 /* MessageListViewController.swift */; };
+		A5FDCAB52BF72252006977B7 /* MessageListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FDCAB42BF72252006977B7 /* MessageListViewModel.swift */; };
+		A5FDCAB72BF7276E006977B7 /* ChatListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FDCAB62BF7276E006977B7 /* ChatListModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -203,6 +206,9 @@
 		A5B4967B2BD04A500079A3B1 /* TotalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalViewController.swift; sourceTree = "<group>"; };
 		A5B4967E2BD04F330079A3B1 /* ContentPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPostViewController.swift; sourceTree = "<group>"; };
 		A5C9EEE52BE3135900CABA05 /* EditCommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCommentViewModel.swift; sourceTree = "<group>"; };
+		A5FDCAB22BF72014006977B7 /* MessageListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListViewController.swift; sourceTree = "<group>"; };
+		A5FDCAB42BF72252006977B7 /* MessageListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListViewModel.swift; sourceTree = "<group>"; };
+		A5FDCAB62BF7276E006977B7 /* ChatListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -315,6 +321,7 @@
 				A55990A32BCBFFB50096B98A /* SignUp */,
 				A55990F82BCC49FF0096B98A /* Tabbar */,
 				A55990E72BCC1D460096B98A /* Posts */,
+				A5FDCAB12BF71FF4006977B7 /* MessageList */,
 				A59F222A2BE3F1DA003B477D /* Payment */,
 				A558A0122BD63767000C1B9D /* Comment */,
 				A5B4967D2BD04F160079A3B1 /* ContentPost */,
@@ -512,6 +519,7 @@
 				A59F225C2BE7C91D003B477D /* PaymentsDataModel.swift */,
 				A59F225E2BE7C939003B477D /* NaverImagesModel.swift */,
 				A59F22602BE7C945003B477D /* NaverImageModel.swift */,
+				A5FDCAB62BF7276E006977B7 /* ChatListModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -532,6 +540,15 @@
 				A5589FEE2BD38263000C1B9D /* ContentPostViewModel.swift */,
 			);
 			path = ContentPost;
+			sourceTree = "<group>";
+		};
+		A5FDCAB12BF71FF4006977B7 /* MessageList */ = {
+			isa = PBXGroup;
+			children = (
+				A5FDCAB22BF72014006977B7 /* MessageListViewController.swift */,
+				A5FDCAB42BF72252006977B7 /* MessageListViewModel.swift */,
+			);
+			path = MessageList;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -651,8 +668,10 @@
 				A55990D72BCC1BC60096B98A /* NicknameViewModel.swift in Sources */,
 				A55990C62BCC1A950096B98A /* UIViewController+Ex.swift in Sources */,
 				A59F22532BE7C8EA003B477D /* CreatorModel.swift in Sources */,
+				A5FDCAB32BF72014006977B7 /* MessageListViewController.swift in Sources */,
 				A55990E42BCC1C530096B98A /* ValidationEmailQuery.swift in Sources */,
 				A5589FFC2BD520D1000C1B9D /* UICollectionViewFlowLayout+Ex.swift in Sources */,
+				A5FDCAB72BF7276E006977B7 /* ChatListModel.swift in Sources */,
 				A59F22492BE7C8AB003B477D /* MessageModel.swift in Sources */,
 				A55990A52BCC00760096B98A /* SignInViewController.swift in Sources */,
 				A59F22452BE7C891003B477D /* LoginModel.swift in Sources */,
@@ -697,6 +716,7 @@
 				A55990CB2BCC1AC30096B98A /* ViewModelType.swift in Sources */,
 				A59F22242BE39330003B477D /* EditProfileViewModel.swift in Sources */,
 				A59F22592BE7C90B003B477D /* FollowModel.swift in Sources */,
+				A5FDCAB52BF72252006977B7 /* MessageListViewModel.swift in Sources */,
 				A55990E22BCC1C3B0096B98A /* LoginQuery.swift in Sources */,
 				A5589FF82BD4E087000C1B9D /* ProfileViewController.swift in Sources */,
 				A55990A72BCC00830096B98A /* SignInViewModel.swift in Sources */,

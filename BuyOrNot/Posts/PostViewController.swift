@@ -22,6 +22,7 @@ final class PostViewController: BaseViewController {
 	let tableView = UITableView()
 	private let refreshControl = UIRefreshControl()
 
+	private let messageListButton = UIButton()
 
 	@objc func reloadData() {
 		self.loadingLottieView.isHidden = false
@@ -40,12 +41,30 @@ final class PostViewController: BaseViewController {
 		if viewModel.totalOrDetail {
 			setNavigationTitleImage()
 			setupInteractiveTitleAsLeftBarButtonItem()
+			setupMessageListButton()
 		} else {
 			self.navigationItem.title = "게시물"
 		}
 	}
 
+	func setupMessageListButton() {
 
+		messageListButton.setBackgroundImage(UIImage(systemName: "paperplane.fill"), for: .normal)
+		messageListButton.layer.cornerRadius = 15
+		messageListButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+//		messageListButton.tintColor = .systemBlue
+
+
+//		messageListButton.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
+		messageListButton.addTarget(self, action: #selector(messageListButtonTapped), for: .touchUpInside)
+
+		navigationItem.rightBarButtonItem = UIBarButtonItem(customView: messageListButton)
+	}
+
+	@objc private func messageListButtonTapped() {
+
+		navigationController?.pushViewController(MessageListViewController(), animated: true)
+	}
 
 	func setupInteractiveTitleAsLeftBarButtonItem() {
 		let titleButton = UIButton(type: .system)
