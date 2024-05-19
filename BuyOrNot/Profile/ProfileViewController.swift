@@ -18,6 +18,7 @@ final class ProfileViewController: BaseViewController {
 
 	let logoutOrFollowButton = UIButton()
 	let profileSettingButton = UIButton()
+	let messageButton = UIButton()
 
 	let profileImageView = UIImageView()
 
@@ -134,11 +135,14 @@ final class ProfileViewController: BaseViewController {
 
 	override func bind() {
 		let input = ProfileViewModel.Input(navigationRightButtonTapped: logoutOrFollowButton.rx.tap,
+										   messageButtonTapped: messageButton.rx.tap,
 										   deleteButtonTapped: nil
 										   ,unfollowButtonTapped: nil,
 										   followButtonTapped: nil)
 
 		let output = viewModel.transform(input: input)
+
+
 
 		output.data
 			.drive(with: self) { owner, profileData in
@@ -160,7 +164,8 @@ final class ProfileViewController: BaseViewController {
 						owner.logoutOrFollowButton.setImage(UIImage(systemName: "person.crop.circle.fill.badge.plus"), for: .normal)
 						owner.logoutOrFollowButton.backgroundColor = .systemBlue
 					}
-					owner.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: owner.logoutOrFollowButton)]
+					owner.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: owner.logoutOrFollowButton),
+																UIBarButtonItem(customView: owner.messageButton)]
 				}
 
 
@@ -206,6 +211,12 @@ final class ProfileViewController: BaseViewController {
 			}
 			.disposed(by: disposeBag)
 
+		output.messageButtonTapped
+			.drive(with: self) { owner, roomId in
+				print(roomId)
+			}
+			.disposed(by: disposeBag)
+
 
 	}
 
@@ -218,6 +229,11 @@ final class ProfileViewController: BaseViewController {
 		 profileSettingButton.layer.cornerRadius = 15
 		 profileSettingButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
 		 profileSettingButton.tintColor = .systemBlue
+
+		 messageButton.setBackgroundImage(UIImage(systemName: "plus.message.fill"), for: .normal)
+		 messageButton.layer.cornerRadius = 15
+		 messageButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+//		 profileSettingButton.tintColor = .systemBlue
 
 
 		 [postsStackView, followersStackView, followingStackView].forEach { stackView in

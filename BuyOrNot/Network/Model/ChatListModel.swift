@@ -21,14 +21,14 @@ struct ChatModel: Decodable, Equatable {
 	let createdAt: String
 	let updatedAt: String
 	let participants: [CreatorModel]
-	let lastChat: LastChatModel?
+	let lastChat: ChatContentModel?
 
 	static func == (lhs: ChatModel, rhs: ChatModel) -> Bool {
 		return lhs.room_id == rhs.room_id
 	 }
 }
 
-struct LastChatModel: Decodable {
+struct ChatContentModel: Decodable {
 	let chat_id: String
 	let room_id: String
 	let content: String
@@ -36,3 +36,12 @@ struct LastChatModel: Decodable {
 	let sender: CreatorModel
 	let files: [String]
 }
+
+
+
+struct ChatRoomModel: Decodable {
+
+	let data: [ChatContentModel]
+
+}
+

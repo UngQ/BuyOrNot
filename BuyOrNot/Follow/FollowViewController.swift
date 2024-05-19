@@ -38,6 +38,7 @@ final class FollowViewController: BaseViewController {
 		let unfollowButtonTapped = PublishSubject<Int>()
 
 		let input = ProfileViewModel.Input(navigationRightButtonTapped: nil,
+										   messageButtonTapped: nil,
 										   deleteButtonTapped: deleteButtonTapped.asObservable(),
 										   unfollowButtonTapped: unfollowButtonTapped.asObservable(),
 										   followButtonTapped: followButtonTapped.asObservable())

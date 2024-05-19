@@ -52,6 +52,8 @@ enum Router {
 
 	//chat
 	case myChats
+	case makeChat(query: Encodable)
+	case lookChat(id: String)
 
 }
 
@@ -80,7 +82,8 @@ extension Router: TargetType {
 				.withdraw,
 				.paymentList,
 				.naverPhoto,
-				.myChats:
+				.myChats,
+				.lookChat:
 			return .get
 
 		case .login,
@@ -91,7 +94,8 @@ extension Router: TargetType {
 			 .uploadComment,
 			 .likePost,
 			 .plusFollow,
-			 .validationPayment:
+			 .validationPayment,
+			 .makeChat:
 			return .post
 
 		case .updateComment,
@@ -170,8 +174,12 @@ extension Router: TargetType {
 		case .naverPhoto:
 			return "/v1/search/image"
 
-		case .myChats:
+		case .myChats,
+				.makeChat:
 			return "/v1/chats"
+
+		case .lookChat(let id):
+			return "/v1/chats/\(id)"
 
 		}
 	}
@@ -203,7 +211,8 @@ extension Router: TargetType {
 				.likePost,
 				.uploadComment,
 				.updateComment,
-				.validationPayment:
+				.validationPayment,
+				.makeChat:
 			return [HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
 					HTTPHeader.contentType.rawValue: HTTPHeader.json.rawValue,
 					HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
@@ -222,7 +231,8 @@ extension Router: TargetType {
 			.deletePost,
 			.withdraw,
 			.paymentList,
-			.myChats
+			.myChats,
+			.lookChat
 			:
 			return [
 				HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
@@ -279,7 +289,8 @@ extension Router: TargetType {
 				.likePost(_, let query, _),
 				.uploadComment(_, let query),
 				.updateComment(_, _, let query),
-				.validationPayment(let query):
+				.validationPayment(let query),
+				.makeChat(let query):
 			let encoder = JSONEncoder()
 			return try? encoder.encode(query)
 

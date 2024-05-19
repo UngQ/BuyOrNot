@@ -29,6 +29,8 @@ final class ProfileViewModel: ViewModelType {
 	struct Input {
 
 		let navigationRightButtonTapped: ControlEvent<Void>?
+		let messageButtonTapped: ControlEvent<Void>?
+
 		let deleteButtonTapped: Observable<Int>?
 		let unfollowButtonTapped: Observable<Int>?
 		let followButtonTapped: Observable<Int>?
@@ -37,10 +39,12 @@ final class ProfileViewModel: ViewModelType {
 	struct Output {
 		let data: Driver<ProfileModel>
 		let navigationRightButtonTapped: Driver<Void>
+		let messageButtonTapped: Driver<String>
 	}
 
 	func transform(input: Input) -> Output {
 
+		let roomId = PublishSubject<String>()
 
 		if myOrOther {
 
@@ -226,8 +230,19 @@ final class ProfileViewModel: ViewModelType {
 			}
 			.disposed(by: disposeBag)
 
+		input.messageButtonTapped?
+			.flatMap({ _ in
+				NetworkManager.performRequest(route: .makeChat(query: ChatQuery(opponent_id: self.profileData.value.user_id)), decodingType: ChatModel.self)
+			})
+			.subscribe(with: self, onNext: { owner, result in
+				
+				roomId.onNext(result.room_id)
+			})
+			.disposed(by: disposeBag)
+
 		return Output(data: profileData.asDriver(),
-					  navigationRightButtonTapped: input.navigationRightButtonTapped?.asDriver() ?? Driver.never())
+					  navigationRightButtonTapped: input.navigationRightButtonTapped?.asDriver() ?? Driver.never(),
+					  messageButtonTapped: roomId.asDriver(onErrorJustReturn: ""))
 	}
 
 }
