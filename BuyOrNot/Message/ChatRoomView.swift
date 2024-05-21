@@ -9,6 +9,7 @@ import SwiftUI
 import RxSwift
 import Combine
 import ExyteChat
+import IQKeyboardManagerSwift
 
 struct ChatRoomView: View {
 
@@ -47,6 +48,7 @@ struct ChatRoomView: View {
 
 
 
+
 			HStack {
 				TextField("메세지를 입력해주세요.", text: $newMessage, axis: .vertical)
 					.lineLimit(3)
@@ -59,13 +61,15 @@ struct ChatRoomView: View {
 
 		}
 		.padding()
-		.navigationTitle("Direct Message")
+		.navigationTitle("Direct Message 💬")
 
 		.task {
 			SocketIOManager.shared?.establishConnection()
+			IQKeyboardManager.shared.enable = false
 		}
 		.onDisappear {
 			SocketIOManager.shared?.leaveConnection()
+			IQKeyboardManager.shared.enable = true
 		}
 	}
 

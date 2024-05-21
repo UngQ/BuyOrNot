@@ -10,6 +10,7 @@ import RxSwift
 import RxCocoa
 import SwiftUI
 
+
 final class ProfileViewController: BaseViewController {
 
 	let viewModel = ProfileViewModel()
@@ -217,7 +218,9 @@ final class ProfileViewController: BaseViewController {
 				print(roomId)
 				SocketIOManager.initializeSharedInstance(roomId: roomId)
 				let chatRoomView = ChatRoomView(viewModel: ChatRoomViewModel(chatId: roomId))
+
 				let hostingController = UIHostingController(rootView: chatRoomView)
+				
 				owner.navigationController?.pushViewController(hostingController, animated: true)
 			}
 			.disposed(by: disposeBag)
