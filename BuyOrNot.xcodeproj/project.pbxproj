@@ -79,6 +79,7 @@
 		A58FC0BD2BFC456800E23D45 /* SocketIOManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58FC0BC2BFC456800E23D45 /* SocketIOManager.swift */; };
 		A58FC0C02BFC459700E23D45 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = A58FC0BF2BFC459700E23D45 /* SocketIO */; };
 		A58FC0C22BFCE91100E23D45 /* MessageQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58FC0C12BFCE91100E23D45 /* MessageQuery.swift */; };
+		A58FC0C52BFCFE3B00E23D45 /* ExyteChat in Frameworks */ = {isa = PBXBuildFile; productRef = A58FC0C42BFCFE3B00E23D45 /* ExyteChat */; };
 		A59F22222BE39326003B477D /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F22212BE39326003B477D /* EditProfileViewController.swift */; };
 		A59F22242BE39330003B477D /* EditProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F22232BE39330003B477D /* EditProfileViewModel.swift */; };
 		A59F22262BE3C3DE003B477D /* ProfileQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F22252BE3C3DE003B477D /* ProfileQuery.swift */; };
@@ -231,6 +232,7 @@
 			files = (
 				A5B4966A2BCECE330079A3B1 /* IQKeyboardManagerSwift in Frameworks */,
 				A5B496772BD045560079A3B1 /* Tabman in Frameworks */,
+				A58FC0C52BFCFE3B00E23D45 /* ExyteChat in Frameworks */,
 				A558A04C2BD95EF9000C1B9D /* RxGesture in Frameworks */,
 				A59F22642BE9342D003B477D /* RxKeyboard in Frameworks */,
 				A59F22292BE3E92F003B477D /* iamport-ios in Frameworks */,
@@ -610,6 +612,7 @@
 				A59F22282BE3E92F003B477D /* iamport-ios */,
 				A59F22632BE9342D003B477D /* RxKeyboard */,
 				A58FC0BF2BFC459700E23D45 /* SocketIO */,
+				A58FC0C42BFCFE3B00E23D45 /* ExyteChat */,
 			);
 			productName = BuyOrNot;
 			productReference = A559908B2BCBFED00096B98A /* BuyOrNot.app */;
@@ -653,6 +656,7 @@
 				A59F22272BE3E92F003B477D /* XCRemoteSwiftPackageReference "iamport-ios" */,
 				A59F22622BE9342D003B477D /* XCRemoteSwiftPackageReference "RxKeyboard" */,
 				A58FC0BE2BFC459700E23D45 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */,
+				A58FC0C32BFCFE3B00E23D45 /* XCRemoteSwiftPackageReference "Chat" */,
 			);
 			productRefGroup = A559908C2BCBFED00096B98A /* Products */;
 			projectDirPath = "";
@@ -1084,6 +1088,14 @@
 				version = 16.1.0;
 			};
 		};
+		A58FC0C32BFCFE3B00E23D45 /* XCRemoteSwiftPackageReference "Chat" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/Chat.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.7;
+			};
+		};
 		A59F22272BE3E92F003B477D /* XCRemoteSwiftPackageReference "iamport-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/iamport/iamport-ios.git";
@@ -1168,6 +1180,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A58FC0BE2BFC459700E23D45 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
 			productName = SocketIO;
+		};
+		A58FC0C42BFCFE3B00E23D45 /* ExyteChat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A58FC0C32BFCFE3B00E23D45 /* XCRemoteSwiftPackageReference "Chat" */;
+			productName = ExyteChat;
 		};
 		A59F22282BE3E92F003B477D /* iamport-ios */ = {
 			isa = XCSwiftPackageProductDependency;

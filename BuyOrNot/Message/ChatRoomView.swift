@@ -7,6 +7,8 @@
 
 import SwiftUI
 import RxSwift
+import Combine
+import ExyteChat
 
 struct ChatRoomView: View {
 
@@ -20,30 +22,45 @@ struct ChatRoomView: View {
 
 
 
-			ScrollViewReader { proxy in
-			
-				List(viewModel.messages.data, id: \.chat_id) { chat in
-					ChatRowView(chat: chat)
-						.id(chat.chat_id)
-						.listRowSeparator(.hidden)
-				}
-				.listStyle(.plain)
-				.onChange(of: viewModel.messages.data) { _ in
-					scrollToBottom(proxy: proxy)
-				}
+//			ScrollViewReader { proxy in
+//				List(viewModel.messages.data, id: \.chat_id) { chat in
+//
+//					ChatRowView(chat: chat)
+//						.id(chat.chat_id)
+//						.listRowSeparator(.hidden)
+//				}
+//				.listStyle(.plain)
+//				.onChange(of: viewModel.messages.data) { _ in
+//					scrollToBottom(proxy: proxy)
+//				}
+//
+//			}
 
+			// Exyte Chat List View
+			ChatView(messages: $viewModel.messages.wrappedValue) { _ in
+
+			} inputViewBuilder: { textBinding, attachments, state, style, actionClosure, dismissKeyboardClosure in
+				EmptyView()
+				
 			}
+			.avatarSize(avatarSize: 0)
+
+
 
 			HStack {
-				TextField("내용을 입력해주세요", text: $newMessage, axis: .vertical)
+				TextField("메세지를 입력해주세요.", text: $newMessage, axis: .vertical)
 					.lineLimit(3)
+
 				Button(action: sendMessage, label: {
 					Image(systemName: "paperplane")
 				})
 			}
 			.padding()
+
 		}
+		.padding()
 		.navigationTitle("Direct Message")
+
 		.task {
 			SocketIOManager.shared?.establishConnection()
 		}
@@ -52,13 +69,13 @@ struct ChatRoomView: View {
 		}
 	}
 
-	private func scrollToBottom(proxy: ScrollViewProxy) {
-		if let lastMessage = viewModel.messages.data.last {
-			
-			proxy.scrollTo(lastMessage.chat_id, anchor: .bottom)
-
-		 }
-	 }
+//	private func scrollToBottom(proxy: ScrollViewProxy) {
+//		if let lastMessage = viewModel.messages.data.last {
+//			
+//			proxy.scrollTo(lastMessage.chat_id, anchor: .bottom)
+//
+//		 }
+//	 }
 
 	private func sendMessage() {
 
@@ -70,8 +87,6 @@ struct ChatRoomView: View {
 		}
 
 	}
-}
 
-//#Preview {
-//    ChatRoomView(viewModel: <#T##ChatRoomViewModel#>)
-//}
+	
+}

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ExyteChat
 
 struct ChatListModel: Decodable, Equatable {
 	let data: [ChatModel]
@@ -39,6 +40,17 @@ struct ChatContentModel: Decodable, Equatable {
 	static func == (lhs: ChatContentModel, rhs: ChatContentModel) -> Bool {
 		return lhs.chat_id == rhs.chat_id
 	 }
+
+	var toMessage: Message {
+
+		let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
+		var myChat: Bool = sender.user_id == myId
+		print("myId: \(myId), sender.user_id: \(sender.user_id), isCurrentUser: \(myChat)")
+
+
+		return Message(id: chat_id, user: User(id: sender.user_id, name: sender.nick, avatarURL: nil, isCurrentUser: myChat), createdAt: ISO8601DateFormatter().date(from: createdAt) ?? Date(), text: content ?? "")
+
+	}
 }
 
 

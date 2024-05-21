@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import RxSwift
+import ExyteChat
 
 final class ChatRoomViewModel: ObservableObject {
 
@@ -17,13 +18,16 @@ final class ChatRoomViewModel: ObservableObject {
 	var chatId: String
 
 	@Published
-	var messages: ChatRoomModel = ChatRoomModel(data: [])
+	var messages: [Message] = []
 
 	init(chatId: String) {
 
 		self.chatId = chatId
 
 		NetworkManager.performRequest(route: .lookChat(id: chatId), decodingType: ChatRoomModel.self)
+			.map { result in
+				result.data.map { $0.toMessage }
+			}
 			.subscribe(with: self) { owner, messages in
 				self.messages = messages
 			}
@@ -31,7 +35,7 @@ final class ChatRoomViewModel: ObservableObject {
 
 		SocketIOManager.shared?.receivedChatData
 			.sink { [weak self] chat in
-				self?.messages.data.append(chat)
+				self?.messages.append(chat.toMessage)
 			}
 			.store(in: &cancellable)
 
