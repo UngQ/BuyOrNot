@@ -76,6 +76,8 @@
 		A55990FC2BCCABD50096B98A /* ImagePostQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55990FB2BCCABD50096B98A /* ImagePostQuery.swift */; };
 		A58FC0B92BF9E74300E23D45 /* ChatRoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58FC0B82BF9E74300E23D45 /* ChatRoomView.swift */; };
 		A58FC0BB2BF9E76A00E23D45 /* ChatRoomViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58FC0BA2BF9E76A00E23D45 /* ChatRoomViewModel.swift */; };
+		A58FC0BD2BFC456800E23D45 /* SocketIOManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58FC0BC2BFC456800E23D45 /* SocketIOManager.swift */; };
+		A58FC0C02BFC459700E23D45 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = A58FC0BF2BFC459700E23D45 /* SocketIO */; };
 		A59F22222BE39326003B477D /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F22212BE39326003B477D /* EditProfileViewController.swift */; };
 		A59F22242BE39330003B477D /* EditProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F22232BE39330003B477D /* EditProfileViewModel.swift */; };
 		A59F22262BE3C3DE003B477D /* ProfileQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F22252BE3C3DE003B477D /* ProfileQuery.swift */; };
@@ -181,6 +183,7 @@
 		A55990FB2BCCABD50096B98A /* ImagePostQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePostQuery.swift; sourceTree = "<group>"; };
 		A58FC0B82BF9E74300E23D45 /* ChatRoomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomView.swift; sourceTree = "<group>"; };
 		A58FC0BA2BF9E76A00E23D45 /* ChatRoomViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewModel.swift; sourceTree = "<group>"; };
+		A58FC0BC2BFC456800E23D45 /* SocketIOManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketIOManager.swift; sourceTree = "<group>"; };
 		A59F22212BE39326003B477D /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		A59F22232BE39330003B477D /* EditProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewModel.swift; sourceTree = "<group>"; };
 		A59F22252BE3C3DE003B477D /* ProfileQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileQuery.swift; sourceTree = "<group>"; };
@@ -233,6 +236,7 @@
 				A55990B82BCC012F0096B98A /* Toast in Frameworks */,
 				A55990B02BCC01150096B98A /* RxCocoa in Frameworks */,
 				A558A0562BDBAC15000C1B9D /* KeychainSwift in Frameworks */,
+				A58FC0C02BFC459700E23D45 /* SocketIO in Frameworks */,
 				A55990AD2BCC00C90096B98A /* Kingfisher in Frameworks */,
 				A55990B22BCC01150096B98A /* RxSwift in Frameworks */,
 				A55990AA2BCC00C10096B98A /* Alamofire in Frameworks */,
@@ -567,6 +571,7 @@
 				A58FC0B82BF9E74300E23D45 /* ChatRoomView.swift */,
 				A58FC0BA2BF9E76A00E23D45 /* ChatRoomViewModel.swift */,
 				A5FDCABB2BF9D1CF006977B7 /* ChatRowView.swift */,
+				A58FC0BC2BFC456800E23D45 /* SocketIOManager.swift */,
 			);
 			path = Message;
 			sourceTree = "<group>";
@@ -601,6 +606,7 @@
 				A558A0552BDBAC15000C1B9D /* KeychainSwift */,
 				A59F22282BE3E92F003B477D /* iamport-ios */,
 				A59F22632BE9342D003B477D /* RxKeyboard */,
+				A58FC0BF2BFC459700E23D45 /* SocketIO */,
 			);
 			productName = BuyOrNot;
 			productReference = A559908B2BCBFED00096B98A /* BuyOrNot.app */;
@@ -643,6 +649,7 @@
 				A558A0542BDBAC15000C1B9D /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				A59F22272BE3E92F003B477D /* XCRemoteSwiftPackageReference "iamport-ios" */,
 				A59F22622BE9342D003B477D /* XCRemoteSwiftPackageReference "RxKeyboard" */,
+				A58FC0BE2BFC459700E23D45 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */,
 			);
 			productRefGroup = A559908C2BCBFED00096B98A /* Products */;
 			projectDirPath = "";
@@ -699,6 +706,7 @@
 				A5589FE92BD2907A000C1B9D /* LikeQuery.swift in Sources */,
 				A55990D52BCC1BB60096B98A /* NicknameViewController.swift in Sources */,
 				A5589FED2BD37E21000C1B9D /* UIImageView+Ex.swift in Sources */,
+				A58FC0BD2BFC456800E23D45 /* SocketIOManager.swift in Sources */,
 				A528C7452BDC0A3E00F22167 /* TabmanInProfileViewController.swift in Sources */,
 				A55990FA2BCC4A190096B98A /* CustomTabbarController.swift in Sources */,
 				A558A0162BD637EE000C1B9D /* CommentViewModel.swift in Sources */,
@@ -1064,6 +1072,14 @@
 				minimumVersion = 5.1.1;
 			};
 		};
+		A58FC0BE2BFC459700E23D45 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift.git";
+			requirement = {
+				kind = exactVersion;
+				version = 16.1.0;
+			};
+		};
 		A59F22272BE3E92F003B477D /* XCRemoteSwiftPackageReference "iamport-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/iamport/iamport-ios.git";
@@ -1143,6 +1159,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A55990B62BCC012F0096B98A /* XCRemoteSwiftPackageReference "Toast-Swift" */;
 			productName = Toast;
+		};
+		A58FC0BF2BFC459700E23D45 /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A58FC0BE2BFC459700E23D45 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
+			productName = SocketIO;
 		};
 		A59F22282BE3E92F003B477D /* iamport-ios */ = {
 			isa = XCSwiftPackageProductDependency;

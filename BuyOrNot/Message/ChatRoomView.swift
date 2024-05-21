@@ -8,25 +8,30 @@
 import SwiftUI
 
 struct ChatRoomView: View {
+
+	@StateObject var viewModel: ChatRoomViewModel
+
     var body: some View {
+
+
 		VStack {
 
-			List(viewModel.messages, id: \.self) { chat in
+			List(viewModel.messages, id: \.chat_id) { chat in
 				Text(chat.content)
 					.padding()
-					.background(Color.gray.opacity(0.5))
+					.background(.gray.opacity(0.5))
 			}
 			Button("소켓 해제") {
-				SocketIOManager.shared.leaveConnection()
+				SocketIOManager.shared?.leaveConnection()
 			}
 
 		}
 		.task {
-			SocketIOManager.shared.establishConnection()
+			SocketIOManager.shared?.establishConnection()
 		}
 	}
 }
 
-#Preview {
-    ChatRoomView()
-}
+//#Preview {
+//    ChatRoomView(viewModel: <#T##ChatRoomViewModel#>)
+//}

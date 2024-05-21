@@ -11,17 +11,21 @@ import Combine
 final class ChatRoomViewModel: ObservableObject {
 
 	var cancellable = Set<AnyCancellable>()
+	var chatId: String
 
 	@Published
-	var messages: [RealChat] = []
+	var messages: [ChatContentModel] = []
 
-	init() {
+	init(chatId: String) {
 
-//		SocketIOManager.shared.receivedChatData
-//			.sink { chat in
-//				self.messages.append(chat)
-//			}
-//			.store(in: &cancellable)
+		self.chatId = chatId
+
+
+		SocketIOManager.shared?.receivedChatData
+			.sink { [weak self] chat in
+				self?.messages.append(chat)
+			}
+			.store(in: &cancellable)
 
 	}
 
