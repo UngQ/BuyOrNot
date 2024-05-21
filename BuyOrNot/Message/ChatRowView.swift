@@ -30,11 +30,12 @@ struct ChatRowView: View {
 
 
 
-			Text(chat.content)
+			Text(chat.content ?? "")
 				.padding()
 				.foregroundStyle(myChat ? .white : .black)
 				.background(myChat ? .blue : .gray.opacity(0.5))
-			.cornerRadius(10)
+				
+				.clipShape(.capsule)
 		}
 
 		.frame(maxWidth: .infinity, alignment: .leading)

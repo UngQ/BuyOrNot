@@ -216,8 +216,7 @@ final class ProfileViewController: BaseViewController {
 			.drive(with: self) { owner, roomId in
 				print(roomId)
 				SocketIOManager.initializeSharedInstance(roomId: roomId)
-				let viewModel = ChatRoomViewModel(chatId: roomId)
-				let chatRoomView = ChatRoomView(viewModel: viewModel)
+				let chatRoomView = ChatRoomView(viewModel: ChatRoomViewModel(chatId: roomId))
 				let hostingController = UIHostingController(rootView: chatRoomView)
 				owner.navigationController?.pushViewController(hostingController, animated: true)
 			}

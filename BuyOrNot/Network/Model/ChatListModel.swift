@@ -31,7 +31,7 @@ struct ChatModel: Decodable, Equatable {
 struct ChatContentModel: Decodable {
 	let chat_id: String
 	let room_id: String
-	let content: String
+	let content: String?
 	let createdAt: String
 	let sender: CreatorModel
 	let files: [String]
@@ -41,7 +41,7 @@ struct ChatContentModel: Decodable {
 
 struct ChatRoomModel: Decodable {
 
-	let data: [ChatContentModel]
+	var data: [ChatContentModel]
 
 }
 
