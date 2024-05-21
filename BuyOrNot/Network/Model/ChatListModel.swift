@@ -28,20 +28,27 @@ struct ChatModel: Decodable, Equatable {
 	 }
 }
 
-struct ChatContentModel: Decodable {
+struct ChatContentModel: Decodable, Equatable {
 	let chat_id: String
 	let room_id: String
 	let content: String?
 	let createdAt: String
 	let sender: CreatorModel
 	let files: [String]
+
+	static func == (lhs: ChatContentModel, rhs: ChatContentModel) -> Bool {
+		return lhs.chat_id == rhs.chat_id
+	 }
 }
 
 
 
-struct ChatRoomModel: Decodable {
+struct ChatRoomModel: Decodable, Equatable {
 
 	var data: [ChatContentModel]
 
+	static func == (lhs: ChatRoomModel, rhs: ChatRoomModel) -> Bool {
+		return lhs.data == rhs.data
+	 }
 }
 

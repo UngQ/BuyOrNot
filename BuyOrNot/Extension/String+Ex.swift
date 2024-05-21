@@ -49,4 +49,6 @@ extension String {
 	func numericString() -> String {
 		return self.filter { "0123456789".contains($0) }
 	}
+
+	
 }

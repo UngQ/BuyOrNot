@@ -18,8 +18,19 @@ struct ChatRoomView: View {
 
 		VStack {
 
-			List(viewModel.messages.data, id: \.chat_id) { chat in
-				ChatRowView(chat: chat)
+
+
+			ScrollViewReader { proxy in
+			
+				List(viewModel.messages.data, id: \.chat_id) { chat in
+					ChatRowView(chat: chat)
+						.id(chat.chat_id)
+						.listRowSeparator(.hidden)
+				}
+				.listStyle(.plain)
+				.onChange(of: viewModel.messages.data) { _ in
+					scrollToBottom(proxy: proxy)
+				}
 
 			}
 
@@ -31,19 +42,25 @@ struct ChatRoomView: View {
 				})
 			}
 			.padding()
-
-			Button("소켓 해제") {
-				SocketIOManager.shared?.leaveConnection()
-			}
-
 		}
+		.navigationTitle("Direct Message")
 		.task {
-			
 			SocketIOManager.shared?.establishConnection()
+		}
+		.onDisappear {
+			SocketIOManager.shared?.leaveConnection()
 		}
 	}
 
-	func sendMessage() {
+	private func scrollToBottom(proxy: ScrollViewProxy) {
+		if let lastMessage = viewModel.messages.data.last {
+			
+			proxy.scrollTo(lastMessage.chat_id, anchor: .bottom)
+
+		 }
+	 }
+
+	private func sendMessage() {
 
 		if !newMessage.isEmpty {
 

@@ -16,29 +16,47 @@ struct ChatRowView: View {
 	}
 
 	var body: some View {
-		HStack(spacing: 10) {
-//			Spacer()
+		VStack {
+			HStack(spacing: 10) {
+				//			Spacer()
 
-			if myChat {
-				Spacer()
-			} else {
-				Image(systemName: "person.circle.fill")
-					.resizable()
-					.frame(width: 30, height: 30)
+				if myChat {
+					Spacer()
+				} else {
+					Image(systemName: "person.circle.fill")
+						.resizable()
+						.frame(width: 30, height: 30)
+
+				}
+
+
+
+				Text(chat.content ?? "")
+					.padding()
+					.foregroundStyle(myChat ? .white : .black)
+					.background(myChat ? .blue : .gray.opacity(0.5))
+					.cornerRadius(10)
+
 
 			}
+			.frame(maxWidth: .infinity, alignment: .leading)
 
+			HStack{
+				if myChat {
+					Spacer()
+					Text(chat.createdAt.formattedDate())
+						.font(.caption)
+					
+				} else {
+					Text(chat.createdAt.formattedDate())
+						.font(.caption)
+					Spacer()
+					
+				}
+			}
 
-
-			Text(chat.content ?? "")
-				.padding()
-				.foregroundStyle(myChat ? .white : .black)
-				.background(myChat ? .blue : .gray.opacity(0.5))
-				
-				.clipShape(.capsule)
 		}
 
-		.frame(maxWidth: .infinity, alignment: .leading)
 	}
 }
 
