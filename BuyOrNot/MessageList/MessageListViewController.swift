@@ -31,7 +31,7 @@ class MessageListViewController: BaseViewController {
 			make.edges.equalTo(view.safeAreaLayoutGuide)
 		}
 
-		listTableView.register(PurchaseListTableViewCell.self, forCellReuseIdentifier: PurchaseListTableViewCell.id)
+		listTableView.register(CommentTableViewCell.self, forCellReuseIdentifier: CommentTableViewCell.id)
 		listTableView.rowHeight = 60
 
 		viewModel.viewDidLoadTrigger.accept(())
@@ -63,10 +63,38 @@ class MessageListViewController: BaseViewController {
 
 		output.data
 			.map { $0.data }
-			.drive(listTableView.rx.items(cellIdentifier: PurchaseListTableViewCell.id, cellType: PurchaseListTableViewCell.self)) { row, element, cell  in
+			.drive(listTableView.rx.items(cellIdentifier: CommentTableViewCell.id, cellType: CommentTableViewCell.self)) { row, element, cell  in
 
-				cell.nameLabel.text = "🗒️ \(element.room_id)"
-				cell.priceLabel.text = "\(element.participants)"
+
+				let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
+
+				var otherUserNick: String?
+				   for participant in element.participants {
+					   if participant.user_id != myId {
+						   otherUserNick = participant.nick
+						   break
+					   }
+				   }
+
+
+
+
+				cell.nicknameLabel.text = otherUserNick
+				cell.commentLabel.text = element.lastChat?.content
+
+
+				let vc = ProfileViewController()
+
+//				if myOrOther {
+//					self.navigationController?.pushViewController(vc, animated: true)
+//				} else {
+//					vc.viewModel.myOrOther = false
+//					vc.viewModel.othersId = id
+//					vc.tabmanVC.myOrOthers = false
+//					vc.tabmanVC.myPostsVC.viewModel.myId = id
+//					self.navigationController?.pushViewController(vc, animated: true)
+//				}
+
 
 			}
 			.disposed(by: disposeBag)

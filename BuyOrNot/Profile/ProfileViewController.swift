@@ -216,8 +216,10 @@ final class ProfileViewController: BaseViewController {
 		output.messageButtonTapped
 			.drive(with: self) { owner, roomId in
 				print(roomId)
+				let nick = owner.viewModel.profileData.value.nick
+
 				SocketIOManager.initializeSharedInstance(roomId: roomId)
-				let chatRoomView = ChatRoomView(viewModel: ChatRoomViewModel(chatId: roomId))
+				let chatRoomView = ChatRoomView(viewModel: ChatRoomViewModel(chatId: roomId, nick: nick))
 
 				let hostingController = UIHostingController(rootView: chatRoomView)
 				

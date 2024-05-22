@@ -45,10 +45,11 @@ struct ChatContentModel: Decodable, Equatable {
 
 		let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
 		var myChat: Bool = sender.user_id == myId
-		print("myId: \(myId), sender.user_id: \(sender.user_id), isCurrentUser: \(myChat)")
 
+		let isoDateFormatter = ISO8601DateFormatter()
+		isoDateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
 
-		return Message(id: chat_id, user: User(id: sender.user_id, name: sender.nick, avatarURL: nil, isCurrentUser: myChat), createdAt: ISO8601DateFormatter().date(from: createdAt) ?? Date(), text: content ?? "")
+		return Message(id: chat_id, user: User(id: sender.user_id, name: sender.nick, avatarURL: nil, isCurrentUser: myChat), createdAt: isoDateFormatter.date(from: createdAt) ?? Date(), text: content ?? "")
 
 	}
 }

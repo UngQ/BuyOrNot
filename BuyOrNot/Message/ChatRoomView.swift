@@ -21,22 +21,6 @@ struct ChatRoomView: View {
 
 		VStack {
 
-
-
-//			ScrollViewReader { proxy in
-//				List(viewModel.messages.data, id: \.chat_id) { chat in
-//
-//					ChatRowView(chat: chat)
-//						.id(chat.chat_id)
-//						.listRowSeparator(.hidden)
-//				}
-//				.listStyle(.plain)
-//				.onChange(of: viewModel.messages.data) { _ in
-//					scrollToBottom(proxy: proxy)
-//				}
-//
-//			}
-
 			// Exyte Chat List View
 			ChatView(messages: $viewModel.messages.wrappedValue) { _ in
 
@@ -44,6 +28,7 @@ struct ChatRoomView: View {
 				EmptyView()
 				
 			}
+
 			.avatarSize(avatarSize: 0)
 
 
@@ -53,33 +38,33 @@ struct ChatRoomView: View {
 				TextField("메세지를 입력해주세요.", text: $newMessage, axis: .vertical)
 					.lineLimit(3)
 
-				Button(action: sendMessage, label: {
+				Button(action: sendMessage) {
 					Image(systemName: "paperplane")
-				})
+						.frame(width: 30, height: 30)
+
+				}
+
+
+
 			}
-			.padding()
 
 		}
 		.padding()
-		.navigationTitle("Direct Message 💬")
+		.navigationTitle("\(viewModel.nick)님 와의 💬")
 
 		.task {
+			print("어피얼")
 			SocketIOManager.shared?.establishConnection()
 			IQKeyboardManager.shared.enable = false
+			IQKeyboardManager.shared.resignOnTouchOutside = true
+
 		}
 		.onDisappear {
 			SocketIOManager.shared?.leaveConnection()
 			IQKeyboardManager.shared.enable = true
+			print("디싸피얼")
 		}
 	}
-
-//	private func scrollToBottom(proxy: ScrollViewProxy) {
-//		if let lastMessage = viewModel.messages.data.last {
-//			
-//			proxy.scrollTo(lastMessage.chat_id, anchor: .bottom)
-//
-//		 }
-//	 }
 
 	private func sendMessage() {
 

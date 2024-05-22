@@ -16,13 +16,15 @@ final class ChatRoomViewModel: ObservableObject {
 	var cancellable = Set<AnyCancellable>()
 	var disposeBag = DisposeBag()
 	var chatId: String
+	var nick: String
 
 	@Published
 	var messages: [Message] = []
 
-	init(chatId: String) {
+	init(chatId: String, nick: String) {
 
 		self.chatId = chatId
+		self.nick = nick
 
 		NetworkManager.performRequest(route: .lookChat(id: chatId), decodingType: ChatRoomModel.self)
 			.map { result in
