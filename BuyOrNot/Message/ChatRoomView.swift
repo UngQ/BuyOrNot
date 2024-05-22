@@ -28,8 +28,8 @@ struct ChatRoomView: View {
 				EmptyView()
 				
 			}
-
-			.avatarSize(avatarSize: 0)
+			.avatarSize(avatarSize: 30)
+			.padding(.trailing, 6)
 
 
 
@@ -47,20 +47,22 @@ struct ChatRoomView: View {
 
 
 			}
+			.padding(.horizontal)
+			.padding(.bottom)
 
 		}
-		.padding()
-		.navigationTitle("\(viewModel.nick)님 와의 💬")
+
+		.navigationTitle("\(viewModel.nick)님 💬")
 
 		.task {
 			print("어피얼")
 			SocketIOManager.shared?.establishConnection()
 			IQKeyboardManager.shared.enable = false
 			IQKeyboardManager.shared.resignOnTouchOutside = true
-
 		}
+
 		.onDisappear {
-			SocketIOManager.shared?.leaveConnection()
+//			SocketIOManager.shared?.leaveConnection()
 			IQKeyboardManager.shared.enable = true
 			print("디싸피얼")
 		}

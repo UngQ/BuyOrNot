@@ -49,7 +49,12 @@ struct ChatContentModel: Decodable, Equatable {
 		let isoDateFormatter = ISO8601DateFormatter()
 		isoDateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
 
-		return Message(id: chat_id, user: User(id: sender.user_id, name: sender.nick, avatarURL: nil, isCurrentUser: myChat), createdAt: isoDateFormatter.date(from: createdAt) ?? Date(), text: content ?? "")
+		return Message(id: chat_id,
+					   user: User(id: sender.user_id,
+								  name: sender.nick,
+								  avatarURL: URL(string: "https://github.com/UngQ/ungQ/assets/106305918/9e33e9b4-1aa0-4d07-be83-ad6a90ba2c46"),
+								  isCurrentUser: myChat),
+					   createdAt: isoDateFormatter.date(from: createdAt) ?? Date(), text: content ?? "")
 
 	}
 }

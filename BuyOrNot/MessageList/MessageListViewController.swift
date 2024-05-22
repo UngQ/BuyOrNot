@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class MessageListViewController: BaseViewController {
 
@@ -22,8 +23,10 @@ class MessageListViewController: BaseViewController {
 	}()
 
 
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		self.navigationItem.title = "1:1 채팅방"
 
 		view.addSubview(listTableView)
 
@@ -31,16 +34,26 @@ class MessageListViewController: BaseViewController {
 			make.edges.equalTo(view.safeAreaLayoutGuide)
 		}
 
-		listTableView.register(CommentTableViewCell.self, forCellReuseIdentifier: CommentTableViewCell.id)
+		listTableView.register(MessageListTableViewCell.self, forCellReuseIdentifier: MessageListTableViewCell.id)
 		listTableView.rowHeight = 60
 
-		viewModel.viewDidLoadTrigger.accept(())
 
 		view.addSubview(emptyLabel)
 
 		emptyLabel.snp.makeConstraints { make in
 			make.centerY.centerX.equalToSuperview()
 		}
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		viewModel.viewWillAppearTrigger.accept(())
+	}
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+
+		viewModel.viewWillDisappearTrigger.accept(())
 	}
 
 	override func bind() {
@@ -63,37 +76,46 @@ class MessageListViewController: BaseViewController {
 
 		output.data
 			.map { $0.data }
-			.drive(listTableView.rx.items(cellIdentifier: CommentTableViewCell.id, cellType: CommentTableViewCell.self)) { row, element, cell  in
-
+			.drive(listTableView.rx.items(cellIdentifier: MessageListTableViewCell.id, cellType: MessageListTableViewCell.self)) { row, element, cell  in
 
 				let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
 
+				var otherUserId: String?
 				var otherUserNick: String?
-				   for participant in element.participants {
-					   if participant.user_id != myId {
-						   otherUserNick = participant.nick
-						   break
-					   }
-				   }
+				var otherUserProfileImage: String?
+				for participant in element.participants {
+					if participant.user_id != myId {
+						otherUserId = participant.user_id
+						otherUserNick = participant.nick
+						otherUserProfileImage = participant.profileImage
+						break
+					}
+				}
 
-
-
+				if let endPoint = otherUserProfileImage {
+					let profileImage = "\(APIKey.baseURL.rawValue)/v1/\(endPoint)"
+					cell.profileImageView.loadImage(from: profileImage)
+				}
 
 				cell.nicknameLabel.text = otherUserNick
 				cell.commentLabel.text = element.lastChat?.content
+				cell.dateLabel.text = element.updatedAt.formattedDate()
+
+				cell.nicknameLabel.rx.tapGesture()
+					.when(.recognized)
+					.bind(with: self) { owner, gesture in
+						owner.pushOtherUserProfile(otherUserId: otherUserId)
+					}
+					.disposed(by: cell.disposeBag)
+
+				cell.profileImageView.rx.tapGesture()
+					.when(.recognized)
+					.bind(with: self) { owner, gesture in
+						owner.pushOtherUserProfile(otherUserId: otherUserId)
+					}
+					.disposed(by: cell.disposeBag)
 
 
-				let vc = ProfileViewController()
-
-//				if myOrOther {
-//					self.navigationController?.pushViewController(vc, animated: true)
-//				} else {
-//					vc.viewModel.myOrOther = false
-//					vc.viewModel.othersId = id
-//					vc.tabmanVC.myOrOthers = false
-//					vc.tabmanVC.myPostsVC.viewModel.myId = id
-//					self.navigationController?.pushViewController(vc, animated: true)
-//				}
 
 
 			}
@@ -102,12 +124,40 @@ class MessageListViewController: BaseViewController {
 		listTableView.rx.itemSelected
 			.asDriver()
 			.drive(with: self) { owner, indexPath in
-				
+
+				let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
+
+				let data = owner.viewModel.chatListData.value.data[indexPath.row]
+				let roomId = data.room_id
+
+				var nick: String?
+				for participant in data.participants {
+					if participant.user_id != myId {
+						nick = participant.nick
+						break
+					}
+				}
+
+				SocketIOManager.initializeSharedInstance(roomId: roomId)
+				let chatRoomView = ChatRoomView(viewModel: ChatRoomViewModel(chatId: roomId, nick: nick ?? ""))
+
+				let hostingController = UIHostingController(rootView: chatRoomView)
+
+				owner.navigationController?.pushViewController(hostingController, animated: true)
 
 			}
 			.disposed(by: disposeBag)
 
 
+	}
+
+	private func pushOtherUserProfile(otherUserId: String?) {
+		let vc = ProfileViewController()
+		vc.viewModel.myOrOther = false
+		vc.viewModel.othersId = otherUserId ?? ""
+		vc.tabmanVC.myOrOthers = false
+		vc.tabmanVC.myPostsVC.viewModel.myId = otherUserId ?? ""
+		self.navigationController?.pushViewController(vc, animated: true)
 	}
 
 }

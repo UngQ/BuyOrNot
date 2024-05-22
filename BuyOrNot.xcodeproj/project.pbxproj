@@ -80,6 +80,7 @@
 		A58FC0C02BFC459700E23D45 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = A58FC0BF2BFC459700E23D45 /* SocketIO */; };
 		A58FC0C22BFCE91100E23D45 /* MessageQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58FC0C12BFCE91100E23D45 /* MessageQuery.swift */; };
 		A58FC0C52BFCFE3B00E23D45 /* ExyteChat in Frameworks */ = {isa = PBXBuildFile; productRef = A58FC0C42BFCFE3B00E23D45 /* ExyteChat */; };
+		A58FC0C72BFE402D00E23D45 /* MessageListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58FC0C62BFE402D00E23D45 /* MessageListTableViewCell.swift */; };
 		A59F22222BE39326003B477D /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F22212BE39326003B477D /* EditProfileViewController.swift */; };
 		A59F22242BE39330003B477D /* EditProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F22232BE39330003B477D /* EditProfileViewModel.swift */; };
 		A59F22262BE3C3DE003B477D /* ProfileQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F22252BE3C3DE003B477D /* ProfileQuery.swift */; };
@@ -187,6 +188,7 @@
 		A58FC0BA2BF9E76A00E23D45 /* ChatRoomViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewModel.swift; sourceTree = "<group>"; };
 		A58FC0BC2BFC456800E23D45 /* SocketIOManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketIOManager.swift; sourceTree = "<group>"; };
 		A58FC0C12BFCE91100E23D45 /* MessageQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageQuery.swift; sourceTree = "<group>"; };
+		A58FC0C62BFE402D00E23D45 /* MessageListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListTableViewCell.swift; sourceTree = "<group>"; };
 		A59F22212BE39326003B477D /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		A59F22232BE39330003B477D /* EditProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewModel.swift; sourceTree = "<group>"; };
 		A59F22252BE3C3DE003B477D /* ProfileQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileQuery.swift; sourceTree = "<group>"; };
@@ -267,6 +269,7 @@
 				A558A0172BD63CF6000C1B9D /* CommentTableViewCell.swift */,
 				A528C7B42BDFF13800F22167 /* FollowTableViewCell.swift */,
 				A59F223D2BE6A69D003B477D /* PurchaseListTableViewCell.swift */,
+				A58FC0C62BFE402D00E23D45 /* MessageListTableViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -773,6 +776,7 @@
 				A5589FF32BD4D271000C1B9D /* Category.swift in Sources */,
 				A59F22222BE39326003B477D /* EditProfileViewController.swift in Sources */,
 				A558A01A2BD66333000C1B9D /* CommentQuery.swift in Sources */,
+				A58FC0C72BFE402D00E23D45 /* MessageListTableViewCell.swift in Sources */,
 				A55990CD2BCC1B460096B98A /* SignUpViewController.swift in Sources */,
 				A59F225F2BE7C939003B477D /* NaverImagesModel.swift in Sources */,
 				A528C74A2BDE127E00F22167 /* FollowViewController.swift in Sources */,

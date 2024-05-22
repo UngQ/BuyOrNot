@@ -14,7 +14,8 @@ final class MessageListViewModel: ViewModelType {
 	var disposeBag: DisposeBag = DisposeBag()
 
 
-	let viewDidLoadTrigger = PublishRelay<Void>()
+	let viewWillAppearTrigger = PublishRelay<Void>()
+	let viewWillDisappearTrigger = PublishRelay<Void>()
 	let chatListData = BehaviorRelay<ChatListModel>(value: ChatListModel(data: []))
 
 
@@ -29,7 +30,11 @@ final class MessageListViewModel: ViewModelType {
 
 
 	func transform(input: Input) -> Output {
-		viewDidLoadTrigger
+
+		viewWillAppearTrigger
+			.flatMapLatest { [weak self] in
+				self?.createTimerObservable() ?? Observable.empty()
+			}
 			.flatMap {
 				NetworkManager.performRequest(route: .myChats, decodingType: ChatListModel.self)
 		}
@@ -39,5 +44,11 @@ final class MessageListViewModel: ViewModelType {
 			.disposed(by: disposeBag)
 
 		return Output(data: chatListData.asDriver())
+	}
+
+	private func createTimerObservable() -> Observable<Void> {
+		return Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
+			.map { _ in }
+			.take(until: viewWillDisappearTrigger)
 	}
 }

@@ -1,15 +1,15 @@
 //
-//  CommentTableViewCell.swift
+//  MessageListTableViewCell.swift
 //  BuyOrNot
 //
-//  Created by ungQ on 4/22/24.
+//  Created by ungQ on 5/23/24.
 //
 
 import UIKit
 import SnapKit
 import RxSwift
 
-class CommentTableViewCell: UITableViewCell {
+class MessageListTableViewCell: UITableViewCell {
 
 	var disposeBag = DisposeBag()
 
@@ -42,20 +42,6 @@ class CommentTableViewCell: UITableViewCell {
 		return label
 	}()
 
-	let editButton: UIButton = {
-		let button = UIButton(type: .system)
-		button.setImage(UIImage(systemName: "pencil"), for: .normal)
-		button.tintColor = .systemBlue
-		return button
-	}()
-
-	let deleteButton: UIButton = {
-		let button = UIButton(type: .system)
-		button.setImage(UIImage(systemName: "trash"), for: .normal)
-		button.tintColor = .systemRed
-		return button
-	}()
-
 	override func prepareForReuse() {
 		super.prepareForReuse()
 		profileImageView.image = UIImage(systemName: "person.crop.circle")
@@ -69,8 +55,7 @@ class CommentTableViewCell: UITableViewCell {
 		contentView.addSubview(nicknameLabel)
 		contentView.addSubview(dateLabel)
 		contentView.addSubview(commentLabel)
-		contentView.addSubview(editButton)
-		contentView.addSubview(deleteButton)
+
 		setupConstraints()
 	}
 
@@ -94,21 +79,19 @@ class CommentTableViewCell: UITableViewCell {
 			make.left.equalTo(nicknameLabel.snp.right).offset(10)
 		}
 
-		deleteButton.snp.makeConstraints { make in
-			make.top.equalToSuperview().inset(10)
-			  make.trailing.equalToSuperview().inset(10)
-			  make.height.equalTo(20)
-			  make.width.equalTo(deleteButton.snp.height)
-		}
-
-		editButton.snp.makeConstraints { make in
-			make.top.equalToSuperview().inset(10)
-			  make.trailing.equalTo(deleteButton.snp.leading).offset(-10)
-			  make.height.equalTo(deleteButton.snp.height)
-			  make.width.equalTo(editButton.snp.height)
-		}
-
-
+//		deleteButton.snp.makeConstraints { make in
+//			make.top.equalToSuperview().inset(10)
+//			  make.trailing.equalToSuperview().inset(10)
+//			  make.height.equalTo(20)
+//			  make.width.equalTo(deleteButton.snp.height)
+//		}
+//
+//		editButton.snp.makeConstraints { make in
+//			make.top.equalToSuperview().inset(10)
+//			  make.trailing.equalTo(deleteButton.snp.leading).offset(-10)
+//			  make.height.equalTo(deleteButton.snp.height)
+//			  make.width.equalTo(editButton.snp.height)
+//		}
 
 		commentLabel.snp.makeConstraints { make in
 			make.top.equalTo(nicknameLabel.snp.bottom).offset(10)
@@ -116,7 +99,6 @@ class CommentTableViewCell: UITableViewCell {
 			make.trailing.equalToSuperview().offset(-10)
 			make.bottom.equalToSuperview().offset(-10)
 		}
-
 
 	}
 

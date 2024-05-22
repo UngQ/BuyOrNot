@@ -5,7 +5,7 @@
 //  Created by ungQ on 5/19/24.
 //
 
-import Foundation
+import SwiftUI
 import Combine
 import RxSwift
 import ExyteChat
@@ -26,11 +26,17 @@ final class ChatRoomViewModel: ObservableObject {
 		self.chatId = chatId
 		self.nick = nick
 
+		fetchMessage()
+	}
+
+	func fetchMessage() {
+
 		NetworkManager.performRequest(route: .lookChat(id: chatId), decodingType: ChatRoomModel.self)
 			.map { result in
 				result.data.map { $0.toMessage }
 			}
 			.subscribe(with: self) { owner, messages in
+				self.messages = []
 				self.messages = messages
 			}
 			.disposed(by: disposeBag)
@@ -50,5 +56,18 @@ final class ChatRoomViewModel: ObservableObject {
 			}
 			.disposed(by: disposeBag)
 	}
+
+//	func sendImageMessage(image: UIImage) {
+//		// Here you would upload the image to your server and get the URL
+//		// For example purposes, we will use a placeholder URL
+//		let imageURL = "https://example.com/uploaded_image.jpg"
+//
+//		// Create a new message with the image URL
+//		let newMessage = Message(content: imageURL, type: .)
+//		Message(id: <#T##String#>, user: <#T##User#>, status: <#T##Message.Status?#>, createdAt: <#T##Date#>, text: <#T##String#>, attachments: [Attachment(id: "", url: URL(string: ""), type: .image)], recording: <#T##Recording?#>, replyMessage: <#T##ReplyMessage?#>)
+//
+//		// Append the new message to the messages array
+//		messages.append(newMessage)
+//	}
 
 }
