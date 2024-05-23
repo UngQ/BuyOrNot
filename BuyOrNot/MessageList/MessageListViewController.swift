@@ -35,14 +35,18 @@ class MessageListViewController: BaseViewController {
 		}
 
 		listTableView.register(MessageListTableViewCell.self, forCellReuseIdentifier: MessageListTableViewCell.id)
-		listTableView.rowHeight = 60
+//		listTableView.rowHeight = 60
 
 
 		view.addSubview(emptyLabel)
+		view.addSubview(loadingLottieView)
 
 		emptyLabel.snp.makeConstraints { make in
 			make.centerY.centerX.equalToSuperview()
 		}
+
+		loadingLottieView.isHidden = false
+		loadingLottieView.play()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -66,10 +70,11 @@ class MessageListViewController: BaseViewController {
 			.drive(with: self) { owner, data in
 				if data == [] {
 					owner.emptyLabel.isHidden = false
-
 				} else {
 					owner.emptyLabel.isHidden = true
 				}
+				owner.loadingLottieView.isHidden = true
+				owner.loadingLottieView.stop()
 			}
 			.disposed(by: disposeBag)
 
@@ -77,6 +82,7 @@ class MessageListViewController: BaseViewController {
 		output.data
 			.map { $0.data }
 			.drive(listTableView.rx.items(cellIdentifier: MessageListTableViewCell.id, cellType: MessageListTableViewCell.self)) { row, element, cell  in
+
 
 				let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
 
@@ -137,8 +143,9 @@ class MessageListViewController: BaseViewController {
 						break
 					}
 				}
-
-				SocketIOManager.initializeSharedInstance(roomId: roomId)
+				owner.tabBarController?.tabBar.isHidden = true
+				SocketIOManager.shared.fetchSocket(roomId: roomId)
+//				SocketIOManager.initializeSharedInstance(roomId: roomId)
 				let chatRoomView = ChatRoomView(viewModel: ChatRoomViewModel(chatId: roomId, nick: nick ?? ""))
 
 				let hostingController = UIHostingController(rootView: chatRoomView)
@@ -152,6 +159,7 @@ class MessageListViewController: BaseViewController {
 	}
 
 	private func pushOtherUserProfile(otherUserId: String?) {
+
 		let vc = ProfileViewController()
 		vc.viewModel.myOrOther = false
 		vc.viewModel.othersId = otherUserId ?? ""

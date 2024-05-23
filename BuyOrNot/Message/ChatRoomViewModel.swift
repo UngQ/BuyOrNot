@@ -21,33 +21,29 @@ final class ChatRoomViewModel: ObservableObject {
 	@Published
 	var messages: [Message] = []
 
+
 	init(chatId: String, nick: String) {
 
 		self.chatId = chatId
 		self.nick = nick
-
-		fetchMessage()
-	}
-
-	func fetchMessage() {
 
 		NetworkManager.performRequest(route: .lookChat(id: chatId), decodingType: ChatRoomModel.self)
 			.map { result in
 				result.data.map { $0.toMessage }
 			}
 			.subscribe(with: self) { owner, messages in
-				self.messages = []
+//				self.messages = []
 				self.messages = messages
 			}
 			.disposed(by: disposeBag)
 
-		SocketIOManager.shared?.receivedChatData
+		SocketIOManager.shared.receivedChatData
 			.sink { [weak self] chat in
 				self?.messages.append(chat.toMessage)
 			}
 			.store(in: &cancellable)
-
 	}
+
 
 	func sendMessage(message: String) {
 		NetworkManager.performRequest(route: .sendChat(id: chatId, query: MessageQuery(content: message)), decodingType: ChatContentModel.self)

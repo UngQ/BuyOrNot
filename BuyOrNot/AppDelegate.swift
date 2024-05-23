@@ -69,6 +69,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 	}
 
+	func applicationWillTerminate(_ application: UIApplication) {
+		SocketIOManager.shared.leaveConnection()
+	}
+
 
 
 

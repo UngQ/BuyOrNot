@@ -54,7 +54,8 @@ struct ChatContentModel: Decodable, Equatable {
 								  name: sender.nick,
 								  avatarURL: URL(string: "https://github.com/UngQ/ungQ/assets/106305918/9e33e9b4-1aa0-4d07-be83-ad6a90ba2c46"),
 								  isCurrentUser: myChat),
-					   createdAt: isoDateFormatter.date(from: createdAt) ?? Date(), text: content ?? "")
+					   createdAt: isoDateFormatter.date(from: createdAt) ?? Date(),
+					   text: content ?? "")
 
 	}
 }

@@ -28,7 +28,9 @@ struct ChatRoomView: View {
 				EmptyView()
 				
 			}
-			.avatarSize(avatarSize: 30)
+
+
+			.avatarSize(avatarSize: 36)
 			.padding(.trailing, 6)
 
 
@@ -56,15 +58,16 @@ struct ChatRoomView: View {
 
 		.task {
 			print("어피얼")
-			SocketIOManager.shared?.establishConnection()
+			SocketIOManager.shared.establishConnection()
 			IQKeyboardManager.shared.enable = false
 			IQKeyboardManager.shared.resignOnTouchOutside = true
 		}
 
 		.onDisappear {
-//			SocketIOManager.shared?.leaveConnection()
+			SocketIOManager.shared.leaveConnection()
 			IQKeyboardManager.shared.enable = true
 			print("디싸피얼")
+
 		}
 	}
 

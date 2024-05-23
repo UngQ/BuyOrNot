@@ -14,6 +14,10 @@ class BaseViewController: UIViewController {
 
 	let disposeBag = DisposeBag()
 
+	override func viewWillAppear(_ animated: Bool) {
+		tabBarController?.tabBar.isHidden = false
+	}
+
 
 	lazy var successLoginLottieView : LottieAnimationView = {
 

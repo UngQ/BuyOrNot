@@ -38,7 +38,7 @@ class MessageListTableViewCell: UITableViewCell {
 	let commentLabel: UILabel = {
 		let label = UILabel()
 		label.font = UIFont.systemFont(ofSize: 14)
-		label.numberOfLines = 0
+		label.numberOfLines = 1
 		return label
 	}()
 
@@ -78,20 +78,6 @@ class MessageListTableViewCell: UITableViewCell {
 			make.bottom.equalTo(nicknameLabel.snp.bottom)
 			make.left.equalTo(nicknameLabel.snp.right).offset(10)
 		}
-
-//		deleteButton.snp.makeConstraints { make in
-//			make.top.equalToSuperview().inset(10)
-//			  make.trailing.equalToSuperview().inset(10)
-//			  make.height.equalTo(20)
-//			  make.width.equalTo(deleteButton.snp.height)
-//		}
-//
-//		editButton.snp.makeConstraints { make in
-//			make.top.equalToSuperview().inset(10)
-//			  make.trailing.equalTo(deleteButton.snp.leading).offset(-10)
-//			  make.height.equalTo(deleteButton.snp.height)
-//			  make.width.equalTo(editButton.snp.height)
-//		}
 
 		commentLabel.snp.makeConstraints { make in
 			make.top.equalTo(nicknameLabel.snp.bottom).offset(10)
