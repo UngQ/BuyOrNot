@@ -8,17 +8,16 @@
 ## 🗒️ Introduction
 
 - 살지 말지 고민되는 패션 아이템을 공유하여 함께 투표한 결과로 쇼핑 결정에 도움이 될 수 있는 어플
+- SeSAC iOS 4기 Light Service Level Project(LSLP) 내부 경진대회 3등 수상
 - Configuration: iOS 16.0+ / 라이트모드 지원
 
-## 👍🏻 Key Feature 👎🏻
+## 👍🏻👎🏻 Key Feature 
 
 https://github.com/UngQ/BuyOrNot/assets/106305918/6496eae7-2f06-47cd-b9ce-7ce43137842d
 - RxGesture를 활용하여 이미지의 가운데 x좌표를 0으로 가정 <br>
   사용자가 이 기준선을 기준으로 왼쪽 영역(x < 0)을 더블터치하면 "좋아요" 기능이, <br>
   오른쪽 영역(x > 0)을 더블터치하면 "싫어요" 기능이 동작하도록 구현
 - 동일한 영역에 다시 투표할 경우 기존 투표를 취소
-
-
 
 ## 🗒️ Features
 
@@ -54,6 +53,18 @@ https://github.com/UngQ/BuyOrNot/assets/106305918/6496eae7-2f06-47cd-b9ce-7ce431
     
 
 ## 🎮 주요 기능 Previews
+
+### - 채팅 기능 ( Updated at 2024. 05. 24. )
+![Simulator Screen Recording - iPhone 15 Pro - 2024-05-24 at 12 38 06](https://github.com/UngQ/BuyOrNot/assets/106305918/611aa623-8a7c-48b6-b583-c4cb8e27cdeb)
+
+- 내 채팅방 목록 전체 조회
+- 채팅방 진입시, 대화 내역 조회 및 소켓 통신 활성화 후 실시간 대화 기능
+- Disappear 시점에, 소켓 통신 disconnect
+
+![Simulator Screen Recording - iPhone 15 Pro - 2024-05-24 at 12 38 45](https://github.com/UngQ/BuyOrNot/assets/106305918/fa615597-3659-403b-821c-4577c289fee8)
+
+- 다른 유저 프로필에서 대화 버튼 클릭시, 채팅방 개설 후 진입
+- 이미 있을 경우도 기존 채팅방 진입 후 대화 내역 조회
 
 ### - 회원가입 ~ 탈퇴
 ![회원가입-탈퇴](https://github.com/UngQ/BuyOrNot/assets/106305918/bf3eac4e-b716-4d4a-a7a8-4d834992be02)
@@ -161,17 +172,5 @@ https://github.com/UngQ/BuyOrNot/assets/106305918/6496eae7-2f06-47cd-b9ce-7ce431
 - 구매내역이 생긴 Post는 [판매완료] 처리
 - 내 프로필에서 구매내역 확인
 - 판매완료된 내 게시글의 삭제 버튼 위치 분기처리
-
-### - 채팅 기능 ( Updated at 2024. 05. 24. )
-![Simulator Screen Recording - iPhone 15 Pro - 2024-05-24 at 12 38 06](https://github.com/UngQ/BuyOrNot/assets/106305918/611aa623-8a7c-48b6-b583-c4cb8e27cdeb)
-
-- 내 채팅방 목록 전체 조회
-- 채팅방 진입시, 대화 내역 조회 및 소켓 통신 활성화 후 실시간 대화 기능
-- Disappear 시점에, 소켓 통신 disconnect
-
-![Simulator Screen Recording - iPhone 15 Pro - 2024-05-24 at 12 38 45](https://github.com/UngQ/BuyOrNot/assets/106305918/fa615597-3659-403b-821c-4577c289fee8)
-
-- 다른 유저 프로필에서 대화 버튼 클릭시, 채팅방 개설 후 진입
-- 이미 있을 경우도 기존 채팅방 진입 후 대화 내역 조회
 
 
