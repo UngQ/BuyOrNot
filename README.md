@@ -56,6 +56,7 @@ https://github.com/UngQ/BuyOrNot/assets/106305918/6496eae7-2f06-47cd-b9ce-7ce431
 ## 🎮 주요 기능 Previews
 
 ### - 채팅 기능 ( Updated at 2024. 05. 24. )
+
 ![Simulator Screen Recording - iPhone 15 Pro - 2024-05-24 at 12 38 06](https://github.com/UngQ/BuyOrNot/assets/106305918/611aa623-8a7c-48b6-b583-c4cb8e27cdeb)
 
 - 내 채팅방 목록 전체 조회
