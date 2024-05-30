@@ -68,6 +68,7 @@ final class PaymentViewController: BaseViewController {
 					print(query)
 
 					NetworkManager.performRequestVoidType(route: .validationPayment(query: query))
+
 						.catch({ error in
 							print(error.localizedDescription)
 

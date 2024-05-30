@@ -84,6 +84,7 @@ final class CommentViewModel: ViewModelType {
 				}
 
 				return NetworkManager.performRequestVoidType(route: .deleteComment(id: self.postID, commentId: post.comment_id))
+
 			}.subscribe(with: self) { owner, value in
 				print("삭제버튼")
 				message.accept("댓글을 삭제하였습니다.")
