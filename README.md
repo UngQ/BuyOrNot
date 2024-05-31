@@ -68,7 +68,14 @@ https://github.com/UngQ/BuyOrNot/assets/106305918/6496eae7-2f06-47cd-b9ce-7ce431
 - 이미 있을 경우도 기존 채팅방 진입 후 대화 내역 조회
 
 ### - 회원가입 ~ 탈퇴
-![회원가입-탈퇴](https://github.com/UngQ/BuyOrNot/assets/106305918/bf3eac4e-b716-4d4a-a7a8-4d834992be02)
+
+|![회원가입-탈퇴](https://github.com/UngQ/BuyOrNot/assets/106305918/bf3eac4e-b716-4d4a-a7a8-4d834992be02)|![자동로그인](https://github.com/UngQ/BuyOrNot/assets/106305918/7e1bb436-695b-4c23-ba44-a97a26b29437)|![프로필수정](https://github.com/UngQ/BuyOrNot/assets/106305918/4063fbf8-b3bc-40b1-a723-f7ec3e379997)
+|![게시글작성-삭제](https://github.com/UngQ/BuyOrNot/assets/106305918/6abe442d-5266-4b6c-a485-2f33f7d16d1a)
+|
+|:--:|:--:|:--:|:--:|
+|다른 유저 프로필 - 만든 여행|내 프로필 - 신청한 여행|내 프로필 - 정보|여행 상세페이지|
+
+
 
 - 회원가입 API
 - 이메일 중복체크 API
@@ -79,14 +86,13 @@ https://github.com/UngQ/BuyOrNot/assets/106305918/6496eae7-2f06-47cd-b9ce-7ce431
     - 탈퇴시, 가입/로그인시 저장된 계정 비밀번호 확인 검사 후 진행하도록 구현
 
 ### - 자동 로그인 On/Off
-![자동로그인](https://github.com/UngQ/BuyOrNot/assets/106305918/7e1bb436-695b-4c23-ba44-a97a26b29437)
+
 
 - KeychainSwift 를 활용한 자동로그인 기능
     - 로그인시 자동로그인 체크
     - refreshToken 만료 후 로그인창으로 이동시, 사용자의 별도 입력 없이 자동로그인
 
 ### - 프로필 수정
-![프로필수정](https://github.com/UngQ/BuyOrNot/assets/106305918/4063fbf8-b3bc-40b1-a723-f7ec3e379997)
 
 - 프로필 수정
     - 이미지 수정 기능
@@ -95,7 +101,6 @@ https://github.com/UngQ/BuyOrNot/assets/106305918/6496eae7-2f06-47cd-b9ce-7ce431
         - 회원가입시 적용한 닉네임 필터링 동일하게 적용
 
 ### - 게시글 작성 (이미지 업로드), 삭제
-![게시글작성-삭제](https://github.com/UngQ/BuyOrNot/assets/106305918/6abe442d-5266-4b6c-a485-2f33f7d16d1a)
 
 - 이미지 업로드
     - 업로드할 카테고리 선택
