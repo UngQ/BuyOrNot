@@ -84,7 +84,8 @@ class MessageListViewController: BaseViewController {
 			.drive(listTableView.rx.items(cellIdentifier: MessageListTableViewCell.id, cellType: MessageListTableViewCell.self)) { row, element, cell  in
 
 
-				let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
+				let myId = UserDefaultsManager.userId
+//				UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
 
 				var otherUserId: String?
 				var otherUserNick: String?
@@ -131,7 +132,9 @@ class MessageListViewController: BaseViewController {
 			.asDriver()
 			.drive(with: self) { owner, indexPath in
 
-				let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
+				let myId = UserDefaultsManager.userId
+//				UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
+
 
 				let data = owner.viewModel.chatListData.value.data[indexPath.row]
 				let roomId = data.room_id

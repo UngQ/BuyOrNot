@@ -20,13 +20,11 @@ final class ContentPostViewModel: ViewModelType {
 
 	var content: Content?
 
-
 	var isLoading = false
 	var nextCursor: String? = nil
 	var title: String?
 	var hashTag: String?
-	var myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
-
+	var myId = UserDefaultsManager.userId
 
 	var disposeBag = DisposeBag()
 
@@ -118,8 +116,6 @@ final class ContentPostViewModel: ViewModelType {
 
 		case .likePosts:
 
-			let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
-
 			viewWillAppearTrigger
 				.flatMap {
 					NetworkManager.performRequest(route: .myLikes(query: PostQueryItems(next: "", limit: "20", hashTag: nil)), decodingType: PostsModel.self)
@@ -135,7 +131,6 @@ final class ContentPostViewModel: ViewModelType {
 				.disposed(by: disposeBag)
 
 		case .dislikePosts:
-			let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
 
 			viewWillAppearTrigger
 				.flatMap {
@@ -152,7 +147,7 @@ final class ContentPostViewModel: ViewModelType {
 				.disposed(by: disposeBag)
 
 		case nil:
-			let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
+			let myId = UserDefaultsManager.userId
 
 			viewWillAppearTrigger
 				.flatMap {

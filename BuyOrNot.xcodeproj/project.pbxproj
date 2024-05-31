@@ -81,6 +81,7 @@
 		A58FC0C22BFCE91100E23D45 /* MessageQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58FC0C12BFCE91100E23D45 /* MessageQuery.swift */; };
 		A58FC0C52BFCFE3B00E23D45 /* ExyteChat in Frameworks */ = {isa = PBXBuildFile; productRef = A58FC0C42BFCFE3B00E23D45 /* ExyteChat */; };
 		A58FC0C72BFE402D00E23D45 /* MessageListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58FC0C62BFE402D00E23D45 /* MessageListTableViewCell.swift */; };
+		A58FC0EA2C09699A00E23D45 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58FC0E92C09699A00E23D45 /* UserDefaultsManager.swift */; };
 		A59F22222BE39326003B477D /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F22212BE39326003B477D /* EditProfileViewController.swift */; };
 		A59F22242BE39330003B477D /* EditProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F22232BE39330003B477D /* EditProfileViewModel.swift */; };
 		A59F22262BE3C3DE003B477D /* ProfileQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59F22252BE3C3DE003B477D /* ProfileQuery.swift */; };
@@ -189,6 +190,7 @@
 		A58FC0BC2BFC456800E23D45 /* SocketIOManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketIOManager.swift; sourceTree = "<group>"; };
 		A58FC0C12BFCE91100E23D45 /* MessageQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageQuery.swift; sourceTree = "<group>"; };
 		A58FC0C62BFE402D00E23D45 /* MessageListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListTableViewCell.swift; sourceTree = "<group>"; };
+		A58FC0E92C09699A00E23D45 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		A59F22212BE39326003B477D /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		A59F22232BE39330003B477D /* EditProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewModel.swift; sourceTree = "<group>"; };
 		A59F22252BE3C3DE003B477D /* ProfileQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileQuery.swift; sourceTree = "<group>"; };
@@ -335,6 +337,7 @@
 		A559908D2BCBFED00096B98A /* BuyOrNot */ = {
 			isa = PBXGroup;
 			children = (
+				A58FC0E82C09697F00E23D45 /* PropertyWrapper */,
 				A55990D82BCC1BD50096B98A /* Network */,
 				A55990A22BCBFF9C0096B98A /* SignIn */,
 				A55990A32BCBFFB50096B98A /* SignUp */,
@@ -468,6 +471,14 @@
 				A55990F92BCC4A190096B98A /* CustomTabbarController.swift */,
 			);
 			path = Tabbar;
+			sourceTree = "<group>";
+		};
+		A58FC0E82C09697F00E23D45 /* PropertyWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				A58FC0E92C09699A00E23D45 /* UserDefaultsManager.swift */,
+			);
+			path = PropertyWrapper;
 			sourceTree = "<group>";
 		};
 		A59F22202BE39303003B477D /* Edit */ = {
@@ -723,6 +734,7 @@
 				A558A0162BD637EE000C1B9D /* CommentViewModel.swift in Sources */,
 				A59F22512BE7C8DD003B477D /* CommentModel.swift in Sources */,
 				A59F222C2BE3F200003B477D /* PaymentViewController.swift in Sources */,
+				A58FC0EA2C09699A00E23D45 /* UserDefaultsManager.swift in Sources */,
 				A528C7B52BDFF13800F22167 /* FollowTableViewCell.swift in Sources */,
 				A5589FFE2BD574A8000C1B9D /* UIScrollView+Ex.swift in Sources */,
 				A55990E02BCC1C200096B98A /* HTTPHeader.swift in Sources */,

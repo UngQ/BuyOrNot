@@ -55,7 +55,8 @@ final class SignInViewModel: ViewModelType {
 				print("\(loginQuery)) 이곳인가")
 
 				//회원 탈퇴시, 비밀번호 확인용 (API에서 비밀번호값 미제공)
-				UserDefaults.standard.set(loginQuery.password, forKey: UserDefaultsKey.password.key)
+				UserDefaultsManager.password = loginQuery.password
+//				UserDefaults.standard.set(loginQuery.password, forKey: UserDefaultsKey.password.key)
 
 				return NetworkManager.performRequest(route: .login(query: loginQuery), decodingType: LoginModel.self)
 					.catch { error -> Single<LoginModel> in
@@ -66,15 +67,21 @@ final class SignInViewModel: ViewModelType {
 			.subscribe(with: self, onNext: { owner, loginModel in
 				print("통신성공")
 				if let profileImage = loginModel.profileImage {
-					UserDefaults.standard.set(profileImage, forKey: UserDefaultsKey.profileImage.key)
+					UserDefaultsManager.profileImage = profileImage
+//					UserDefaults.standard.set(profileImage, forKey: UserDefaultsKey.profileImage.key)
 				} else {
-					UserDefaults.standard.set("", forKey: UserDefaultsKey.profileImage.key)
+					UserDefaultsManager.profileImage = ""
+//					UserDefaults.standard.set("", forKey: UserDefaultsKey.profileImage.key)
 				}
 
-				UserDefaults.standard.set(loginModel.nick, forKey: UserDefaultsKey.nick.key)
-				UserDefaults.standard.set(loginModel.user_id, forKey: UserDefaultsKey.userId.key)
-				UserDefaults.standard.set(loginModel.accessToken, forKey: UserDefaultsKey.accessToken.key)
-				UserDefaults.standard.set(loginModel.refreshToken, forKey: UserDefaultsKey.refreshToken.key)
+				UserDefaultsManager.nick = loginModel.nick
+				UserDefaultsManager.userId = loginModel.user_id
+				UserDefaultsManager.accessToken = loginModel.accessToken
+				UserDefaultsManager.refreshToken = loginModel.refreshToken
+//				UserDefaults.standard.set(loginModel.nick, forKey: UserDefaultsKey.nick.key)
+//				UserDefaults.standard.set(loginModel.user_id, forKey: UserDefaultsKey.userId.key)
+//				UserDefaults.standard.set(loginModel.accessToken, forKey: UserDefaultsKey.accessToken.key)
+//				UserDefaults.standard.set(loginModel.refreshToken, forKey: UserDefaultsKey.refreshToken.key)
 				loginSuccessTrigger.accept(())
 			})
 					 .disposed(by: disposeBag)
@@ -90,13 +97,15 @@ final class SignInViewModel: ViewModelType {
 	func handleAutoLogin(_ email: String, password: String, enable: Bool) {
 		let keychain = KeychainSwift()
 		if enable {
-			UserDefaults.standard.set(true, forKey: "autoLoginEnabled")
+			UserDefaultsManager.autoLoginEnabled = true
+//			UserDefaults.standard.set(true, forKey: "autoLoginEnabled")
 
 			keychain.set(email, forKey: "userEmail")
 			keychain.set(password, forKey: "userPassword")
 		} else {
 			print("??여기안옴?")
-			UserDefaults.standard.set(false, forKey: "autoLoginEnabled")
+			UserDefaultsManager.autoLoginEnabled = false
+//			UserDefaults.standard.set(false, forKey: "autoLoginEnabled")
 			
 			keychain.delete("userEmail")
 			keychain.delete("userPassword")
@@ -107,7 +116,8 @@ final class SignInViewModel: ViewModelType {
 	
 	func checkAutoLogin() -> (email: String?, password: String?) {
 		let keychain = KeychainSwift()
-		if UserDefaults.standard.bool(forKey: "autoLoginEnabled") {
+		if UserDefaultsManager.autoLoginEnabled {
+//			UserDefaults.standard.bool(forKey: "autoLoginEnabled") {
 			let email = keychain.get("userEmail")
 			let password = keychain.get("userPassword")
 			return (email, password)

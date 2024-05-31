@@ -22,9 +22,8 @@ final class ProfileViewModel: ViewModelType {
 
 	//다른 프로필 들어갈 경우, 내 팔로잉과 비교용
 	var myFollowingData: [CreatorModel] = []
-	let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
-	let myNick = UserDefaults.standard.string(forKey: UserDefaultsKey.nick.key) ?? ""
-
+	let myId = UserDefaultsManager.userId
+	let myNick = UserDefaultsManager.nick
 
 	struct Input {
 
@@ -76,10 +75,10 @@ final class ProfileViewModel: ViewModelType {
 						}
 				}
 				.subscribe(with: self) { owner, data in
-
-					let followerIds = data.followers.map { $0.user_id }
-					let isFollower = followerIds.contains(owner.myId)
-
+//
+//					let followerIds = data.followers.map { $0.user_id }
+//					let isFollower = followerIds.contains(owner.myId)
+//
 
 					owner.profileData.accept(data)
 				}
@@ -180,7 +179,7 @@ final class ProfileViewModel: ViewModelType {
 			 }
 				print("HiHI")
 
-				var newData = self.profileData.value
+				let newData = self.profileData.value
 				self.myFollowingData.removeAll { $0.user_id == follow.user_id }
 
 				self.profileData.accept(newData)
@@ -215,7 +214,7 @@ final class ProfileViewModel: ViewModelType {
 				}
 				print("HiHI")
 
-				var newData = self.profileData.value
+				let newData = self.profileData.value
 				self.myFollowingData.append(follow)
 
 				self.profileData.accept(newData)

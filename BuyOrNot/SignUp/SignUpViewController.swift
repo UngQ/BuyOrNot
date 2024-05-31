@@ -54,8 +54,8 @@ final class SignUpViewController: BaseViewController {
 
 		nextButton.rx.tap
 			.bind(with: self) { owner, _ in
-
-					UserDefaults.standard.setValue(owner.emailTextField.text, forKey: UserDefaultsKey.email.key)
+				UserDefaultsManager.email = owner.emailTextField.text ?? ""
+//					UserDefaults.standard.setValue(owner.emailTextField.text, forKey: UserDefaultsKey.email.key)
 					owner.navigationController?.pushViewController(PasswordViewController(), animated: true)
 
 			}

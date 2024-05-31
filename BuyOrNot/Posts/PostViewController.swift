@@ -118,9 +118,10 @@ override func bind() {
 			print("\(row) 여기가 언제 실행되는가")
 			print(element.buyers)
 
-			guard let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) else {
-				return
-			}
+			let myId = UserDefaultsManager.userId
+//			guard let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) else {
+//				return
+//			}
 
 			if myId == element.creator.user_id {
 				cell.deleteButton.isHidden = false

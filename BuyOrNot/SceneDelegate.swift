@@ -14,7 +14,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 
-		let autoLogin = UserDefaults.standard.bool(forKey: "autoLoginEnabled")
+		let autoLogin = UserDefaultsManager.autoLoginEnabled
+//		UserDefaults.standard.bool(forKey: "autoLoginEnabled")
 
 print(autoLogin)
 

@@ -10,7 +10,8 @@ import SwiftUI
 struct ChatRowView: View {
 
 	var chat: ChatContentModel
-	let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
+	let myId = UserDefaultsManager.userId
+//	UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
 	var myChat: Bool {
 		chat.sender.user_id == myId
 	}

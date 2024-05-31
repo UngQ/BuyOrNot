@@ -40,8 +40,10 @@ final class NicknameViewModel: ViewModelType {
 			.flatMapLatest { nickname -> Single<LoginModel> in
 				guard self.isValidNickname(nickname) else { return Single.never() }
 
-				guard let email = UserDefaults.standard.string(forKey: UserDefaultsKey.email.key) else { return Single.never() }
-				guard let password = UserDefaults.standard.string(forKey: UserDefaultsKey.password.key) else { return Single.never() }
+				let email = UserDefaultsManager.email
+//						UserDefaults.standard.string(forKey: UserDefaultsKey.email.key) else { return Single.never() }
+				let password = UserDefaultsManager.password
+//				UserDefaults.standard.string(forKey: UserDefaultsKey.password.key) else { return Single.never() }
 
 				let joinQuery = JoinQuery(email: email,
 										  password: password,
@@ -54,11 +56,16 @@ final class NicknameViewModel: ViewModelType {
 					}
 			}
 			.subscribe(with: self) { owner, login in
-				UserDefaults.standard.setValue(login.user_id, forKey: UserDefaultsKey.userId.key)
-				UserDefaults.standard.setValue(login.email, forKey: UserDefaultsKey.email.key)
-				UserDefaults.standard.setValue(login.nick, forKey: UserDefaultsKey.nick.key)
-				UserDefaults.standard.setValue(login.accessToken, forKey: UserDefaultsKey.accessToken.key)
-				UserDefaults.standard.setValue(login.refreshToken, forKey: UserDefaultsKey.refreshToken.key)
+				UserDefaultsManager.userId = login.user_id
+				UserDefaultsManager.email = login.email
+				UserDefaultsManager.nick = login.nick
+				UserDefaultsManager.accessToken = login.accessToken
+				UserDefaultsManager.refreshToken = login.refreshToken
+//				UserDefaults.standard.setValue(login.user_id, forKey: UserDefaultsKey.userId.key)
+//				UserDefaults.standard.setValue(login.email, forKey: UserDefaultsKey.email.key)
+//				UserDefaults.standard.setValue(login.nick, forKey: UserDefaultsKey.nick.key)
+//				UserDefaults.standard.setValue(login.accessToken, forKey: UserDefaultsKey.accessToken.key)
+//				UserDefaults.standard.setValue(login.refreshToken, forKey: UserDefaultsKey.refreshToken.key)
 				isCompleteJoin.accept(true)
 			}
 			.disposed(by: disposeBag)

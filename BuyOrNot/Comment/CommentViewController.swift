@@ -185,7 +185,8 @@ final class CommentViewController: BaseViewController {
 					.disposed(by: cell.disposeBag)
 
 
-				let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
+				let myId = UserDefaultsManager.userId
+//				UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
 				if myId == element.creator.user_id {
 					cell.deleteButton.isHidden = false
 					cell.editButton.isHidden = false
@@ -197,7 +198,7 @@ final class CommentViewController: BaseViewController {
 				cell.profileImageView.rx.tapGesture()
 					.when(.recognized)
 					.bind(with: self) { owner, gesture in
-						let vc = ProfileViewController()
+//						let vc = ProfileViewController()
 
 						if element.creator.user_id == myId {
 
@@ -216,7 +217,7 @@ final class CommentViewController: BaseViewController {
 				cell.nicknameLabel.rx.tapGesture()
 					.when(.recognized)
 					.bind(with: self) { owner, gesture in
-						let vc = ProfileViewController()
+//						let vc = ProfileViewController()
 
 						if element.creator.user_id == myId {
 							owner.commentVCDelegate?.pushOthersProfile(myOrOther: true, id: myId)

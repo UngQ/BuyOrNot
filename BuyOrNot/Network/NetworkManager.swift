@@ -17,7 +17,9 @@ struct NetworkManager {
 	//KingFisher 사용시 활용
 	static let imageDownloadRequest = AnyModifier { request in
 		var requestBody = request
-		requestBody.setValue(UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "", forHTTPHeaderField: HTTPHeader.authorization.rawValue)
+		requestBody.setValue(UserDefaultsManager.accessToken,
+//			UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
+							 forHTTPHeaderField: HTTPHeader.authorization.rawValue)
 		requestBody.setValue(APIKey.sesacKey.rawValue, forHTTPHeaderField: HTTPHeader.sesacKey.rawValue)
 
 		return requestBody
@@ -156,7 +158,8 @@ struct NetworkManager {
 					switch response.result {
 					case .success(let accessTokenModel):
 						print("엑세스 토큰 갱신하자")
-						UserDefaults.standard.set(accessTokenModel.accessToken, forKey: UserDefaultsKey.accessToken.key)
+						UserDefaultsManager.accessToken = accessTokenModel.accessToken
+//						UserDefaults.standard.set(accessTokenModel.accessToken, forKey: UserDefaultsKey.accessToken.key)
 						single(.success(()))
 					case .failure(let error):
 						print("흠")

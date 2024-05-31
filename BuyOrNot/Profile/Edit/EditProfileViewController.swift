@@ -79,8 +79,7 @@ final class EditProfileViewController: BaseViewController {
 		}
 		let action = UIAlertAction(title: "확인", style: .destructive) { [unowned self] _ in
 			guard let password = alert.textFields?.first?.text,
-				  let savedPassword = UserDefaults.standard.string(forKey: "password"),
-				  password == savedPassword else {
+				  password == UserDefaultsManager.password else {
 				self.showMismatchError()
 				return
 			}

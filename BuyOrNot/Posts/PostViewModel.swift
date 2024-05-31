@@ -103,9 +103,8 @@ final class PostViewModel: ViewModelType {
 			.flatMap { post -> Single<LikeQueryAndModel> in
 
 
-				guard let post = post, let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) else {
-					return Single.never()
-				}
+				guard let post = post else { return Single.never() }
+				let myId = UserDefaultsManager.userId
 
 				var newPosts = self.postsData.value
 				let like = post.likes.contains(myId)
@@ -153,9 +152,8 @@ final class PostViewModel: ViewModelType {
 			}
 			.flatMap { post -> Single<LikeQueryAndModel> in
 
-				guard let post = post, let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) else {
-					return Single.never()
-				}
+				guard let post = post else { return Single.never() }
+				let myId = UserDefaultsManager.userId
 
 				var newPosts = self.postsData.value
 				let like = post.likes.contains(myId)

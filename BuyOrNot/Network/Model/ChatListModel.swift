@@ -43,7 +43,8 @@ struct ChatContentModel: Decodable, Equatable {
 
 	var toMessage: Message {
 
-		let myId = UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
+		let myId = UserDefaultsManager.userId
+//		UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
 		var myChat: Bool = sender.user_id == myId
 
 		let isoDateFormatter = ISO8601DateFormatter()

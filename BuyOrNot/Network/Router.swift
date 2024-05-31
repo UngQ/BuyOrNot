@@ -191,8 +191,10 @@ extension Router: TargetType {
 		case.tokenRefresh:
 			return [		
 				HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue,
-				HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
-				HTTPHeader.refresh.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.refreshToken.key) ?? ""
+				HTTPHeader.authorization.rawValue: UserDefaultsManager.accessToken,
+//					UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
+				HTTPHeader.refresh.rawValue: UserDefaultsManager.refreshToken
+//					UserDefaults.standard.string(forKey: UserDefaultsKey.refreshToken.key) ?? ""
 			]
 
 		case .login,
@@ -205,7 +207,8 @@ extension Router: TargetType {
 			
 		case .uploadImage,
 			 .editProfile:
-			return [HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
+			return [HTTPHeader.authorization.rawValue: UserDefaultsManager.accessToken,
+//						UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
 					HTTPHeader.contentType.rawValue: HTTPHeader.multipart.rawValue,
 					HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
 
@@ -216,7 +219,8 @@ extension Router: TargetType {
 				.validationPayment,
 				.makeChat,
 				.sendChat:
-			return [HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
+			return [HTTPHeader.authorization.rawValue: UserDefaultsManager.accessToken,
+//						UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
 					HTTPHeader.contentType.rawValue: HTTPHeader.json.rawValue,
 					HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
 
@@ -238,7 +242,8 @@ extension Router: TargetType {
 			.lookChat
 			:
 			return [
-				HTTPHeader.authorization.rawValue: UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
+				HTTPHeader.authorization.rawValue: UserDefaultsManager.accessToken,
+//					UserDefaults.standard.string(forKey: UserDefaultsKey.accessToken.key) ?? "",
 				HTTPHeader.sesacKey.rawValue: APIKey.sesacKey.rawValue]
 
 		case .naverPhoto:
