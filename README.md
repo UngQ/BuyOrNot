@@ -71,12 +71,85 @@
     - **IQKeyboardManager**
       - 키보드가 나타날 때 UI를 자동으로 조정하여 사용성 향상을 위해 사용
     
-## 👍🏻👎🏻 Key Feature 
+## 👍🏻👎🏻 Key Feature
+### 1. ImageView에 RxGesture 적용, Double Tapped 으로 좋아요/싫어요
+   
 https://github.com/UngQ/BuyOrNot/assets/106305918/6496eae7-2f06-47cd-b9ce-7ce43137842d
-- RxGesture를 활용하여 이미지의 가운데 x좌표를 0으로 가정 <br>
-  사용자가 이 기준선을 기준으로 왼쪽 영역(x < 0)을 더블터치하면 "좋아요" 기능이, <br>
-  오른쪽 영역(x > 0)을 더블터치하면 "싫어요" 기능이 동작하도록 구현
+- 이미지의 가운데 x좌표를 0으로 가정, 왼쪽 영역(x < 0)을 더블탭하면 "좋아요", 오른쪽 영역(x > 0)을 더블탭하면 "싫어요" 기능이 동작하도록 구현
 - 동일한 영역에 다시 투표할 경우 기존 투표를 취소
+  <details>
+  <summary><b>주요코드</b></summary>
+
+  ```swift
+  cell.postImageView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
+				gestureRecognizer.numberOfTapsRequired = 2 })
+			.when(.recognized)
+			.subscribe(onNext: { [weak self] gesture in
+				let touchPoint = gesture.location(in: gesture.view)
+				if let width = gesture.view?.bounds.width {
+					if touchPoint.x < width / 2 {
+						likeButtonTapped.onNext(row)
+						self?.playAppropriateAnimation(for: "like", likeCondition: cell.like, dislikeCondition: cell.dislike)
+					} else {
+						disLikeButtonTapped.onNext(row)
+						self?.playAppropriateAnimation(for: "dislike", likeCondition: cell.like, dislikeCondition: cell.dislike)
+					}
+				}
+			})
+			.disposed(by: cell.disposeBag)
+  ```
+    
+</details>
+
+### 2. RxSwift의 retry(when:)을 이용한 토큰 갱신 및 통신 재시도
+- 네트워크 요청이 특정 오류(예: HTTP 상태 코드 419)로 실패할 경우, 토큰을 갱신하고 원래의 요청을 다시 시도
+  <details>
+  <summary><b>주요코드</b></summary>
+
+  ```swift
+  static func performRequest<T: Decodable>(route: Router, decodingType: T.Type?) -> Single<T> {
+    return Single<T>.create { single in
+        do {
+            let urlRequest = try route.asURLRequest()
+
+            AF.request(urlRequest)
+                .validate(statusCode: 200..<300)
+                .responseDecodable(of: T.self) { response in
+                    switch response.result {
+                    case .success(let result):
+                        single(.success(result))
+                    case .failure(let error):
+                        single(.failure(error))
+                    }
+                }
+        } catch {
+            single(.failure(error))
+        }
+
+        return Disposables.create()
+    }
+    .retry(when: { errors in
+        errors.flatMap { error -> Single<Void> in
+            guard let afError = error as? AFError, afError.responseCode == 419 else {
+                throw error
+            }
+            return refreshToken().flatMap { _ in
+                performRequest(route: route, decodingType: T.self).map { _ in Void() }
+            }
+        }
+    })
+  }
+  ```
+
+    - performRequest<T: Decodable>: 주어진 라우트에 따라 네트워크 요청을 수행하고, 결과를 Single<T>로 반환합니다.
+    - 요청이 실패하면 retry(when:) 연산자가 실행되어 오류를 검사합니다.
+    - 오류가 HTTP 419 상태 코드인 경우 refreshToken() 메서드를 호출하여 토큰을 갱신합니다.
+    - 토큰이 갱신되면 원래의 요청을 다시 시도합니다.
+    - refreshToken(): 토큰 갱신을 처리하는 메서드로, 성공적으로 토큰이 갱신되면 Single<Void>를 반환하여 재시도를 허용합니다. 실패하면 오류를 발생시켜 재시도를 중단하고 로그인 창으로 이동하도록 합니다.
+
+    
+</details>
+
 
 
 ## 🎮 주요 기능 Previews
