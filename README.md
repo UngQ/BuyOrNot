@@ -121,7 +121,7 @@ https://github.com/UngQ/BuyOrNot/assets/106305918/6496eae7-2f06-47cd-b9ce-7ce431
     
 </details>
 
-### 3. Router Pattern 적용하여, 효과적인 30개 이상의 API 통신 관리
+### 3. Router Pattern 적용하여, 효과적으로 30개 이상의 API 통신 관리
 - TargetType 프로토콜과 Router 열거형을 사용하여 다양한 API 엔드포인트를 정의하고, 각 요청의 세부 사항을 설정
 - 네트워크 요청을 하나의 Router 열거형으로 관리함으로써 코드의 모듈화와 재사용성을 높임
 - 새로운 API 엔드포인트를 추가할 때 Router 열거형에 새로운 케이스를 추가하고 필요한 속성을 정의하면 되므로, 확장성이 뛰어남
@@ -152,7 +152,7 @@ https://github.com/UngQ/BuyOrNot/assets/106305918/6496eae7-2f06-47cd-b9ce-7ce431
 </details>
 
 ### 4. RxSwift의 retry(when:)을 이용한 토큰 갱신 및 통신 재시도
-- 네트워크 요청이 특정 오류(예: HTTP 상태 코드 419)로 실패할 경우, 토큰을 갱신하고 원래의 요청을 다시 시도
+- 네트워크 요청이 AccessToken 만료 오류인 HTTP 상태 코드 419로 실패할 경우, RefreshToken을 이용하여 토큰을 갱신하고 원래의 요청을 다시 시도
   <details>
   <summary><b>주요코드</b></summary>
 
@@ -304,6 +304,34 @@ https://github.com/UngQ/BuyOrNot/assets/106305918/6496eae7-2f06-47cd-b9ce-7ce431
     
 </details>
 
+### 7. Reactive를 extension하여, Cursor-based Pagination 구현
+- Base가 UIScrollView 타입인 경우, UIScrollView가 바닥에서 400 포인트에 도달할 때마다 이벤트를 방출하는 reachedBottom 프로퍼티를 정의
+  <details>
+  <summary><b>주요코드</b></summary>
+
+  ```swift
+  extension Reactive where Base: UIScrollView {
+	var reachedBottom: Observable<Void> {
+		return contentOffset
+			.debounce(.milliseconds(100), scheduler: MainScheduler.instance)
+			.flatMap { [weak base] _ -> Observable<Void> in
+				guard let scrollView = base else { return .empty() }
+				let contentHeight = scrollView.contentSize.height
+				let scrollViewHeight = scrollView.bounds.size.height
+				let scrollPosition = scrollView.contentOffset.y + scrollViewHeight
+				let threshold = contentHeight - 400
+				if scrollPosition >= threshold {
+					return .just(())
+				} else {
+					return .empty()
+				}
+			}
+	}
+  }
+
+  ```
+    
+</details>
 
 ## 🎮 주요기능 UI
 
