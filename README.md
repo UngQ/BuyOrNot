@@ -2,14 +2,14 @@
 # 🕹️ Buy Or Not (살까요? 말까요?)
 
 - 프로젝트 기간: 2024. 04. 13. ~ 2024. 05. 05.
+- 수상 내역: SeSAC x Memolease iOS 4기 Light Service Level Project(LSLP) 경진대회 3등
 
 ![Apple iPhone 11 Pro Max Presentation](https://github.com/UngQ/BuyOrNot/assets/106305918/5f6be77b-a128-4039-b154-bdbae6d9f325)
 
 ## 🗒️ Introduction
 
 - 살지 말지 고민되는 패션 아이템을 공유하여 함께 투표한 결과로 쇼핑 결정에 도움이 될 수 있는 어플
-- SeSAC iOS 4기 Light Service Level Project(LSLP) 경진대회 3등 수상
-- Configuration: iOS 16.0+ / 라이트모드 지원
+- Configuration: iOS 16.0+
 
 ## 🗒️ Features
 
@@ -70,8 +70,8 @@
     - **IQKeyboardManager**
       - 키보드가 나타날 때 UI를 자동으로 조정하여 사용성 향상을 위해 사용
     
-## 👍🏻👎🏻 Key Feature
-### 1. ImageView에 RxGesture 적용, Double Tapped 으로 좋아요/싫어요
+## 💬 Description
+### 1. ImageView에 RxGesture 적용, Double Tapped시 좋아요👍🏻/싫어요👎🏻
    
 https://github.com/UngQ/BuyOrNot/assets/106305918/6496eae7-2f06-47cd-b9ce-7ce43137842d
 - 이미지의 가운데 x좌표를 0으로 가정, 왼쪽 영역(x < 0)을 더블탭하면 "좋아요", 오른쪽 영역(x > 0)을 더블탭하면 "싫어요" 기능이 동작하도록 구현
