@@ -261,6 +261,50 @@ https://github.com/UngQ/BuyOrNot/assets/106305918/6496eae7-2f06-47cd-b9ce-7ce431
     
 </details>
 
+### 6. @propertyWrapper를 활용한 UserDefaults 캡슐화
+- 자주 사용되는 UserDefaults 의 상용구 코드를 줄이고 가독성을 높이기 위하여 구현
+- @propertyWrapper 속성을 적용한 MyDefaults 구조체 생성 후 UserDefaultsManager 정의
+  <details>
+  <summary><b>주요코드</b></summary>
+
+  ```swift
+  @propertyWrapper
+  struct MyDefaults<T> {
+    let key: String
+    let defaultValue: T
+
+    var wrappedValue: T {
+        get {
+            UserDefaults.standard.object(forKey: key) as? T ?? defaultValue
+        }
+        set {
+            UserDefaults.standard.setValue(newValue, forKey: key)
+        }
+    }
+  }
+
+  enum UserDefaultsManager {
+
+    enum Key: String {
+        case userId
+        ...
+    }
+
+    @MyDefaults(key: Key.userId.rawValue, defaultValue: "")
+    static var userId: String
+    ...
+  }
+
+  //기존 사용법
+  UserDefaults.standard.string(forKey: UserDefaultsKey.userId.key) ?? ""
+
+  //개선된 사용법
+  let myId = UserDefaultsManager.userId //get
+  UserDefaultsManager.userId = "변경된닉네임" //set
+  ```
+    
+</details>
+
 
 
 ## 🎮 주요 기능 Previews
