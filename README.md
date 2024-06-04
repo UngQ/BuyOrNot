@@ -20,10 +20,9 @@
 - 댓글 작성 / 수정 / 삭제 / 조회
 - 프로필 조회 ( 팔로우, 팔로워 / 작성한 게시물 / 좋아요한 게시물 / 싫어요한 게시물 / 결제한 게시물 조회 )
 - 팔로우 / 언팔로우
-- 포트원 활용한 결제
+- PortOne 이용한 PG결제
 
-### Update (2024. 05. 24.)
-- 1:1 채팅방 개설 / 내 채팅방 조회 / 채팅방 대화 내역 조회 / 소켓 활용한 실시간 대화
+- 1:1 채팅방 개설 / 내 채팅방 조회 / 채팅방 대화 내역 조회 / 소켓 활용한 실시간 대화 **(Updated at 2024. 05. 24.)**
 
 ## 🗒️ Technology Stack
 
@@ -306,137 +305,24 @@ https://github.com/UngQ/BuyOrNot/assets/106305918/6496eae7-2f06-47cd-b9ce-7ce431
 </details>
 
 
-
-## 🎮 주요 기능 Previews
-
-### - 채팅 기능 ( Updated at 2024. 05. 24. )
-
-![Simulator Screen Recording - iPhone 15 Pro - 2024-05-24 at 12 38 06](https://github.com/UngQ/BuyOrNot/assets/106305918/611aa623-8a7c-48b6-b583-c4cb8e27cdeb)
-
-- 내 채팅방 목록 전체 조회
-- 채팅방 진입시, 대화 내역 조회 및 소켓 통신 활성화 후 실시간 대화 기능
-- Disappear 시점에, 소켓 통신 disconnect
-
-![Simulator Screen Recording - iPhone 15 Pro - 2024-05-24 at 12 38 45](https://github.com/UngQ/BuyOrNot/assets/106305918/fa615597-3659-403b-821c-4577c289fee8)
-
-- 다른 유저 프로필에서 대화 버튼 클릭시, 채팅방 개설 후 진입
-- 이미 있을 경우도 기존 채팅방 진입 후 대화 내역 조회
-
-### - 회원가입 ~ 탈퇴
+## 🎮 주요기능 UI
 
 |![회원가입-탈퇴](https://github.com/UngQ/BuyOrNot/assets/106305918/bf3eac4e-b716-4d4a-a7a8-4d834992be02)|![자동로그인](https://github.com/UngQ/BuyOrNot/assets/106305918/7e1bb436-695b-4c23-ba44-a97a26b29437)|![프로필수정](https://github.com/UngQ/BuyOrNot/assets/106305918/4063fbf8-b3bc-40b1-a723-f7ec3e379997)|![게시글작성-삭제](https://github.com/UngQ/BuyOrNot/assets/106305918/6abe442d-5266-4b6c-a485-2f33f7d16d1a)|
 |:--:|:--:|:--:|:--:|
 |회원가입 ~ 탈퇴|Keychain 활용한 자동로그인|프로필 수정|포스트 CRUD|
 
-
-
-- 회원가입 API
-- 이메일 중복체크 API
-- NSPredicate를 활용한 이메일 형식,
-비밀번호 형식, 닉네임 자체 정규식 검사
-- 가입 성공시, 전체 게시물 조회뷰로 이동
-- 회원 탈퇴
-    - 탈퇴시, 가입/로그인시 저장된 계정 비밀번호 확인 검사 후 진행하도록 구현
-
-### - 자동 로그인 On/Off
-
-
-- KeychainSwift 를 활용한 자동로그인 기능
-    - 로그인시 자동로그인 체크
-    - refreshToken 만료 후 로그인창으로 이동시, 사용자의 별도 입력 없이 자동로그인
-
-### - 프로필 수정
-
-- 프로필 수정
-    - 이미지 수정 기능
-        - 이미지 삭제 API 지원하지 않아, [기본 프로필 이미지] 선택시 지정해놓은 System UIImage로 업로드하도록 구현
-    - 닉네임 수정 기능
-        - 회원가입시 적용한 닉네임 필터링 동일하게 적용
-
-### - 게시글 작성 (이미지 업로드), 삭제
-
-- 이미지 업로드
-    - 업로드할 카테고리 선택
-        - 카테고리를 Content에 저장하도록 구현하여, Hashtag 검색으로 활용함
-    - 갤러리 / 카메라 / 네이버 검색 으로 이미지 업로드 진행
-- 게시글 작성
-    - 이미지 업로드 후 게시글 작성 뷰로 이동
-    - Price TextField에는 숫자만 입력가능,
-    입력시 자동 decimal 및 [원] 입력
-- 게시글 삭제
-    - 내가 작성한 게시글에서만 상단에 
-    삭제 버튼 활성화
-    - 삭제 후 새로고침
-
-
 |![Simulator Screen Recording - iPhone 15 Pro - 2024-05-05 at 11 05 03](https://github.com/UngQ/BuyOrNot/assets/106305918/1b06e0a5-432c-483b-8684-9a5f1dfc976a)|![내프로필](https://github.com/UngQ/BuyOrNot/assets/106305918/5cdcfa4e-f32a-4230-922a-38666f0f9891)|![다른프로필](https://github.com/UngQ/BuyOrNot/assets/106305918/6d5e2610-a853-4ca8-9da3-99c80a76dd61)|![팔로우](https://github.com/UngQ/BuyOrNot/assets/106305918/c0d82806-0adb-46dc-95de-a3bd31c045e7)|
 |:--:|:--:|:--:|:--:|
 |포스트 좋아요/싫어요|내 프로필 조회|다른 유저 프로필 조회|팔로우|
-
-
-### - 게시글 Like / DisLike
-
-- 게시글 좋아요(사세요) / 싫어요(마세요) 기능
-    - 미투표시, 결과 Hidden
-    - 위,아래 엄지버튼 클릭시 투표
-    - 이미지 넓이 절반 기준,
-    왼쪽 Double Tap ⇒ 좋아요 
-    오른쪽 Double Tap ⇒ 싫어요
-    - Lotti 활용하여, 투표 성공을 직관적으로 표현
-
-### - 내 프로필 조회
-
-- 내 프로필 조회
-    - 내가 작성한 게시글 조회
-    - 좋아요/싫어요 한 게시글 조회
-    - 내 팔로워
-        - 내 팔로잉 목록과 비교 후 버튼 분기처리 (언팔/팔로우)
-    - 내 팔로잉
-        - 팔로잉 삭제(언팔) 버튼
-    - 내 구매목록(결제내역) 조회
-
-### - 다른 유저 프로필 조회
-
-- 상대 프로필 조회
-    - 작성한 게시글 조회
-    - 팔로워 조회, 팔로잉 조회
-        - [나] 팔로우 버튼 Hidden
-        내 팔로잉과 비교 후 언팔/팔로우 분기처리
-        
-### - 팔로우 기능
-
-- 상대 프로필 조회
-    - 내 프로필과 비교 후 Navigation Right Button 언팔/팔로우 분기처리
-
 
 |![카테고리조회-사용자별조회](https://github.com/UngQ/BuyOrNot/assets/106305918/fa9d0656-0ee1-4a96-87ff-9bcaa4cdb411)|![댓글](https://github.com/UngQ/BuyOrNot/assets/106305918/13d22eb9-6ff6-4a4a-8e19-6a536a1e7209)|![Simulator Screen Recording - iPhone 15 Pro - 2024-05-05 at 20 07 20](https://github.com/UngQ/BuyOrNot/assets/106305918/c98d45f5-a6be-44a0-aa6f-3272005e1947)|
 |:--:|:--:|:--:|
 |게시물 조회|댓글 작성, 삭제, 수정|결제 기능|
 
+### - 채팅 기능 ( Updated at 2024. 05. 24. )
 
-### - 게시물 조회
-
-- Hashtag 활용한 카테고리 조회
-    - Post 작성시, content에 입력한 category를 활용한 hashtag 검색 조회
-- 특정 게시물 조회
-    - hashtag 검색된 게시글 디테일 조회
-    및 작성자 프로필 조회
-    
-### - 댓글 작성, 삭제, 수정
-
-
-- 댓글 작성 / 삭제 / 수정
-    - 각 게시물의 고유 ID와 댓글의 고유 ID를 
-    활용한 댓글 작성, 삭제, 수정 기능
-    - 금일 작성한 댓글은 방금, 15분전, 10시간 전 등으로 표시 (게시물에도 적용)
-    
-### - 결제 기능
-
-
-- 포트원 활용한 결제 기능
-- 결제 완료 후, 결제 영수증 검증 API 통하여 서버에 구매 처리 요청
-- 구매내역이 생긴 Post는 [판매완료] 처리
-- 내 프로필에서 구매내역 확인
-- 판매완료된 내 게시글의 삭제 버튼 위치 분기처리
+|![Simulator Screen Recording - iPhone 15 Pro - 2024-05-24 at 12 38 06](https://github.com/UngQ/BuyOrNot/assets/106305918/611aa623-8a7c-48b6-b583-c4cb8e27cdeb)|![Simulator Screen Recording - iPhone 15 Pro - 2024-05-24 at 12 38 45](https://github.com/UngQ/BuyOrNot/assets/106305918/fa615597-3659-403b-821c-4577c289fee8)|
+|:--:|:--:|
+|내 채팅방 목록|다른유저 프로필에서 채팅방 진입|
 
 
