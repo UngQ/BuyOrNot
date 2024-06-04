@@ -124,14 +124,13 @@ print(random)
 			print("chat received", dataArray, ack )
 
 			if let data = dataArray.first {
-				//나중엔 do catch 문으로 바꾸삼
-				let result = try? JSONSerialization.data(withJSONObject: data)
-
-				let decodedData = try? JSONDecoder().decode(ChatContentModel.self, from: result!)
-
-				self.receivedChatData.send(decodedData!)
-
-
+				do {
+					let result = try JSONSerialization.data(withJSONObject: data)
+					let decodedData = try JSONDecoder().decode(ChatContentModel.self, from: result)
+					self.receivedChatData.send(decodedData)
+				} catch {
+					print("Error during JSON serialization or decoding: \(error.localizedDescription)")
+				}
 			}
 
 
