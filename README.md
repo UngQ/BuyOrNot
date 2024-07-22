@@ -354,3 +354,7 @@ https://github.com/UngQ/BuyOrNot/assets/106305918/6496eae7-2f06-47cd-b9ce-7ce431
 |내 채팅방 목록|다른유저 프로필에서 채팅방 진입|
 
 
+## 📸 프로젝트 발표 및 수상식 기념사진
+
+|![IMG_8219](https://github.com/user-attachments/assets/1557a7de-33d0-4a37-8313-ef2785918bc9)|![IMG_8279](https://github.com/user-attachments/assets/0221a37c-73e9-4940-98e3-92d266700e67)|
+|:--:|:--:|
